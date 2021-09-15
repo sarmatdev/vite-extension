@@ -1,10 +1,6 @@
 <template>
   <div class="home">
-    <BaseInput
-      class="mt-10 mx-5"
-      label="for example"
-      placeholder="For example"
-    />
+    <BaseButton size="lg" class="mt-10" color="blue">Click</BaseButton>
   </div>
 </template>
 
