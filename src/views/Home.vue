@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
+    <BaseInput
+      class="mt-10 mx-5"
+      label="for example"
+      placeholder="For example"
+    />
   </div>
 </template>
 
