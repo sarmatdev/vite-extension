@@ -38,7 +38,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
+import useFocus from '@/composables/useFocus'
 export default defineComponent({
   name: 'BaseInput',
   props: {
@@ -52,11 +53,7 @@ export default defineComponent({
     }
   },
   setup() {
-    let focusStatus = ref(false)
-    function focusChange() {
-      focusStatus.value = !focusStatus.value
-    }
-
+    const { focusStatus, focusChange } = useFocus()
     return {
       focusStatus,
       focusChange
