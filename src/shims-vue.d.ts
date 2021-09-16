@@ -4,3 +4,7 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+declare module '@vite/vitejs-http'
+
+declare module '@vite/vitejs-ws'
