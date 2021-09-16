@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col relative">
     <label
-      @click="inputFocus"
+      @click="this.$refs.input.focus()"
       class="absolute left-0 -top-8 py-2 text-base text-gray-600 cursor-pointer"
       >{{ label }}</label
     >
@@ -50,16 +50,9 @@ export default defineComponent({
       focusStatus.value = !focusStatus.value
     }
 
-    const input = ref(null)
-    function inputFocus() {
-      input.value.focus()
-    }
-
     return {
       focusStatus,
-      focusChange,
-      input,
-      inputFocus
+      focusChange
     }
   }
 })
