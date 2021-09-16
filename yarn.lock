@@ -1576,6 +1576,16 @@
     "@typescript-eslint/types" "4.31.1"
     eslint-visitor-keys "^2.0.0"
 
+"@vite/vitejs-http@^2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@vite/vitejs-http/-/vitejs-http-2.3.14.tgz#6484a579a44c50e6211f3f18fb01d81377bf6aff"
+  integrity sha512-DXJNEUu9fK66yIhkoPfihMktPJuLSQ34MAfgmVpd/SxjoGB8xmFfjN7ZeXHk8ibgLgX9g81XcizsWwg4oqSLpA==
+
+"@vite/vitejs-ws@^2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@vite/vitejs-ws/-/vitejs-ws-2.3.14.tgz#a29cd18092b19cba5372b10b804242a558d5e6b5"
+  integrity sha512-MkUowsTyowt8gEyRVO6becu7GFx2jAf4CVUehgYMopD7HFEL2MzJWQb4JQCdIBYBGzjvCWUSMjAf9O57aJrqyQ==
+
 "@vite/vitejs@^2.3.14":
   version "2.3.14"
   resolved "https://registry.yarnpkg.com/@vite/vitejs/-/vitejs-2.3.14.tgz#d21f9d8a131b49f3274a3ddd28baa9f35bb260c3"
