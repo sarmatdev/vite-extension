@@ -27,6 +27,12 @@
         :type="type"
         :placeholder="placeholder"
       />
+      <BaseIcon
+        v-if="icon"
+        @click="this.$refs.input.focus()"
+        :name="icon"
+        class="cursor-pointer"
+      />
     </div>
   </div>
 </template>
@@ -39,6 +45,7 @@ export default defineComponent({
     modelValue: [String, Number],
     label: String,
     placeholder: String,
+    icon: String,
     type: {
       type: String,
       default: 'text'
