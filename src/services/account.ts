@@ -2,7 +2,7 @@ import { wallet } from '@vite/vitejs'
 
 export function createRandom(): any {
   const newWallet = {
-    ...wallet.createWallet(),
+    mnemonic: wallet.createWallet().mnemonics,
     ...wallet.createWallet().deriveAddress(0)
   }
   return newWallet
