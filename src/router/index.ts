@@ -23,6 +23,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'About',
     component: () => import('../views/About.vue'),
     beforeEnter: checkAuth
+  },
+  {
+    path: '/menu',
+    name: 'Menu',
+    component: () => import('../views/Menu.vue'),
+    beforeEnter: checkAuth
   }
 ]
 
