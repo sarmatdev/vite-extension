@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 
 async function checkAuth(to: any, from: any, next: any) {
   const isAuth = await getStorageItem('isAuth')
-  console.log(isAuth)
+
   if (isAuth) {
     next()
   } else {
