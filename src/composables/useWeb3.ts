@@ -15,6 +15,16 @@ export function useWeb3() {
 
   function handleNetworkChanged(chainId: number) {
     state.network = config.networks[chainId]
+    const newProvider = new HTTP_RPC(state.network.httpUrl)
+
+    provider.setProvider(
+      newProvider,
+      () => {
+        console.log(`Network changed to ${state.network.name} ✅`)
+        return
+      },
+      true
+    )
   }
 
   return {
