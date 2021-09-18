@@ -19,6 +19,21 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
+    path: '/welcome',
+    name: 'Welcome',
+    component: () => import('../views/Welcome.vue')
+  },
+  {
+    path: '/create-wallet',
+    name: 'CreateWallet',
+    component: () => import('../views/wallet/CreateWallet.vue')
+  },
+  {
+    path: '/import-wallet',
+    name: 'ImportWallet',
+    component: () => import('../views/wallet/ImportWallet.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('../views/About.vue'),

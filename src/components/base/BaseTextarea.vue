@@ -13,6 +13,7 @@
       ref="textarea"
       type="text"
       :placeholder="placeholder"
+      :readonly="readonly"
     />
   </div>
 </template>
@@ -29,6 +30,10 @@ export default defineComponent({
     tabindex: {
       type: Number,
       default: 0
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   setup() {

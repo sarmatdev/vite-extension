@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import registerBaseComponents from './helpers/registerBaseComponents'
-import './assets/tailwind.css'
+import './assets/styles/tailwind.css'
 
 export const app = createApp(App)
 

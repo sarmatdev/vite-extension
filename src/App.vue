@@ -1,8 +1,8 @@
 <template>
-  <div id="nav">
+  <div>
     <Header />
+    <router-view />
   </div>
-  <router-view />
 </template>
 
 <script lang="ts">

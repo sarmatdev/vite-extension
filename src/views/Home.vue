@@ -1,8 +1,6 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <!-- <base-input v-model="name"></base-input>
-    <base-button @click="saveWallet" color="blue">Save</base-button> -->
   </div>
 </template>
 
