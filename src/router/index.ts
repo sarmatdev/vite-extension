@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
+import { useStore } from 'vuex'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -27,6 +28,17 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+const store = useStore()
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!store.getters['auth/isAuth']) {
+      next('/welcome')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
