@@ -60,6 +60,7 @@ export default defineComponent({
     outline: { type: Boolean, default: false },
     flat: { type: Boolean, default: false },
     rounded: { type: Boolean, default: false },
+    squared: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
     loadingLabel: { type: String, default: 'loading...' },
     disabled: { type: Boolean, default: false }
@@ -161,6 +162,7 @@ export default defineComponent({
     })
     const shapeClasses = computed(() => {
       if (props.circle || props.rounded) return 'rounded-full'
+      if (props.squared) return 'rounded-md w-8 h-8 text-base'
       return 'rounded-lg'
     })
     const cursorClasses = computed(() => {

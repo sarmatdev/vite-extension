@@ -1,34 +1,37 @@
 <template>
   <div class="home">
-    <BaseInput icon="search" placeholder="take" />
-    <BaseSelect label="For Example" :options="[1, 2, 3, 4, 5]" />
-    <BaseCheckBox
-      label="For Example"
-      placeholder="take"
-      v-model="number"
-      :options="['I confirm declaration']"
-    />
-    <BaseTextarea label="For Example" placeholder="take" class="mx-2" />
-    >
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <select v-model="currentNetwork" name="" id="">
-      <option :value="0">Mainnet</option>
-      <option :value="1">Testnet</option>
-    </select>
-    {{ currentNetwork }}
+    <h1>Home</h1>
+    <!-- <base-input v-model="name"></base-input>
+    <base-button @click="saveWallet" color="blue">Save</base-button> -->
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import { useWeb3 } from '@/composables/useWeb3'
+import { createRandom } from '@/services/account'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Home',
   setup() {
-    const number = ref(null)
+    const store = useStore()
     const web3 = useWeb3()
+    const number = ref(null)
+    const name = ref('')
     const currentNetwork = ref(1)
+
+    // const wallet = createRandom()
+    // console.log(wallet)
+
+    // function saveWallet() {
+    //   store.dispatch('wallets/storeWallet', {
+    //     name: name.value,
+    //     ...wallet
+    //   })
+
+    //   store.commit('auth/setAuth', true)
+    // }
 
     watch(currentNetwork, () => {
       web3.handleNetworkChanged(currentNetwork.value)
@@ -36,7 +39,9 @@ export default defineComponent({
 
     return {
       currentNetwork,
-      number
+      number,
+      name
+      // saveWallet
     }
   }
 })
