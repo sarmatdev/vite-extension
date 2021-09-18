@@ -16,7 +16,7 @@ export function createMnemonic(): any {
   return wallet.createMnemonics()
 }
 
-export function validateMnemonic(phrase: string) {
+export function validateMnemonic(phrase: string): any {
   return wallet.validateMnemonics(phrase)
 }
 

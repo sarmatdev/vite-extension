@@ -10,7 +10,7 @@
     />
     <BaseTextarea label="For Example" placeholder="take" class="mx-2" />
     >
-    <img alt="Vue logo" src="../assets/logo.png" />
+
     <select v-model="currentNetwork" name="" id="">
       <option :value="0">Mainnet</option>
       <option :value="1">Testnet</option>
