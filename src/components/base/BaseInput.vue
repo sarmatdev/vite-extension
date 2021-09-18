@@ -34,6 +34,9 @@
         class="cursor-pointer"
       />
     </div>
+    <ul v-if="errors.length" class="absolute top-10 text-red-400 text-sm">
+      <li v-for="(error, idx) in errors" :key="idx">{{ error }}</li>
+    </ul>
   </div>
 </template>
 
@@ -50,6 +53,12 @@ export default defineComponent({
     type: {
       type: String,
       default: 'text'
+    },
+    errors: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   setup() {
