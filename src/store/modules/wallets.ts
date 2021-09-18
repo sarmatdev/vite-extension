@@ -1,6 +1,7 @@
 import { setStorageItem } from '@/services/storage'
 import { encryptString } from '@/services/crypto'
 import { v4 as uuidv4 } from 'uuid'
+import { Commit } from 'vuex'
 
 interface Account {
   name: string
@@ -25,21 +26,23 @@ const mutations = {
   }
 }
 const actions = {
-  //@ts-ignore
-  storeWallet({ commit }, wallet) {
+  storeWallet({ commit }: { commit: Commit }, wallet: any) {
     const salt = uuidv4().replace(/-/g, '')
+
+    delete wallet.mnemonic
+    delete wallet.path
+
     const encryptedWallet = {
       ...wallet,
       privateKey: encryptString(wallet.privateKey, salt),
       salt
     }
 
+    console.log('salt', salt)
+    console.log('encryptedWallet', encryptedWallet)
+
     commit('setWallet', encryptedWallet)
     setStorageItem(wallet.name, encryptedWallet)
-  },
-  //@ts-ignore
-  sendTransaction(_, { web3, tx }) {
-    return web3.sendTransaction(tx)
   }
 }
 const getters = {

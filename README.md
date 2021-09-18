@@ -8,7 +8,7 @@
 - [ ] List of pending transactions and unreceived transactions
 - [ ] The ability to send transactions and receive transactions
 - [ ] The Hook for signing and sending transactions
-- [ ] The ability to switch networks (Mainnet, testnet,etc.)
+- [x] The ability to switch networks (Mainnet, testnet,etc.)
 
 ## Project setup
 

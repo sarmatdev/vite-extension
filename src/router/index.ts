@@ -1,6 +1,16 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { getStorageItem } from '@/services/storage'
 import Home from '../views/Home.vue'
-import { useStore } from 'vuex'
+
+async function checkAuth(to: any, from: any, next: any) {
+  const isAuth = await getStorageItem('isAuth')
+
+  if (isAuth) {
+    next()
+  } else {
+    next('/')
+  }
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -22,23 +32,24 @@ const routes: Array<RouteRecordRaw> = [
     path: '/import-wallet',
     name: 'ImportWallet',
     component: () => import('../views/wallet/ImportWallet.vue')
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/About.vue'),
+    beforeEnter: checkAuth
+  },
+  {
+    path: '/menu',
+    name: 'Menu',
+    component: () => import('../views/Menu.vue'),
+    beforeEnter: checkAuth
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
-
-const store = useStore()
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!store.getters['auth/isAuth']) {
-      next('/welcome')
-    }
-  } else {
-    next()
-  }
 })
 
 export default router

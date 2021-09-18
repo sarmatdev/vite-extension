@@ -8,3 +8,5 @@ declare module '*.vue' {
 declare module '@vite/vitejs-http'
 
 declare module '@vite/vitejs-ws'
+
+declare module 'uuid'
