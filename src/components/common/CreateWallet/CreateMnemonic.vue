@@ -69,7 +69,7 @@ export default defineComponent({
   emits: ['nextStep'],
   setup(_, { emit }) {
     const wallet = createRandom()
-    const mnemonic = wallet.mnemonics.split(' ').slice(12).join(' ')
+    const mnemonic = wallet.mnemonics
     const agree = ref([])
 
     const state = reactive({
