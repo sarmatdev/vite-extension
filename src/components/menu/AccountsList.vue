@@ -47,7 +47,9 @@
             <h3 class="leading-none">
               {{ account.name }}
             </h3>
-            <p class="text-sm text-gray-600">{{ account.address }}</p>
+            <p class="text-sm text-gray-600">
+              {{ compressAddress(account.address) }}
+            </p>
           </div>
         </div>
         <base-icon name="check" size="xl" class="text-blue-600" />
@@ -65,15 +67,15 @@ export default defineComponent({
     const accounts = [
       {
         name: 'Test',
-        address: '0xE721FD46d...e3304'
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
       },
       {
         name: 'Alan',
-        address: '0xE721FD46d...e3304'
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
       },
       {
         name: 'Sarmat',
-        address: '0xE721FD46d...e3304'
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
       }
     ]
 
@@ -81,9 +83,18 @@ export default defineComponent({
       return name.charAt(0)
     }
 
+    function compressAddress(address: string, leftOffset = 15, RightOffet = 5) {
+      return (
+        address.substr(0, leftOffset) +
+        '...' +
+        address.substr(address.length - RightOffet, address.length)
+      )
+    }
+
     return {
       accounts,
-      accountNameSymbol
+      accountNameSymbol,
+      compressAddress
     }
   }
 })
