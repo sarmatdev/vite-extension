@@ -4,7 +4,7 @@ import { ViteAPI } from '@vite/vitejs'
 import HTTP_RPC from '@vite/vitejs-http'
 
 const state = reactive({
-  network: config.networks[0]
+  network: config.networks[1]
 })
 
 export function useWeb3() {

@@ -67,6 +67,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
+import { accountNameSymbol, compressAddress } from '@/helpers/string'
 
 export default defineComponent({
   name: 'AccountsList',
@@ -79,35 +80,9 @@ export default defineComponent({
     const active = computed(() => {
       return store.getters['wallets/active']
     })
-    // const accounts = [
-    //   {
-    //     name: 'Test',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   },
-    //   {
-    //     name: 'Alan',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   },
-    //   {
-    //     name: 'Sarmat',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   }
-    // ]
 
     function selectActive(address: string): void {
       store.commit('wallets/setActive', address)
-    }
-
-    function accountNameSymbol(name: string): string {
-      return name.charAt(0)
-    }
-
-    function compressAddress(address: string, leftOffset = 15, RightOffet = 5) {
-      return (
-        address.substr(0, leftOffset) +
-        '...' +
-        address.substr(address.length - RightOffet, address.length)
-      )
     }
 
     return {

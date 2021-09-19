@@ -18,5 +18,11 @@ export default {
       httpUrl: 'http://127.0.0.1:9500',
       wsUrl: ''
     }
-  ]
+  ],
+  nativeAsset: {
+    tokenSymbol: 'VITE',
+    tokenName: 'Vite Token',
+    tokenId: 'tti_5649544520544f4b454e6e40',
+    decimals: 18
+  }
 }
