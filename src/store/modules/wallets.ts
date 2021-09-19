@@ -2,8 +2,9 @@ import { setStorageItem } from '@/services/storage'
 import { encryptString } from '@/services/crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Commit } from 'vuex'
+import { find } from 'lodash-es'
 
-interface Account {
+export interface Account {
   name: string
   address: string
   privateKey: string
@@ -11,18 +12,24 @@ interface Account {
 }
 
 export interface WalletsState {
-  selectedWallet: Account
+  active: Account | undefined
   accounts: Array<Account>
 }
 
 const state = {
-  selectedWallet: {},
+  active: {},
   accounts: []
 }
 const mutations = {
   setWallet(state: WalletsState, account: Account): void {
-    state.selectedWallet = account
+    state.active = account
     state.accounts.push(account)
+  },
+  setActive(state: WalletsState, address: string): void {
+    // @ts-ignore
+    console.log(address)
+    const active = find(state.accounts, { address: address })
+    state.active = active
   }
 }
 const actions = {
@@ -46,7 +53,7 @@ const actions = {
   }
 }
 const getters = {
-  selectedWallet: (s: WalletsState) => s.selectedWallet,
+  active: (s: WalletsState) => s.active,
   accounts: (s: WalletsState) => s.accounts,
   accountsNum: (s: WalletsState) => s.accounts.length
 }
