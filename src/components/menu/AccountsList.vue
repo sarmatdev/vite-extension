@@ -27,7 +27,6 @@
         "
         v-for="account in accounts"
         :key="account.address"
-        @click="selectActive(account.address)"
       >
         <div class="flex">
           <div
@@ -53,50 +52,32 @@
             </p>
           </div>
         </div>
-        <base-icon
-          v-if="account.address === active.address"
-          name="check"
-          size="xl"
-          class="text-blue-600"
-        />
+        <base-icon name="check" size="xl" class="text-blue-600" />
       </li>
     </ul>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'AccountsList',
   setup() {
-    const store = useStore()
-
-    const accounts = computed(() => {
-      return store.getters['wallets/accounts']
-    })
-    const active = computed(() => {
-      return store.getters['wallets/active']
-    })
-    // const accounts = [
-    //   {
-    //     name: 'Test',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   },
-    //   {
-    //     name: 'Alan',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   },
-    //   {
-    //     name: 'Sarmat',
-    //     address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
-    //   }
-    // ]
-
-    function selectActive(address: string): void {
-      store.commit('wallets/setActive', address)
-    }
+    const accounts = [
+      {
+        name: 'Test',
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
+      },
+      {
+        name: 'Alan',
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
+      },
+      {
+        name: 'Sarmat',
+        address: '0xE721FD46d55033CE834AEeFaF5cC88DAC1be3304'
+      }
+    ]
 
     function accountNameSymbol(name: string): string {
       return name.charAt(0)
@@ -112,8 +93,6 @@ export default defineComponent({
 
     return {
       accounts,
-      active,
-      selectActive,
       accountNameSymbol,
       compressAddress
     }
