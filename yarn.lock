@@ -12235,7 +12235,7 @@ vue@^3.0.0:
 
 vuex-persistedstate@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.npmjs.org/vuex-persistedstate/-/vuex-persistedstate-4.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/vuex-persistedstate/-/vuex-persistedstate-4.0.0.tgz#ed82f266ca98c869a2aad9cb9880c2f608c05f3a"
   integrity sha512-jDs+awbV9YD2A2F6S5zgtYq1Bjd8v0YldOK6HPv1EJZzGMse0FtZTREfXvA7zlVfq9MpmSZJNmYQVylfpZ5znQ==
   dependencies:
     deepmerge "^4.2.2"

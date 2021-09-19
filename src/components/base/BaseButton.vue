@@ -40,7 +40,7 @@ export default defineComponent({
     },
     color: {
       type: String,
-      default: 'primary',
+      default: 'blue',
       validator: (val: string): boolean =>
         [
           'primary',
