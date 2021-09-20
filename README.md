@@ -3,7 +3,7 @@
 ## Features
 
 - [ ] Mnemonic creation, input, output and encryption
-- [ ] Address switch
+- [x] Address switch
 - [ ] The ability to add new tokens and check balance
 - [ ] List of pending transactions and unreceived transactions
 - [ ] The ability to send transactions and receive transactions
