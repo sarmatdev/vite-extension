@@ -21,20 +21,26 @@
     <main v-if="step == 1" class="create_wallet">
       <section class="text-center grid grid-cols-1 gap-y-4 mb-6">
         <div class="p-2">
-          <BaseInput
+          <PasswordInput
             v-model="state.password"
             @input="v$.password.$touch()"
+            @iconEvent="passwordVisible = !passwordVisible"
+            :passwordVisible="passwordVisible"
+            :type="passwordVisible ? 'text' : 'password'"
+            :errors="passwordErrors"
             class="mt-6 mb-14"
             placeholder="Input the password"
             label="Password"
-            :errors="passwordErrors"
           />
-          <BaseInput
+          <PasswordInput
             v-model="state.repeatPassword"
             @input="v$.repeatPassword.$touch()"
+            @iconEvent="repeatPasswordVisible = !repeatPasswordVisible"
+            :passwordVisible="repeatPasswordVisible"
+            :type="repeatPasswordVisible ? 'text' : 'password'"
+            :errors="repeatPasswordErrors"
             placeholder="Confirm the password"
             label="Confirm password"
-            :errors="repeatPasswordErrors"
           />
         </div>
         <p class="text-sm mx-2.5">
@@ -104,7 +110,11 @@
             </li>
           </ul>
           <div class="flex space-x-3">
-            <BaseButton @click="clearMnemonic" color="blue" size="lg"
+            <BaseButton
+              @click="clearMnemonic"
+              color="blue"
+              size="lg"
+              :disabled="!mnemonicForConfirm.length"
               >Clear</BaseButton
             >
             <BaseButton
@@ -128,9 +138,11 @@ import { useRouter } from 'vue-router'
 import { createRandom, validateMnemonic } from '@/services/account'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
+import PasswordInput from '@/components/PasswordInput.vue'
 
 export default defineComponent({
   name: 'CreateWallet',
+  components: { PasswordInput },
   emits: ['nextStep'],
   setup() {
     const store = useStore()
@@ -235,12 +247,17 @@ export default defineComponent({
       router.push('/')
     }
 
+    const passwordVisible = ref(false)
+    const repeatPasswordVisible = ref(false)
+
     return {
       store,
       step,
       router,
       v$,
       state,
+      passwordVisible,
+      repeatPasswordVisible,
       mnemonic,
       randomMnemonic,
       continueToConfirm,

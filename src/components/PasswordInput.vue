@@ -28,9 +28,16 @@
         :placeholder="placeholder"
       />
       <BaseIcon
-        v-if="icon"
+        v-if="passwordVisible"
         @click="$emit('iconEvent', $event.target)"
-        :name="icon"
+        name="eye-off"
+        size="sm"
+        class="cursor-pointer"
+      />
+      <BaseIcon
+        v-if="!passwordVisible"
+        @click="$emit('iconEvent', $event.target)"
+        name="eye"
         size="sm"
         class="cursor-pointer"
       />
@@ -50,7 +57,7 @@ export default defineComponent({
     modelValue: [String, Number],
     label: String,
     placeholder: String,
-    icon: String,
+    passwordVisible: Boolean,
     type: {
       type: String,
       default: 'text'
