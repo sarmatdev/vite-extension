@@ -42,8 +42,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/menu',
     name: 'Menu',
-    component: () => import('../views/Menu.vue'),
-    beforeEnter: checkAuth
+    component: () => import('../views/Menu.vue')
+    // beforeEnter: checkAuth
+  },
+  {
+    path: '/send',
+    name: 'Send',
+    component: () => import('../views/Send.vue')
+    // beforeEnter: checkAuth
   }
 ]
 
