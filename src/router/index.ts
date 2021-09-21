@@ -49,6 +49,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/manage-assets',
     name: 'ManageAssets',
     component: () => import('../views/ManageAssets.vue')
+  },
+  {
+    path: '/menu',
+    name: 'Menu',
+    component: () => import('../views/Menu.vue')
+    // beforeEnter: checkAuth
+  },
+  {
+    path: '/send',
+    name: 'Send',
+    component: () => import('../views/Send.vue')
     // beforeEnter: checkAuth
   }
 ]
