@@ -26,14 +26,6 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  width: 100vw;
-  min-width: 300px;
-  height: 100vh;
-  min-height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   overflow: hidden;
   background-color: #73a3c4;
 }
@@ -42,12 +34,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #617ba3;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
   overflow: scroll;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5;
   width: 360px;
   height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #fff;
 }
 </style>

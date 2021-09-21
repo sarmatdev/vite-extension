@@ -1,13 +1,18 @@
 <template>
-  <div class="p-8 border text-center m-auto inline-block">
+  <div class="p-6 border text-center flex flex-col justify-center space-y-3">
     <img class="h-8" src="@/assets/images/logo-blue1.svg" alt="" />
-    <div>{{ toNum(balance, 18) }} — VITE</div>
+    <div class="font-bold text-blue-900">
+      <span class="text-3xl">{{
+        Math.trunc(toNum(balance, 18)) + (frac(toNum(balance, 18)) ? '.' : '')
+      }}</span
+      ><span class="text-xl">{{ frac(toNum(balance, 18)) }} VITE</span>
+    </div>
     <BaseTooltip>
       <template v-slot:activator>
         <div
           @click="copyAddress"
           class="
-            p-4
+            p-2
             rounded-xl
             cursor-pointer
             hover:shadow-xl
@@ -17,11 +22,11 @@
             ease-in-out
           "
         >
-          <p>
+          <p class="font-black text-blue-900 text-xl">
             {{ active.name }}
           </p>
           <p class="font-bold">
-            {{ compressAddress(active.address) }}
+            {{ active.address ? compressAddress(active.address, 10, 5) : '' }}
           </p>
         </div>
       </template>
@@ -43,7 +48,7 @@ export default defineComponent({
   name: 'AccountInfo',
   setup() {
     const store = useStore()
-    const { toNum } = useNumbers()
+    const { toNum, frac } = useNumbers()
 
     const copiedAddress = ref(false)
 
@@ -63,6 +68,7 @@ export default defineComponent({
       balance,
       active,
       toNum,
+      frac,
       compressAddress,
       copyAddress
     }
