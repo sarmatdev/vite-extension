@@ -6,19 +6,14 @@
       <BaseButton color="blue" size="lg"> Receive </BaseButton>
     </div>
     <div class="fixed inset-x-0 top-2/4 bottom-0 rounded-t-2xl bg-blue-900">
-      <div class="flex justify-between text-base font-bold text-center">
-        <span
+      <div class="flex justify-between">
+        <BaseLink
           v-for="(navItem, idx) in ['Assets', 'Activity']"
           :key="idx"
           @click="navRoute = navItem"
-          :class="navRoute === navItem ? 'text-white ' : 'text-blue-500'"
-          class="w-full cursor-pointer"
-        >
-          <p class="py-3">{{ navItem }}</p>
-          <hr
-            :class="navRoute === navItem ? 'bg-white' : 'bg-blue-500'"
-            class="border-none h-0.5"
-        /></span>
+          :active="navRoute === navItem"
+          >{{ navItem }}
+        </BaseLink>
       </div>
       <div v-if="navRoute === 'Assets'" class="overflow-y-scroll h-60">
         <span
@@ -41,29 +36,18 @@
             <span class="block"> {{ asset.name }}</span>
           </div>
         </span>
-        <div
+        <BaseToggle
           class="
-            bg-blue-800
-            rounded-lg
-            w-10
-            h-10
-            flex
-            justify-center
-            items-center
             fixed
+            z-10
             right-1/2
             bottom-9
             transform
             translate-x-2/4 translate-y-2/4
-            cursor-pointer
-            transition
-            duration-100
-            ease-in-out
-            hover:bg-blue-600
           "
-        >
-          <BaseIcon class="text-white" name="plus" />
-        </div>
+          icon="plus"
+          to="/manage-assets"
+        />
       </div>
       <div
         v-if="navRoute === 'Activity'"
@@ -93,16 +77,12 @@
                   {{ activityMockItem.status }}
                 </span>
               </div>
-              <div class="text-right flex flex-col">
-                <span class="text-white font-semibold">
+              <div class="text-right">
+                <p class="text-white font-semibold">
                   {{ activityMockItem.amount + ' ' + activityMockItem.token }}
-                </span>
-                <span>
-                  From: {{ compressAddress(activityMockItem.address) }}
-                </span>
-                <span>
-                  To: {{ compressAddress(activityMockItem.toAddress) }}
-                </span>
+                </p>
+                <p>From: {{ compressAddress(activityMockItem.address) }}</p>
+                <p>To: {{ compressAddress(activityMockItem.toAddress) }}</p>
               </div>
             </div>
           </div>
