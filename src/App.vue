@@ -37,7 +37,6 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  overflow: scroll;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5;

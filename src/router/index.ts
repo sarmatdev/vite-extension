@@ -44,6 +44,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Menu',
     component: () => import('../views/Menu.vue'),
     beforeEnter: checkAuth
+  },
+  {
+    path: '/manage-assets',
+    name: 'ManageAssets',
+    component: () => import('../views/ManageAssets.vue')
+    // beforeEnter: checkAuth
   }
 ]
 
