@@ -1,17 +1,15 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
     <AccountInfo />
-    <base-input v-model="name" placeholder="Wallet Name" />
-    <base-button @click="saveWallet">save</base-button>
+    <div class="mt-6">
+      <base-button color="green">Send</base-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useTokens } from '@/composables/useTokens'
-import { createRandom } from '@/services/account'
-import { useStore } from 'vuex'
 import AccountInfo from '@/components/AccountInfo.vue'
 
 export default defineComponent({
@@ -20,27 +18,14 @@ export default defineComponent({
     AccountInfo
   },
   setup() {
-    const store = useStore()
-    const { loadNativeAssetBalance } = useTokens()
+    const { loadNativeAssetBalance, getTokenInfoList } = useTokens()
     const name = ref('test')
 
     loadNativeAssetBalance()
-
-    const wallet = createRandom()
-    console.log(wallet)
-    function saveWallet() {
-      store.dispatch('wallets/storeWallet', {
-        name: name.value,
-        ...wallet
-      })
-
-      store.dispatch('auth/storePassword', 'xaliudzyx')
-      store.commit('auth/setAuth', true)
-    }
+    getTokenInfoList()
 
     return {
-      name,
-      saveWallet
+      name
     }
   }
 })
