@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import feather from 'feather-icons'
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, onUpdated } from 'vue'
 export default defineComponent({
   name: 'BaseIcon',
   props: {
@@ -39,6 +39,7 @@ export default defineComponent({
       }
     })
     const fill = computed(() => (props.filled ? 'currentColor' : 'none'))
+
     onMounted(() => feather.replace())
     return { iconSize, fill }
   }

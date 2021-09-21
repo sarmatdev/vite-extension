@@ -11,5 +11,24 @@ export default function useNumbers() {
     return new BigNumber(value).div(`1e${decimals}`)
   }
 
-  return { toNum }
+  function frac(value: number): string | number | undefined {
+    const int = value.toString().split('.')[1]
+    if (int === undefined) {
+      return ''
+    }
+    if (!(Math.trunc(value) > 1)) {
+      if (int.length > 5) {
+        return int.substr(0, 5)
+      }
+      return int
+    }
+    if (Math.trunc(value) > 1) {
+      if (int.length > 3) {
+        return int.substr(0, 3)
+      }
+      return int
+    }
+  }
+
+  return { toNum, frac }
 }

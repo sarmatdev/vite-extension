@@ -1,9 +1,8 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col relative">
     <label
       @click="this.$refs.input.focus()"
-      class="text-base text-gray-600 cursor-pointer"
-      v-if="label"
+      class="absolute left-0 -top-8 py-2 text-base text-gray-600 cursor-pointer"
       >{{ label }}</label
     >
     <div
@@ -29,9 +28,16 @@
         :placeholder="placeholder"
       />
       <BaseIcon
-        v-if="icon"
+        v-if="passwordVisible"
         @click="$emit('iconEvent', $event.target)"
-        :name="icon"
+        name="eye-off"
+        size="sm"
+        class="cursor-pointer"
+      />
+      <BaseIcon
+        v-if="!passwordVisible"
+        @click="$emit('iconEvent', $event.target)"
+        name="eye"
         size="sm"
         class="cursor-pointer"
       />
@@ -51,7 +57,7 @@ export default defineComponent({
     modelValue: [String, Number],
     label: String,
     placeholder: String,
-    icon: String,
+    passwordVisible: Boolean,
     type: {
       type: String,
       default: 'text'
