@@ -1,8 +1,9 @@
 <template>
-  <div class="flex flex-col relative">
+  <div class="flex flex-col">
     <label
       @click="this.$refs.input.focus()"
-      class="absolute left-0 -top-8 py-2 text-base text-gray-600 cursor-pointer"
+      class="text-base text-gray-600 cursor-pointer"
+      v-if="label"
       >{{ label }}</label
     >
     <div

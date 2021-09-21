@@ -36,9 +36,6 @@ const actions = {
   storeWallet({ commit }: { commit: Commit }, wallet: any) {
     const salt = uuidv4().replace(/-/g, '')
 
-    delete wallet.mnemonic
-    delete wallet.path
-
     const encryptedWallet = {
       ...wallet,
       privateKey: encryptString(wallet.privateKey, salt),
