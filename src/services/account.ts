@@ -9,7 +9,11 @@ export function createRandom(): any {
 }
 
 export function createFromMnemonic(mnemonic: string): any {
-  return wallet.getWallet(mnemonic)
+  const fromMnemonic = {
+    mnemonic: wallet.getWallet(mnemonic).mnemonics,
+    ...wallet.getWallet(mnemonic).deriveAddress(0)
+  }
+  return fromMnemonic
 }
 
 export function createMnemonic(): any {

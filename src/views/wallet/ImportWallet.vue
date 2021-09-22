@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, unref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { createFromPrivateKey } from '@/services/account'
+import { createFromMnemonic } from '@/services/account'
 export default defineComponent({
   name: 'Import wallet',
   setup() {
@@ -27,18 +27,17 @@ export default defineComponent({
     const name = ref('')
     const source = ref('')
 
-    const importedWallet = computed(() => {
-      return createFromPrivateKey(source.value)
-    })
+    // const importedWallet = computed(() => {
+    //   return createFromMnemonic(source.value)
+    // })
+
+    // console.log(unref(importedWallet))
 
     function importWallet() {
-      createFromPrivateKey(source.value)
       store.dispatch('wallets/storeWallet', {
         name: name.value,
-        //@ts-ignore
-        address: importedWallet.value.address,
-        //@ts-ignore
-        privateKey: importedWallet.value.privateKey
+        // @ts-ignore
+        ...createFromMnemonic(source.value)
       })
 
       router.push('/')

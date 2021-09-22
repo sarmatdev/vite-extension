@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { useWeb3 } from './useWeb3'
 import config from '@/config'
@@ -6,15 +7,16 @@ export default function useTokens() {
   const store = useStore()
   const { provider } = useWeb3()
 
+  const active = computed(() => store.getters['wallets/active'])
+
   async function loadNativeAssetBalance() {
     const { balanceInfoMap } = await provider.request(
       'ledger_getAccountInfoByAddress',
-      'vite_8c76a644faa9979e4210e4ed9fa52df99f5c12532aca91e219'
+      active.value.address
     )
 
     const balance = balanceInfoMap[config.nativeAsset.tokenId].balance
 
-    console.log(balanceInfoMap)
     store.commit('account/setBalance', balance)
   }
 

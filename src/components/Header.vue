@@ -1,6 +1,8 @@
 <template>
   <div class="h-12 flex items-center justify-between px-2">
-    <img class="h-8" src="@/assets/images/logo-blue1.svg" alt="" />
+    <router-link to="/">
+      <img class="h-8" src="@/assets/images/logo-blue1.svg" alt="" />
+    </router-link>
     <select v-model="currentNetwork">
       <option :value="0">Mainnet</option>
       <option :value="1">Testnet</option>
