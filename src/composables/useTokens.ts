@@ -2,7 +2,7 @@ import { useStore } from 'vuex'
 import { useWeb3 } from './useWeb3'
 import config from '@/config'
 
-export function useTokens() {
+export default function useTokens() {
   const store = useStore()
   const { provider } = useWeb3()
 
@@ -18,8 +18,14 @@ export function useTokens() {
     store.commit('account/setBalance', balance)
   }
 
+  async function getTokenInfoList() {
+    const data = await provider.request('contract_getTokenInfoList', 0, 100)
+    return data
+  }
+
   return {
     provider,
-    loadNativeAssetBalance
+    loadNativeAssetBalance,
+    getTokenInfoList
   }
 }

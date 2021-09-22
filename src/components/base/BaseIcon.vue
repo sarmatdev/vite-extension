@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import feather from 'feather-icons'
-import { computed, defineComponent, onMounted, onUpdated } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 export default defineComponent({
   name: 'BaseIcon',
   props: {

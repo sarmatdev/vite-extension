@@ -17,8 +17,8 @@
       </div>
       <div v-if="navRoute === 'Assets'" class="overflow-y-scroll h-60">
         <span
-          v-for="asset in assets"
-          :key="asset.address"
+          v-for="selectedToken in selectedTokens"
+          :key="selectedToken.tokenId"
           class="
             flex
             py-2.5
@@ -30,10 +30,12 @@
             hover:bg-blue-800
           "
         >
-          <img class="h-10" :src="asset.logoURI" alt="" />
+          <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
           <div class="ml-2 leading-tight">
-            <span class="font-bold text-white">0 {{ asset.symbol }}</span>
-            <span class="block"> {{ asset.name }}</span>
+            <span class="font-bold text-white"
+              >0 {{ selectedToken.tokenSymbol }}</span
+            >
+            <span class="block"> {{ selectedToken.tokenName }}</span>
           </div>
         </span>
         <BaseToggle
@@ -94,8 +96,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useTokens } from '@/composables/useTokens'
+import { defineComponent, ref, computed, onBeforeMount } from 'vue'
+import useTokens from '@/composables/useTokens'
 import { createRandom } from '@/services/account'
 import { useStore } from 'vuex'
 import AccountInfo from '@/components/AccountInfo.vue'
@@ -111,6 +113,13 @@ export default defineComponent({
     const { loadNativeAssetBalance } = useTokens()
     const name = ref('test')
 
+    onBeforeMount(() => {
+      store.dispatch('account/fetchTokens')
+    })
+
+    const selectedTokens = computed(() => {
+      return store.getters['account/selectedTokens']
+    })
     loadNativeAssetBalance()
 
     const wallet = createRandom()
@@ -126,49 +135,6 @@ export default defineComponent({
     }
 
     const navRoute = ref('Assets')
-
-    const assets = ref([
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        decimals: 6,
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        decimals: 6,
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        decimals: 6,
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        decimals: 6,
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        decimals: 6,
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png'
-      }
-    ])
 
     const activityMock = [
       {
@@ -216,8 +182,8 @@ export default defineComponent({
 
     return {
       name,
-      assets,
       saveWallet,
+      selectedTokens,
       navRoute,
       activityMock,
       compressAddress

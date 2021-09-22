@@ -22,7 +22,11 @@
         />
       </div>
       <p class="text-center my-4">
-        {{ filter ? 'All assets added' : 'value of length' }}
+        {{
+          filter
+            ? `${filteredTokens.length} of ${tokens.length}`
+            : 'All assets added'
+        }}
       </p>
       <div
         class="
@@ -36,21 +40,30 @@
         "
       >
         <div
+          v-for="token in filteredTokens"
+          :key="token.tokenId"
+          @click="selectToken(token)"
           class="w-full cursor-pointer"
-          v-for="asset in assets"
-          :key="asset.address"
-          @click="check = !check"
+          :class="hasCheck(token) ? 'bg-blue-700' : 'hover:bg-blue-800'"
         >
           <div class="flex justify-between items-center p-3">
-            <img class="h-10" :src="asset.logoURI" alt="" />
+            <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
             <div class="text-left">
               <p class="text-white font-semibold">
-                {{ asset.amount + ' ' + asset.symbol }}
+                {{ 0 + ' ' + token.tokenSymbol }}
               </p>
-              <p>{{ compressAddress(asset.address) }}</p>
+              <p>{{ compressAddress(token.tokenId) }}</p>
             </div>
-            <BaseIcon v-if="check" class="text-white" name="check-circle" />
-            <BaseIcon v-if="!check" class="text-white" name="circle" />
+            <BaseIcon
+              v-if="hasCheck(token)"
+              class="text-white"
+              name="check-circle"
+            />
+            <BaseIcon
+              v-if="!hasCheck(token)"
+              class="text-white"
+              name="circle"
+            />
           </div>
           <hr class="bg-white text-white border-none h-0.5" />
         </div>
@@ -68,77 +81,56 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import { compressAddress } from '@/helpers/string'
 
 export default defineComponent({
   name: 'ManagseAssets',
   setup() {
+    const store = useStore()
     const navRoute = ref('Search')
+
+    const tokens = computed(() => {
+      return store.getters['account/tokens']
+    })
+
     const filter = ref('')
+    const filteredTokens = computed(() => {
+      return tokens.value.filter(
+        (el: any) =>
+          el.tokenName.toLowerCase().includes(filter.value.toLowerCase()) ||
+          el.tokenSymbol.toLowerCase().includes(filter.value.toLowerCase())
+      )
+    })
 
-    const assets = ref([
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
-      },
-      {
-        symbol: 'USDC',
-        name: 'USD Coin',
-        amount: 6,
-        logoURI:
-          'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-        address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
+    const selectedTokens = computed(() => {
+      return store.getters['account/selectedTokens']
+    })
+
+    function hasCheck(token: any): boolean {
+      return selectedTokens.value.filter((el: any) =>
+        el.tokenId.includes(token.tokenId)
+      ).length
+    }
+    function selectToken(token: any): void {
+      if (hasCheck(token)) {
+        store.commit('account/removeSelectedTokens', token)
+      } else {
+        store.commit('account/addSelectedTokens', token)
       }
-    ])
+      console.log(selectedTokens.value)
+    }
 
-    const check = ref(false)
-
-    return { navRoute, filter, assets, compressAddress, check }
+    return {
+      navRoute,
+      filter,
+      selectedTokens,
+      compressAddress,
+      hasCheck,
+      selectToken,
+      filteredTokens
+    }
   }
 })
 </script>
