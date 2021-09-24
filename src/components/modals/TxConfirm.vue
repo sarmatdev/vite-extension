@@ -1,10 +1,10 @@
 <template>
   <transition
-    enter-active-class="transition duration-200 ease-out transform"
+    enter-active-class="transition duration-100 ease-out transform"
     enter-class="-translate-y-3 scale-95 opacity-0"
     enter-to-class="translate-y-0 scale-100 opacity-100"
-    leave-active-class="transition duration-200 ease-in transform"
-    leave-class="translate-y-0 opacity-200"
+    leave-active-class="transition duration-100 ease-in transform"
+    leave-class="translate-y-0 opacity-100"
     leave-to-class="translate-y-3 opacity-0"
   >
     <div
@@ -33,7 +33,7 @@
           src="@/assets/images/logo-blue1.svg"
           alt="Token Logo"
         />
-        <h3 class="text-2xl font-bold mt-2">0.001 VITE</h3>
+        <h3 class="text-2xl font-bold mt-2">{{ props.params?.amount }} VITE</h3>
         <div class="mt-4 flex items-center">
           <div class="p-2 text-left bg-blue-100 rounded-lg">
             <p>From</p>
@@ -58,23 +58,24 @@
           </div>
           <div class="p-2 text-right bg-blue-100 rounded-lg">
             <p>To</p>
-            {{
-              compressAddress('0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d', 5)
-            }}
+            {{ compressAddress(props.params?.toAddress, 5) }}
           </div>
         </div>
       </section>
       <footer class="grid grid-cols-2 gap-4 p-4">
         <base-button @click="closeModal" outline>Cancel</base-button>
-        <base-button>Send</base-button>
+        <base-button @click="send" :loading="loading">Send</base-button>
       </footer>
     </div>
   </transition>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, PropType } from 'vue'
 import { compressAddress } from '@/helpers/string'
+import { useWeb3, SendTokens } from '@/composables/useWeb3'
+import useNumbers from '@/composables/useNumbers'
+import config from '@/config'
 
 export default defineComponent({
   name: 'TxConfirm',
@@ -82,14 +83,38 @@ export default defineComponent({
     show: {
       type: Boolean,
       default: false
+    },
+    params: {
+      type: Object as PropType<SendTokens>
     }
   },
   setup(props, { emit }) {
+    const { sendTokens } = useWeb3()
+    const { formatUnits } = useNumbers()
     const showModal = ref(false)
+    const loading = ref(false)
 
     function closeModal() {
-      console.log('close')
       emit('close')
+    }
+
+    function send() {
+      loading.value = true
+      sendTokens({
+        toAddress: props.params?.toAddress,
+        amount: formatUnits(props.params?.amount, 18),
+        tokenId: config.nativeAsset.tokenId
+      })
+        .then((res) => {
+          console.log('✅', res)
+          closeModal()
+        })
+        .catch((e) => {
+          console.log('🚨', e)
+        })
+        .finally(() => {
+          loading.value = false
+        })
     }
 
     watch(
@@ -103,7 +128,10 @@ export default defineComponent({
     return {
       showModal,
       closeModal,
-      compressAddress
+      send,
+      compressAddress,
+      props,
+      loading
     }
   }
 })
