@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 border text-center flex flex-col justify-center space-y-3">
+  <div class="px-6 border text-center flex flex-col justify-center space-y-3">
     <img class="h-8" src="@/assets/images/logo-blue1.svg" alt="" />
     <div class="font-bold text-blue-900">
       <span class="text-3xl">{{
