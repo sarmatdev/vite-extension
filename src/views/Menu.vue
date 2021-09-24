@@ -1,8 +1,6 @@
 <template>
   <div class="h-14 flex items-center bg-blue-200 rounded-b-lg px-2">
-    <base-button to="/" size="xs" color="blue" squared>
-      <base-icon name="chevron-left" />
-    </base-button>
+    <BaseToggle icon="chevron-left" to="/" />
     <p class="text-black text-lg font-bold m-auto">Account</p>
   </div>
   <div class="px-2 m-auto">
