@@ -2,7 +2,7 @@
   <div
     @click="this.$router.push(to)"
     class="
-      bg-blue-800
+      bg-blue-300
       rounded-lg
       w-10
       h-10
@@ -13,10 +13,10 @@
       transition
       duration-100
       ease-in-out
-      hover:bg-blue-600
+      hover:bg-blue-400
     "
   >
-    <BaseIcon class="text-white" :name="icon" />
+    <BaseIcon class="text-black" :name="icon" />
   </div>
 </template>
 

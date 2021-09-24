@@ -2,7 +2,7 @@
   <div>
     <div class="fixed inset-x-0 top-0 z-50 bg-blue-200 flex p-2 items-center">
       <BaseToggle icon="chevron-left" to="/" />
-      <span class="ml-20 text-white"> Asset Management </span>
+      <span class="ml-20 text-blue-400"> Asset Management </span>
     </div>
     <div class="flex justify-between bg-blue-200">
       <BaseLink
@@ -49,19 +49,19 @@
           <div class="flex justify-between items-center p-3">
             <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
             <div class="text-left">
-              <p class="text-white font-semibold">
+              <p class="text-black font-semibold">
                 {{ 0 + ' ' + token.tokenSymbol }}
               </p>
               <p>{{ compressAddress(token.tokenId) }}</p>
             </div>
             <BaseIcon
               v-if="hasCheck(token)"
-              class="text-white"
+              class="text-black"
               name="check-circle"
             />
             <BaseIcon
               v-if="!hasCheck(token)"
-              class="text-white"
+              class="text-black"
               name="circle"
             />
           </div>
@@ -70,7 +70,7 @@
       </div>
     </template>
     <div v-if="navRoute === 'Your assets'">
-      <div class="rounded-b-2xl bg-blue-900 px-3 pt-8 h-96">
+      <div class="rounded-b-2xl bg-blue-200 px-3 pt-8 h-96">
         <BaseInput placeholder="Contract address" />
       </div>
       <div class="px-3 py-8">
