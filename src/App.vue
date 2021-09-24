@@ -36,6 +36,7 @@ body {
   color: #617ba3;
   padding: 0;
   margin: 0;
+  overflow: hidden;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.5;

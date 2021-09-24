@@ -13,6 +13,7 @@
         justify-between
         items-center
         p-1
+        bg-white
         text-gray-600
         border-2
         rounded-md

@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 import { useWeb3 } from './useWeb3'
 import config from '@/config'
 
-export function useTokens() {
+export default function useTokens() {
   const store = useStore()
   const { provider } = useWeb3()
 
@@ -22,8 +22,7 @@ export function useTokens() {
 
   async function getTokenInfoList() {
     const data = await provider.request('contract_getTokenInfoList', 0, 100)
-    // commit to store
-    console.log('Tokens', data)
+    return data
   }
 
   return {
