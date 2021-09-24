@@ -7,8 +7,12 @@ BigNumber.config({
 })
 
 export default function useNumbers() {
-  function toNum(value: string, decimals: number): BigNumber {
-    return new BigNumber(value).div(`1e${decimals}`)
+  function toNum(value: string | number, decimals: number): string {
+    return new BigNumber(value).div(`1e${decimals}`).toString()
+  }
+
+  function formatUnits(value: any, decimals: number): string {
+    return new BigNumber(value).times(`1e${decimals}`).toString()
   }
 
   function frac(value: number): string | number | undefined {
@@ -30,5 +34,5 @@ export default function useNumbers() {
     }
   }
 
-  return { toNum, frac }
+  return { toNum, frac, formatUnits }
 }
