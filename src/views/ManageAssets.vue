@@ -67,6 +67,12 @@
           </div>
           <hr class="bg-white text-white border-none h-0.5" />
         </div>
+        <p
+          v-if="!filteredTokens.length"
+          class="text-2xl text-blue-900 text-center font-bold mt-36"
+        >
+          Not found
+        </p>
       </div>
     </template>
     <div v-if="navRoute === 'Your assets'">
