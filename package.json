@@ -25,6 +25,7 @@
     "feather-icons": "^4.28.0",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
+    "qr-code-styling": "^1.6.0-rc.1",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
