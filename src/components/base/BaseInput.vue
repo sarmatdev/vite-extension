@@ -28,6 +28,7 @@
         class="w-full bg-white p-1.5 rounded-lg text-xs outline-none"
         :type="type"
         :placeholder="placeholder"
+        :disabled="disabled"
       />
       <BaseIcon
         v-if="icon"
@@ -57,6 +58,7 @@ export default defineComponent({
       type: String,
       default: 'text'
     },
+    disabled: String,
     errors: {
       type: Array,
       default: () => {
