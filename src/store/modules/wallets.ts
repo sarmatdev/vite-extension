@@ -3,13 +3,7 @@ import { encryptString } from '@/services/crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Commit } from 'vuex'
 import { find } from 'lodash-es'
-
-export interface Account {
-  name: string
-  address: string
-  privateKey: string
-  salt: string
-}
+import { Account } from '@/types'
 
 export interface WalletsState {
   active: Account | undefined

@@ -1,29 +1,19 @@
 import useTokens from '@/composables/useTokens'
 import { Commit } from 'vuex'
+import { IToken, IMarket } from '@/types'
 
-export interface IToken {
-  decimals: number
-  index: number
-  isOwnerBurnOnly: boolean
-  isReIssuable: boolean
-  maxSupply: string
-  owner: string
-  ownerBurnOnly: boolean
-  tokenId: string
-  tokenName: string
-  tokenSymbol: string
-  totalSupply: string
-}
 export interface AccountState {
   balance: string
   tokens: Array<IToken>
   selectedTokens: Array<IToken>
+  markets: Array<IMarket>
 }
 
 const state: AccountState = {
   balance: '',
   tokens: [],
-  selectedTokens: []
+  selectedTokens: [],
+  markets: []
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
