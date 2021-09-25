@@ -3,7 +3,7 @@
     <AccountInfo />
     <div class="flex mx-3 space-x-3 mb-3">
       <BaseButton to="/send" color="blue" size="lg"> Send </BaseButton>
-      <BaseButton color="blue" size="lg"> Receive </BaseButton>
+      <BaseButton to="/recieve" color="blue" size="lg"> Receive </BaseButton>
     </div>
     <div class="fixed inset-x-0 top-2/4 bottom-0 rounded-t-2xl bg-blue-900">
       <div class="flex justify-between">

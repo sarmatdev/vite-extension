@@ -6,7 +6,7 @@
 - [x] Address switch
 - [ ] The ability to add new tokens and check balance
 - [ ] List of pending transactions and unreceived transactions
-- [ ] The ability to send transactions and receive transactions
+- [x] The ability to send transactions and receive transactions
 - [ ] The Hook for signing and sending transactions
 - [x] The ability to switch networks (Mainnet, testnet,etc.)
 
