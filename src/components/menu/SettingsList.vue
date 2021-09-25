@@ -1,12 +1,10 @@
 <template>
-  <section
-    class="h-full mt-2 flex flex-col items-start bg-blue-100 rounded-t-2xl"
-  >
-    <ul class="w-full h-full min-h-full overflow-scroll">
+  <section class="mt-2 flex flex-col bg-blue-100 rounded-2xl">
+    <ul class="w-full my-2">
       <li
         class="
           p-2
-          rounded-2xl
+          rounded-xl
           flex
           items-center
           justify-between
@@ -15,9 +13,10 @@
         "
         v-for="item in items"
         :key="item"
+        @click="this.$router.push(item.to)"
       >
         <div class="flex items-center text-gray-600">
-          <base-icon name="plus" size="xl" />
+          <BaseIcon :name="item.icon" size="xl" />
           <div class="ml-2">
             <h3 class="leading-none text-xl font-medium">
               {{ item.title }}
@@ -38,24 +37,14 @@ export default defineComponent({
   setup() {
     const items = [
       {
-        title: 'Add Account',
+        title: 'Add account',
         icon: 'plus',
-        to: '/create-account'
+        to: '/create-wallet'
       },
       {
-        title: 'Add Account',
-        icon: 'plus',
-        to: '/create-account'
-      },
-      {
-        title: 'Add Account',
-        icon: 'plus',
-        to: '/create-account'
-      },
-      {
-        title: 'Add Account',
-        icon: 'plus',
-        to: '/create-account'
+        title: 'Import wallet',
+        icon: 'download',
+        to: '/import-wallet'
       }
     ]
 
