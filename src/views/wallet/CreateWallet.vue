@@ -92,6 +92,7 @@
           <BaseTextarea
             label="You must write the phrase in the correct order"
             v-model="mnemonicForConfirmString"
+            readonly
           ></BaseTextarea>
           <ul class="grid grid-cols-3 gap-2">
             <li
@@ -135,7 +136,11 @@
 import { defineComponent, ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { createRandom, validateMnemonic } from '@/services/account'
+import {
+  createRandom,
+  validateMnemonic,
+  createFromMnemonic
+} from '@/services/account'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 import PasswordInput from '@/components/PasswordInput.vue'
@@ -229,7 +234,11 @@ export default defineComponent({
     }
 
     const mnemonicConfirmed = computed(() => {
-      return validateMnemonic(mnemonicForConfirm.value.join(' '))
+      return validateMnemonic(mnemonicForConfirmString.value)
+    })
+
+    const fromMnemonic = computed(() => {
+      return createFromMnemonic(mnemonic)
     })
 
     const nextWalletName = computed(() => {
@@ -240,8 +249,8 @@ export default defineComponent({
     function saveWallet() {
       store.dispatch('wallets/storeWallet', {
         name: walletName.value,
-        address: mnemonicConfirmed.value.address,
-        privateKey: mnemonicConfirmed.value.privateKey
+        address: fromMnemonic.value.address,
+        privateKey: fromMnemonic.value.privateKey
       })
 
       router.push('/')

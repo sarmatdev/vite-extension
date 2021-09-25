@@ -49,7 +49,7 @@
               {{ account.name }}
             </h3>
             <p class="text-sm text-gray-600">
-              {{ compressAddress(account.address) }}
+              {{ compressAddress(account.address, 10, 5) }}
             </p>
           </div>
         </div>
@@ -77,6 +77,7 @@ export default defineComponent({
     const accounts = computed(() => {
       return store.getters['wallets/accounts']
     })
+    console.log(accounts)
     const active = computed(() => {
       return store.getters['wallets/active']
     })

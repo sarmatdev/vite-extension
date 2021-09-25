@@ -5,7 +5,7 @@
       <BaseButton to="/send" color="blue" size="lg"> Send </BaseButton>
       <BaseButton color="blue" size="lg"> Receive </BaseButton>
     </div>
-    <div class="fixed inset-x-0 top-2/4 bottom-0 rounded-t-2xl bg-blue-900">
+    <div class="fixed inset-x-0 top-2/4 bottom-0 rounded-t-2xl bg-blue-200">
       <div class="flex justify-between">
         <BaseLink
           v-for="(navItem, idx) in ['Assets', 'Activity']"
@@ -27,12 +27,12 @@
             transition
             duration-100
             ease-in-out
-            hover:bg-blue-800
+            hover:bg-blue-300
           "
         >
           <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
           <div class="ml-2 leading-tight">
-            <span class="font-bold text-white"
+            <span class="font-bold text-black"
               >0 {{ selectedToken.tokenSymbol }}</span
             >
             <span class="block"> {{ selectedToken.tokenName }}</span>
@@ -63,16 +63,16 @@
             <div class="flex justify-between items-center">
               <BaseIcon
                 v-if="activityMockItem.status === 'Completed'"
-                class="text-white"
+                class="text-black"
                 name="send"
               />
               <BaseIcon
                 v-if="activityMockItem.status === 'Pending'"
-                class="text-white"
+                class="text-black"
                 name="clock"
               />
               <div class="text-left flex flex-col">
-                <span class="text-white font-semibold">
+                <span class="text-black font-semibold">
                   {{ activityMockItem.blockType }}
                 </span>
                 <span>
@@ -80,7 +80,7 @@
                 </span>
               </div>
               <div class="text-right">
-                <p class="text-white font-semibold">
+                <p class="text-black font-semibold">
                   {{ activityMockItem.amount + ' ' + activityMockItem.token }}
                 </p>
                 <p>From: {{ compressAddress(activityMockItem.address) }}</p>

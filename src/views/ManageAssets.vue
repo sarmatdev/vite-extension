@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="fixed inset-x-0 top-0 z-50 bg-blue-900 flex p-2 items-center">
+    <div class="fixed inset-x-0 top-0 z-50 bg-blue-200 flex p-2 items-center">
       <BaseToggle icon="chevron-left" to="/" />
-      <span class="ml-20 text-white"> Asset Management </span>
+      <span class="ml-20 text-blue-400"> Asset Management </span>
     </div>
-    <div class="flex justify-between bg-blue-900">
+    <div class="flex justify-between bg-blue-200">
       <BaseLink
         v-for="(navItem, idx) in ['Search', 'Your assets']"
         :key="idx"
@@ -14,7 +14,7 @@
       </BaseLink>
     </div>
     <template v-if="navRoute === 'Search'">
-      <div class="rounded-b-2xl bg-blue-900 p-3">
+      <div class="rounded-b-2xl bg-blue-200 p-3">
         <BaseInput
           v-model="filter"
           class="mx-3 my-8"
@@ -34,7 +34,7 @@
           inset-x-0
           bottom-0
           rounded-t-2xl
-          bg-blue-900
+          bg-blue-200
           overflow-y-scroll
           h-80
         "
@@ -44,33 +44,39 @@
           :key="token.tokenId"
           @click="selectToken(token)"
           class="w-full cursor-pointer"
-          :class="hasCheck(token) ? 'bg-blue-700' : 'hover:bg-blue-800'"
+          :class="hasCheck(token) ? 'bg-blue-400' : 'hover:bg-blue-300'"
         >
           <div class="flex justify-between items-center p-3">
             <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
             <div class="text-left">
-              <p class="text-white font-semibold">
+              <p class="text-black font-semibold">
                 {{ 0 + ' ' + token.tokenSymbol }}
               </p>
               <p>{{ compressAddress(token.tokenId) }}</p>
             </div>
             <BaseIcon
               v-if="hasCheck(token)"
-              class="text-white"
+              class="text-black"
               name="check-circle"
             />
             <BaseIcon
               v-if="!hasCheck(token)"
-              class="text-white"
+              class="text-black"
               name="circle"
             />
           </div>
           <hr class="bg-white text-white border-none h-0.5" />
         </div>
+        <p
+          v-if="!filteredTokens.length"
+          class="text-2xl text-blue-900 text-center font-bold mt-36"
+        >
+          Not found
+        </p>
       </div>
     </template>
     <div v-if="navRoute === 'Your assets'">
-      <div class="rounded-b-2xl bg-blue-900 px-3 pt-8 h-96">
+      <div class="rounded-b-2xl bg-blue-200 px-3 pt-8 h-96">
         <BaseInput placeholder="Contract address" />
       </div>
       <div class="px-3 py-8">
@@ -94,6 +100,8 @@ export default defineComponent({
     const tokens = computed(() => {
       return store.getters['account/tokens']
     })
+
+    console.log(tokens.value)
 
     const filter = ref('')
     const filteredTokens = computed(() => {
@@ -119,7 +127,6 @@ export default defineComponent({
       } else {
         store.commit('account/addSelectedTokens', token)
       }
-      console.log(selectedTokens.value)
     }
 
     return {
@@ -129,6 +136,7 @@ export default defineComponent({
       compressAddress,
       hasCheck,
       selectToken,
+      tokens,
       filteredTokens
     }
   }
