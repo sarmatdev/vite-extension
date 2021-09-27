@@ -4,19 +4,22 @@ export default {
       id: 1,
       name: 'Mainnet',
       httpUrl: 'https://node-tokyo.vite.net/http',
-      wsUrl: 'wss://node-tokyo.vite.net/ws'
+      wsUrl: 'wss://node-tokyo.vite.net/ws',
+      httpVitex: 'https://vitex.vite.net/api/v1'
     },
     {
       id: 2,
       name: 'Testnet',
       httpUrl: 'https://buidl.vite.net/gvite/http',
-      wsUrl: 'wss://buidl.vite.net/gvite/ws'
+      wsUrl: 'wss://buidl.vite.net/gvite/ws',
+      httpVitex: 'https://vitex.vite.net/api/v1'
     },
     {
       id: 3,
       name: 'Local',
       httpUrl: 'http://127.0.0.1:9500',
-      wsUrl: ''
+      wsUrl: '',
+      httpVitex: 'https://vitex.vite.net/api/v1'
     }
   ],
   nativeAsset: {
