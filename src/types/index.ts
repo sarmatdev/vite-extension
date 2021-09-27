@@ -19,26 +19,27 @@ export interface IToken {
   totalSupply: string
 }
 
-export interface IMarket {
-  id: string
-  symbol: string
+export interface IVitexToken {
+  tokenId: string
   name: string
-  image: string
-  current_price: number
-  market_cap: number
-  market_cap_rank: number
-  fully_diluted_valuation: number
-  total_volume: number
-  high_24h: number
-  low_24: number
-  price_change_24h: number
-  price_change_percentage_24h: number
-  market_cap_change_24h: number
-  market_change_percentage_24h: number
-  circulating_supply: number
-  total_supply: number
-  max_supply: number
-  ath: number
-  ath_change_percentage: number
-  ath_date: string
+  symbol: string
+  originalSymbol: string
+  totalSupply: string
+  owner: string
+  tokenDecimals: number
+  urlIcon: string
+}
+
+export interface tokenPrices {
+  tokenId: 'tti_564954455820434f494e69b5'
+  tokenSymbol: string
+  usdRate: string | number
+  cnyRate: string | number
+  rubRate: string | number
+  krwRate: string | number
+  tryRate: string | number
+  vndRate: string | number
+  eurRate: string | number
+  gbpRate: string | number
+  btcRate: string | number
 }

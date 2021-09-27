@@ -60,6 +60,7 @@ export function useWeb3() {
   }
 
   return {
+    state,
     provider,
     sendTokens,
     handleNetworkChanged
