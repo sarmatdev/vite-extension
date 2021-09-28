@@ -1,4 +1,5 @@
 <template>
+  <label>Select token</label>
   <Listbox v-model="selectedToken" v-slot="{ open }">
     <div class="relative mt-1">
       <ListboxButton
@@ -15,14 +16,13 @@
           rounded-lg
           shadow-md
           ring-2
-          cursor-default
+          cursor-pointer
           focus:outline-none
           transition
-          delay-150
-          duration-300
+          duration-150
         "
       >
-        <img class="h-10 mr-2" src="../assets/images/logo-blue1.svg" alt="" />
+        <img class="h-8 mr-2" src="../assets/images/logo-blue1.svg" alt="" />
         <span class="block truncate flex-center">
           <span class="text-base mr-2 text-black font-medium">
             {{ selectedValue.tokenSymbol }}
@@ -47,7 +47,7 @@
               {
                 'transform rotate-180': open
               },
-              'transition delay-150 duration-300'
+              'transition duration-150'
             ]"
             name="chevron-down"
           />
@@ -86,11 +86,11 @@
             <li
               :class="[
                 active ? 'text-amber-900 bg-blue-100' : 'text-gray-900',
-                'cursor-default select-none relative py-2 px-4 flex items-center'
+                'cursor-pointer select-none relative py-2 border-t px-4 flex items-center'
               ]"
             >
               <img
-                class="h-10 mr-2"
+                class="h-8 mr-2"
                 src="../assets/images/logo-blue1.svg"
                 alt=""
               />
@@ -142,7 +142,7 @@ import {
 export default {
   name: 'TokenSelect',
   props: {
-    modelValue: String
+    modelValue: Object
   },
   components: {
     Listbox,
