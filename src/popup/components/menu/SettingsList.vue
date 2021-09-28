@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-2 flex flex-col bg-blue-100 rounded-2xl">
+  <section class="mt-2 h-full flex flex-col bg-blue-100 rounded-2xl">
     <ul class="w-full my-2">
       <li
         class="

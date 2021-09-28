@@ -1,9 +1,9 @@
 <template>
-  <div class="h-14 flex items-center bg-blue-200 rounded-b-lg px-2">
+  <div class="h-14 pb-2 flex items-center bg-blue-200 rounded-b-lg px-2">
     <BaseToggle icon="chevron-left" to="/" />
     <p class="text-black text-lg font-bold m-auto">Account</p>
   </div>
-  <div class="px-2 m-auto">
+  <div class="px-2 m-auto h-full">
     <AccountsList />
     <SettingsList />
   </div>
