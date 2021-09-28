@@ -1,184 +1,123 @@
 <template>
-  <Listbox v-model="selectedToken" v-slot="{ open }">
-    <div class="relative mt-1">
-      <ListboxButton
-        :class="open ? 'ring-blue-300' : 'ring-gray-300'"
+  <div
+    class="relative"
+    @click="showSelect = !showSelect"
+    v-click-outside="closeSelect"
+  >
+    <base-input v-bind="$props" icon="chevron-down" />
+    <transition
+      enter-active-class="transition duration-100 ease-out"
+      enter-from-class="transform scale-95 opacity-0"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <div
+        v-if="showSelect"
         class="
-          relative
           w-full
-          flex
-          items-center
-          py-2
-          pl-3
-          pr-10
-          text-left
-          rounded-lg
-          shadow-xl
-          ring-2
-          cursor-default
-          focus:outline-none
-          transition
-          delay-150
-          duration-300
+          py-1
+          px-2
+          bg-white
+          rounded-md
+          border-2
+          absolute
+          top-16
+          right-0
         "
       >
-        <img class="h-10 mr-2" src="../assets/images/logo-blue1.svg" alt="" />
-        <span class="block truncate flex-center">
-          <span class="text-base mr-2 text-black font-medium">
-            {{ selectedValue.tokenSymbol }}
-          </span>
-          <span class="text-sm text-gray-400">
-            {{ selectedValue.tokenName }}
-          </span>
-        </span>
-        <span
-          class="
-            absolute
-            inset-y-0
-            right-0
-            flex
-            items-center
-            pr-2
-            pointer-events-none
-          "
-        >
-          <BaseIcon
-            :class="[
-              {
-                'transform rotate-180': open
-              },
-              'transition delay-150 duration-300'
-            ]"
-            name="chevron-down"
-          />
-        </span>
-      </ListboxButton>
+        LIST
+      </div>
+    </transition>
+  </div>
 
-      <transition
-        leave-active-class="transition duration-100 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <ListboxOptions
-          class="
-            absolute
-            w-full
-            py-1
-            mt-1
-            overflow-auto
-            text-base
-            bg-white
-            rounded-md
-            shadow-lg
-            max-h-60
-            ring-1 ring-black ring-opacity-5
-            focus:outline-none
-            sm:text-sm
-          "
-        >
-          <ListboxOption
-            v-slot="{ active, selected }"
-            v-for="token in tokens"
-            :key="token.tokenId"
-            :value="token"
-            as="template"
-          >
-            <li
-              :class="[
-                active ? 'text-amber-900 bg-blue-100' : 'text-gray-900',
-                'cursor-default select-none relative py-2 pl-10 pr-4 flex items-center'
-              ]"
-            >
-              <img class="h-10 mr-2" :src="forUrlIcon(token)" alt="" />
-              <span
-                :class="[
-                  selected ? 'font-medium ' : 'font-normal',
-                  'block truncate'
-                ]"
-              >
-                <p class="text-base mr-2 text-black font-medium">
-                  {{ token.tokenSymbol }}
-                </p>
-                <p class="text-sm text-gray-400">
-                  {{ token.tokenName }}
-                </p>
-              </span>
-              <span
-                class="absolute flex items-center inset-y-0 right-10 text-black"
-                >{{ forPrice(token) }}$</span
-              >
-              <span
-                v-if="selected"
-                class="
-                  absolute
-                  inset-y-0
-                  right-0
-                  flex
-                  items-center
-                  pr-3
-                  text-black
-                "
-              >
-                <BaseIcon name="check" />
-              </span>
-            </li>
-          </ListboxOption>
-        </ListboxOptions>
-      </transition>
+  <!-- <div class="flex flex-col relative">
+    <label class="text-base text-gray-600 cursor-pointer" v-if="label">{{
+      label
+    }}</label>
+    <div
+      @click="showSelect = !showSelect"
+      class="
+        flex
+        justify-between
+        items-center
+        cursor-pointer
+        h-10
+        p-1
+        text-gray-600
+        border-2
+        rounded-md
+      "
+    >
+      <input
+        :value="modelValue"
+        @focus="focusChange"
+        @blur="focusChange"
+        @input="$emit('update:modelValue', $event.target.value)"
+        ref="input"
+        class="w-full bg-white p-1.5 rounded-lg text-xs outline-none"
+        :type="type"
+        :placeholder="placeholder"
+      />
+      <BaseIcon
+        v-if="icon"
+        @click="$emit('iconEvent', $event.target)"
+        :name="icon"
+        size="sm"
+        class="cursor-pointer"
+      />
     </div>
-  </Listbox>
+    <transition
+      enter-active-class="transition duration-100 ease-out"
+      enter-from-class="transform scale-95 opacity-0"
+      enter-to-class="transform scale-100 opacity-100"
+      leave-active-class="transition duration-75 ease-in"
+      leave-from-class="transform scale-100 opacity-100"
+      leave-to-class="transform scale-95 opacity-0"
+    >
+      <div
+        v-if="showSelect"
+        class="
+          w-full
+          p-1
+          bg-pink-50
+          rounded-md
+          border-2
+          absolute
+          top-16
+          right-0
+        "
+      >
+        LIST
+      </div>
+    </transition>
+  </div> -->
 </template>
 
-<script>
-import { ref, onBeforeMount, computed, watchEffect } from 'vue'
-import { useStore } from 'vuex'
-import useApi from '@/composables/useApi'
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption
-} from '@headlessui/vue'
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
 
-export default {
+export default defineComponent({
   name: 'TokenSelect',
   props: {
-    modelValue: String
+    label: {
+      type: String
+    }
   },
-  components: {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption
-  },
+  setup() {
+    const showSelect = ref(false)
 
-  setup(_, { emit }) {
-    const store = useStore()
-    onBeforeMount(() => {
-      store.dispatch('account/fetchVitexTokens')
-    })
-
-    const tokens = computed(() => {
-      return store.getters['account/tokens']
-    })
-    const selectedToken = ref(null)
-    const selectedValue = computed(() => {
-      return selectedToken.value ? selectedToken.value : tokens.value[0]
-    })
-
-    watchEffect(() => {
-      emit('update:modelValue', selectedValue.value)
-    })
-
-    const { forUrlIcon, forPrice } = useApi()
+    function closeSelect() {
+      showSelect.value = false
+    }
 
     return {
-      tokens,
-      selectedToken,
-      selectedValue,
-      forUrlIcon,
-      forPrice
+      showSelect,
+      closeSelect
     }
   }
-}
+})
 </script>
+
+<style></style>

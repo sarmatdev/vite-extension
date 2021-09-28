@@ -1,5 +1,0 @@
-diff a/src/store/modules/account.ts b/src/store/modules/account.ts	(rejected hunks)
-@@ -44,2 +44 @@ const actions = {
--  }
--  ,
-+  },

@@ -1,6 +1,6 @@
 <template>
   <div class="p-2">
-    <TokenSelect v-model="token" label="Asset" />
+    <TokenSelect label="Asset" />
     <base-input v-model="toAddress" class="mt-2" label="Address"></base-input>
     <base-input v-model="amount" type="number" class="mt-2" label="Amount" />
     <base-button @click="isOpen = true" class="mt-2" color="green" block
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch, onBeforeMount } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import TokenSelect from '@/components/TokenSelect.vue'
 import TxConfirm from '@/components/modals/TxConfirm.vue'
 import useNumbers from '@/composables/useNumbers'
@@ -32,7 +32,6 @@ export default defineComponent({
     const amount = ref('0')
     const rawAmount = ref('')
     const toAddress = ref('')
-    const token = ref(null)
 
     watch(amount, () => {
       rawAmount.value = formatUnits(amount.value, 18)
@@ -47,7 +46,6 @@ export default defineComponent({
     }
 
     return {
-      token,
       amount,
       toAddress,
       isOpen,

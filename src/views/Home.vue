@@ -119,7 +119,6 @@ export default defineComponent({
     const selectedTokens = computed(() => {
       return store.getters['account/selectedTokens']
     })
-    console.log(selectedTokens)
     loadNativeAssetBalance()
     getTokenInfoList()
 
