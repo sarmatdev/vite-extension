@@ -1,6 +1,6 @@
 <template>
   <div class="p-2">
-    <TokenSelect label="Asset" />
+    <TokenSelect v-model="token" />
     <base-input v-model="toAddress" class="mt-2" label="Address"></base-input>
     <base-input v-model="amount" type="number" class="mt-2" label="Amount" />
     <base-button @click="isOpen = true" class="mt-2" color="green" block
@@ -30,6 +30,7 @@ export default defineComponent({
     const { formatUnits } = useNumbers()
     const isOpen = ref(false)
     const amount = ref('0')
+    const token = ref(null)
     const rawAmount = ref('')
     const toAddress = ref('')
 
@@ -46,6 +47,7 @@ export default defineComponent({
     }
 
     return {
+      token,
       amount,
       toAddress,
       isOpen,
