@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="box-container">
     <Header />
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
+/* eslint-disabled */
 import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
 
@@ -22,14 +23,7 @@ export default defineComponent({
   width: 0;
   background: transparent;
 }
-body {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-  background-color: #73a3c4;
-}
-#app {
+.box-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,5 +41,6 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
+  box-shadow: 0px 0px 60px 20px rgba(0, 0, 0, 0.3);
 }
 </style>
