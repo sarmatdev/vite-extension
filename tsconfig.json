@@ -13,7 +13,7 @@
     "baseUrl": ".",
     "types": ["webpack-env", "jest"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/popup/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
