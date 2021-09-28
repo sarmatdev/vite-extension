@@ -9,11 +9,7 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
-  "permissions": [
-    "storage",
-    "notifications",
-    "activeTab"
-  ],
+  "permissions": ["storage", "notifications", "activeTab"],
   "browser_action": {
     "default_title": "Vite Wallet",
     "default_popup": "index.html"
