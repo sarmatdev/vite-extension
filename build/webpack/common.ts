@@ -8,32 +8,13 @@ import * as CopyWebpackPlugin from 'copy-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
 
 export function fromSrc(p: string) {
-  return path.resolve(__dirname, '../../src/popup', p)
+  return path.resolve(__dirname, '../../src', p)
 }
 
 export default {
-  entry: {
-    popup: '../../src/popup'
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    publicPath: '/'
-  },
-  context: path.resolve(__dirname, '../../src/popup'),
+  context: path.resolve(__dirname, '../../src'),
   module: {
     rules: [
-      // {
-      //   test: /\.css|scss$/,
-      //   use: [
-      //     {
-      //       loader: MiniCssExtractPlugin.loader
-      //     },
-      //     'style-loader',
-      //     'css-loader',
-      //     'sass-loader'
-      //   ]
-      // },
       {
         test: /\.css|scss$/,
         use: [
@@ -99,12 +80,12 @@ export default {
       filename: '[name].[contenthash].css'
     }),
     new HtmlWebpackPlugin({
-      template: 'index.html'
+      template: path.resolve(__dirname, '../../src/popup/index.html')
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: './assets',
+          from: path.resolve(__dirname, '../../src/popup/assets'),
           to: './assets'
         },
         { from: path.resolve(__dirname, '../../static'), to: './' }
