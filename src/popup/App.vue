@@ -23,6 +23,12 @@ export default defineComponent({
   width: 0;
   background: transparent;
 }
+
+body {
+  width: 360px;
+  height: 600px;
+}
+
 .box-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { getStorageItem } from '@/services/storage'
-import Home from '../views/Home.vue'
 
 async function checkAuth(to: any, from: any, next: any) {
   const isAuth = await getStorageItem('isAuth')
@@ -16,7 +15,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import('../views/Home.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/welcome',
