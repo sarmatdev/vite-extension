@@ -26,10 +26,10 @@ export function useWeb3() {
   })
 
   const active = computed(() => store.getters['wallets/active'])
-  const privateKey = decryptString(active.value.privateKey, active.value.salt)
-  console.log('privateKey', privateKey)
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
+    const privateKey = decryptString(active.value.privateKey, active.value.salt)
+    console.log('privateKey', privateKey)
     const newAccountBlock = createAccountBlock('send', {
       address: active.value.address,
       toAddress,
