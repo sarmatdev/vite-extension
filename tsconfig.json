@@ -1,17 +1,13 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "module": "CommonJS",
+    "target": "ES5",
     "baseUrl": ".",
-    "types": ["webpack-env", "jest"],
+    "rootDir": ".",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "types": ["webpack-env", "jest", "ts-node"],
     "paths": {
       "@/*": ["src/popup/*"]
     },
@@ -24,5 +20,5 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
