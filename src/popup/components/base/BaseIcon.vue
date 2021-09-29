@@ -40,7 +40,7 @@ export default defineComponent({
     })
     const fill = computed(() => (props.filled ? 'currentColor' : 'none'))
 
-    onMounted(() => feather.replace())
+    // onMounted(() => feather.replace())
     return { iconSize, fill }
   }
 })

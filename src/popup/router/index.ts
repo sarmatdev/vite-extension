@@ -8,7 +8,7 @@ async function checkAuth(to: any, from: any, next: any) {
   if (isAuth) {
     next()
   } else {
-    next('/')
+    next('/welcome')
   }
 }
 
