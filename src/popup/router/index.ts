@@ -8,7 +8,7 @@ async function checkAuth(to: any, from: any, next: any) {
   if (isAuth) {
     next()
   } else {
-    next('/')
+    next('/welcome')
   }
 }
 
@@ -47,20 +47,20 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/menu',
     name: 'Menu',
-    component: () => import('../views/Menu.vue')
-    // beforeEnter: checkAuth
+    component: () => import('../views/Menu.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/send',
     name: 'Send',
-    component: () => import('../views/Send.vue')
-    // beforeEnter: checkAuth
+    component: () => import('../views/Send.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/recieve',
     name: 'Recieve',
-    component: () => import('../views/Recieve.vue')
-    // beforeEnter: checkAuth
+    component: () => import('../views/Recieve.vue'),
+    beforeEnter: checkAuth
   }
 ]
 

@@ -23,9 +23,9 @@ export default defineComponent({
 
     const currentNetwork = ref(0)
 
-    watch(currentNetwork, () => {
-      web3.handleNetworkChanged(currentNetwork.value)
-    })
+    // watch(currentNetwork, () => {
+    //   web3.handleNetworkChanged(currentNetwork.value)
+    // })
 
     return {
       currentNetwork
