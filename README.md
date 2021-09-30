@@ -10,20 +10,20 @@
 - [ ] The Hook for signing and sending transactions
 - [x] The ability to switch networks (Mainnet, testnet,etc.)
 ## Demo
-<img src="docs/welcom-page.png" height="300">
-<img src="docs/password-creation.png" height="300">
-<img src="docs/create-mnemonic.png" height="300">
-<img src="docs/confirm-mnemonic.png" height="300">
-<img src="docs/home.png" height="300">
-<img src="docs/home-network-select.png" height="300">
-<img src="docs/home-activity.png" height="300">
-<img src="docs/menu.png" height="300">
-<img src="docs/send.png" height="300">
-<img src="docs/send-token-select.png" height="300">
-<img src="docs/send-confirm.png" height="300">
-<img src="docs/recieve.png" height="300">
-<img src="docs/asset-management-search.png" height="300">
-<img src="docs/asset-management-custom.png" height="300">
+<img src="docs/welcom-page.png" height="450">
+<img src="docs/password-creation.png" height="450">
+<img src="docs/create-mnemonic.png" height="450">
+<img src="docs/confirm-mnemonic.png" height="450">
+<img src="docs/home.png" height="450">
+<img src="docs/home-network-select.png" height="450">
+<img src="docs/home-activity.png" height="450">
+<img src="docs/menu.png" height="450">
+<img src="docs/send.png" height="450">
+<img src="docs/send-token-select.png" height="450">
+<img src="docs/send-confirm.png" height="450">
+<img src="docs/recieve.png" height="450">
+<img src="docs/asset-management-search.png" height="450">
+<img src="docs/asset-management-custom.png" height="450">
 
 ## Project setup
 
