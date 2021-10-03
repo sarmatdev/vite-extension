@@ -3,7 +3,7 @@
     <h1 class="text-2xl text-gray-600 text-center font-bold">Import wallet</h1>
     <img
       class="mx-auto"
-      src="@/assets/images/vite-logo.png"
+      src="assets/images/vite-logo.png"
       width="120"
       alt="Welcome Image"
     />
