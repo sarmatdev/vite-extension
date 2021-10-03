@@ -106,6 +106,7 @@ export default {
     new CleanWebpackPlugin(),
     new VueLoaderPlugin()
   ],
+  devtool: 'cheap-module-source-map',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '../../src/popup')
