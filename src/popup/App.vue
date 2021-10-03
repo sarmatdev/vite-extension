@@ -47,6 +47,6 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #fff;
-  box-shadow: 0px 0px 60px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 5px 15px #00000033;
 }
 </style>
