@@ -9,7 +9,9 @@
 - [x] The ability to send transactions and receive transactions
 - [ ] The Hook for signing and sending transactions
 - [x] The ability to switch networks (Mainnet, testnet,etc.)
+
 ## Demo
+
 <img src="docs/welcom-page.png" height="450">
 <img src="docs/password-creation.png" height="450">
 <img src="docs/create-mnemonic.png" height="450">
