@@ -43,7 +43,6 @@ export default defineComponent({
     })
 
     return { iconSize }
-
   }
 })
 </script>

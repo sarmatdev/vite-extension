@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore, createLogger } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import modules from './modules'
 
@@ -7,6 +7,7 @@ export default createStore({
   plugins: [
     createPersistedState({
       paths: Object.keys(modules)
-    })
+    }),
+    createLogger()
   ]
 })

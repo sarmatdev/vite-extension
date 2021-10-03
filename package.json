@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "webpack serve --open --config=build/webpack/dev.ts",
-    "serve": "vue-cli-service serve src/popup/index.ts --mode development",
+    "dev:app": "webpack serve --open webpack --config=build/webpack/dev.ts",
+    "dev:extension": "webpack --watch --config=build/webpack/common.ts --mode development",
     "build": "webpack --config=build/webpack/prod.ts",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",

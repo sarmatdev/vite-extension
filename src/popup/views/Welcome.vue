@@ -3,7 +3,7 @@
     <h1 class="text-center text-2xl">Welcome to</h1>
     <img
       class="mt-12 mb-6"
-      src="../assets/images/vite-logo-blue@2x.png"
+      src="assets/images/vite-logo-blue@2x.png"
       width="360"
       alt="Welcome Image"
     />

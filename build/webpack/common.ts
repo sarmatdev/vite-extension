@@ -1,4 +1,5 @@
 import * as path from 'path'
+import { resolve } from 'path'
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import * as HtmlWebpackPlugin from 'html-webpack-plugin'
 import * as Webpack from 'webpack'
@@ -13,6 +14,17 @@ export function fromSrc(p: string) {
 
 export default {
   context: path.resolve(__dirname, '../../src'),
+  mode: process.env.NODE_ENV,
+  entry: {
+    background: [fromSrc('/background/index.ts')],
+    popup: fromSrc('/popup/index.ts'),
+    'content-script': fromSrc('/content/index.ts')
+  },
+  output: {
+    path: resolve('./dist'),
+    pathinfo: false,
+    filename: '[name].js'
+  },
   module: {
     rules: [
       {
@@ -95,6 +107,9 @@ export default {
     new VueLoaderPlugin()
   ],
   resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '../../src/popup')
+    },
     extensions: ['.ts', '.js', '.vue'],
     plugins: [new TsconfigPathsPlugin()]
   }
