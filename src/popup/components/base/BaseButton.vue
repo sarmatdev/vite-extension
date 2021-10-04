@@ -84,13 +84,13 @@ export default defineComponent({
     const circleSizeClasses = computed(() => {
       switch (props.size) {
         case 'xs':
-          return 'w-6 h-6 text-sm'
+          return 'w-4 h-4 text-sm'
         case 'sm':
-          return 'w-9 h-9 text-lg'
+          return 'w-6 h-6 text-lg'
         case 'md':
-          return 'w-10 h-10 text-lg'
+          return 'w-9 h-9 text-lg'
         case 'lg':
-          return 'w-16 h-16 text-2xl'
+          return 'w-12 h-12 text-2xl'
         default:
           return 'w-10 h-10 text-base'
       }
@@ -125,7 +125,8 @@ export default defineComponent({
     })
     const bgColorClasses = computed(() => {
       if (props.color.includes('gradient')) return bgGradientClasses.value
-      else if (props.outline) return 'bg-transparent'
+      else if (props.outline)
+        return `bg-transparent hover:bg-${props.color}-600 hover:text-white`
       else if (props.flat) return bgFlatClasses.value
       else if (props.color === 'white') return 'bg-white'
       else {
