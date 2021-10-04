@@ -133,9 +133,13 @@ export default defineComponent({
 
     const selected = ref(config.networks[0])
 
-    watch(selected, () => {
-      web3.handleNetworkChanged(selected)
-    })
+    watch(
+      selected,
+      () => {
+        web3.handleNetworkChanged(selected)
+      },
+      { immediate: true }
+    )
 
     return {
       selected,
