@@ -1,4 +1,4 @@
-import aes from 'aes-js'
+import * as aes from 'aes-js'
 
 export function encryptString(data: any, salt: string): string {
   const textBytes = aes.utils.utf8.toBytes(data)

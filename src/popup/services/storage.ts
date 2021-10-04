@@ -1,4 +1,4 @@
-import localforage from 'localforage'
+import * as localforage from 'localforage'
 
 export async function getStorageItem(key: string): Promise<any> {
   try {
