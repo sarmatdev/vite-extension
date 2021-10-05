@@ -1,73 +1,47 @@
 <template>
-  <div :class="`base__warning--${warningType}`" class="base__warning">
-    <div :class="`base__warning--${position}__container`">
-      <BaseIcon
-        :class="`base__warning--${position}__icon`"
-        :name="warningType"
-      />
-      <slot />
+  <div class="rounded-md bg-yellow-100 p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <BaseIcon :name="icon" />
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-yellow-400">Attention needed</h3>
+        <div class="mt-1 text-sm text-yellow-700">
+          <p>
+            <slot />
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+
 export default defineComponent({
   name: 'BaseWarning',
   props: {
-    position: {
+    type: {
       type: String,
-      default: 'vertically',
-      validator: (value: string) => ['vertically', 'horizontal'].includes(value)
-    },
-    name: {
-      type: String,
-      default: 'alert-triangle',
-      validator: (value: string) => ['info', 'error'].includes(value)
+      default: 'warn',
+      validator: (value: string) => ['warn', 'error'].includes(value)
     }
   },
   setup(props) {
-    const warningType = computed(() => {
-      switch (props.name) {
-        case 'info':
-          return 'alert-circle'
-        case 'error':
+    const icon = computed(() => {
+      switch (props.type) {
+        case 'warn':
           return 'alert-triangle'
+        case 'error':
+          return 'alert-circle'
         default:
           return 'alert-triangle'
       }
     })
     return {
-      warningType
+      icon
     }
   }
 })
 </script>
-
-<style lang="scss">
-.base__warning {
-  @apply rounded-2xl p-2.5 text-xs font-light;
-  &--vertically {
-    &__container {
-      @apply flex flex-col justify-center text-center;
-    }
-    &__icon {
-      @apply w-8 h-8 mx-auto;
-    }
-  }
-  &--horizontal {
-    &__container {
-      @apply flex items-center;
-    }
-    &__icon {
-      @apply w-8 h-8 my-auto mr-3 p-1;
-    }
-  }
-  &--alert-triangle {
-    @apply bg-red-200 text-red-400 bg-opacity-20;
-  }
-  &--alert-circle {
-    @apply bg-yellow-200 text-yellow-400 bg-opacity-20;
-  }
-}
-</style>
