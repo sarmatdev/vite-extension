@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="text-center p-2 mb-2">
+  <div class="p-2">
+    <div class="text-center mb-2">
       <h1 class="text-gray-600 text-2xl font-black cursor-default">
         Wallet creation
       </h1>
@@ -19,53 +19,32 @@
       </div>
     </div>
     <main v-if="step == 1" class="create_wallet">
-      <section class="text-center grid grid-cols-1 gap-y-4 mb-6">
-        <div class="p-2">
-          <PasswordInput
-            v-model="state.password"
-            @input="v$.password.$touch()"
-            @iconEvent="passwordVisible = !passwordVisible"
-            :passwordVisible="passwordVisible"
-            :type="passwordVisible ? 'text' : 'password'"
-            :errors="passwordErrors"
-            class="mt-6 mb-14"
-            placeholder="Input the password"
-            label="Password"
-          />
-          <PasswordInput
-            v-model="state.repeatPassword"
-            @input="v$.repeatPassword.$touch()"
-            @iconEvent="repeatPasswordVisible = !repeatPasswordVisible"
-            :passwordVisible="repeatPasswordVisible"
-            :type="repeatPasswordVisible ? 'text' : 'password'"
-            :errors="repeatPasswordErrors"
-            placeholder="Confirm the password"
-            label="Confirm password"
-          />
-        </div>
-        <p class="text-sm mx-2.5">
+      <section class="h-full">
+        <BaseWarning name="info">
           Write down or copy this phrase in the correct order and keep it in a
           safe place.
-        </p>
-        <BaseTextarea class="mx-6" v-model="mnemonic" readonly />
-        <button
-          class="
-            mx-auto
-            text-blue-600
-            px-1
-            flex
-            justify-between
-            items-center
-            hover:text-blue-500
-          "
-        >
-          <BaseIcon class="mr-0.5" name="copy" />
+        </BaseWarning>
+
+        <BaseTextarea class="mt-4" v-model="mnemonic" readonly />
+
+        <BaseButton outline class="mt-4" size="xs">
+          <BaseIcon class="mr-0.5" size="xs" name="copy" />
           Copy
-        </button>
+        </BaseButton>
       </section>
-      <div class="text-sm p-2">
+      <section
+        class="
+          text-sm
+          w-full
+          p-2
+          fixed
+          bottom-0
+          right-0
+          bg-blue-100
+          rounded-t-md
+        "
+      >
         <BaseCheckBox
-          class="mb-2"
           v-model="agree"
           :options="[
             'I understand that if you lose your recovery phrase, you will not beable to access my funds'
@@ -79,13 +58,13 @@
           :disabled="!agree.length"
           >Continue</BaseButton
         >
-      </div>
+      </section>
     </main>
     <transition name="slide">
       <main v-if="step == 2" class="confirm_mnemonic">
         <section class="text-center grid grid-cols-1 gap-y-8 p-3">
           <BaseInput
-            v-model="walletName"
+            v-model="name"
             placeholder="Name"
             label="Set the wallet name"
           ></BaseInput>
@@ -143,11 +122,9 @@ import {
 } from '@/services/account'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
-import PasswordInput from '@/components/PasswordInput.vue'
 
 export default defineComponent({
   name: 'CreateWallet',
-  components: { PasswordInput },
   emits: ['nextStep'],
   setup() {
     const store = useStore()
@@ -160,6 +137,7 @@ export default defineComponent({
         .split(' ')
         .sort(() => Math.round(Math.random() * 100) - 50)
     })
+    const accountsNum = computed(() => store.getters['wallets/accountsNum'])
     console.log(mnemonic)
     const agree = ref([])
 
@@ -180,40 +158,8 @@ export default defineComponent({
     })
     const v$ = useVuelidate(rules, state)
 
-    const passwordErrors = computed(() => {
-      const errors: Array<string> = []
-      if (v$.value.password.$dirty) {
-        if (!v$.value.password.required.$response) {
-          errors.push('This field is required.')
-        }
-        if (!v$.value.password.minLength.$response) {
-          errors.push('Min legth 8')
-        }
-      }
-      return errors
-    })
-
-    const repeatPasswordErrors = computed(() => {
-      const errors: Array<string> = []
-      if (v$.value.repeatPassword.$dirty) {
-        if (
-          !v$.value.repeatPassword.required.$response &&
-          v$.value.repeatPassword.sameAs.$response
-        ) {
-          errors.push('This field is required.')
-        }
-        if (!v$.value.repeatPassword.sameAs.$response) {
-          errors.push('Password mismath')
-        }
-      }
-      return errors
-    })
-
     function continueToConfirm() {
-      v$.value.$touch()
-      if (!v$.value.password.$error && !v$.value.repeatPassword.$error) {
-        step.value = 2
-      }
+      step.value = 2
     }
 
     const mnemonicForConfirm = ref([])
@@ -241,14 +187,11 @@ export default defineComponent({
       return createFromMnemonic(mnemonic)
     })
 
-    const nextWalletName = computed(() => {
-      return `Wallet ${store.getters['wallets/accountsNum']}`
-    })
-    const walletName = ref(nextWalletName.value)
+    const name = ref(`Wallet ${accountsNum.value + 1}`)
 
     function saveWallet() {
       store.dispatch('wallets/storeWallet', {
-        name: walletName.value,
+        name: name.value,
         address: fromMnemonic.value.address,
         privateKey: fromMnemonic.value.privateKey
       })
@@ -271,9 +214,8 @@ export default defineComponent({
       randomMnemonic,
       continueToConfirm,
       agree,
-      passwordErrors,
-      repeatPasswordErrors,
-      walletName,
+      wallet,
+      name,
       mnemonicForConfirm,
       clearMnemonic,
       addMnemonic,
