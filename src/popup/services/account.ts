@@ -1,11 +1,11 @@
 import { wallet } from '@vite/vitejs'
 
 export function createRandom(): any {
-  const newWallet = {
-    mnemonic: wallet.createWallet(128).mnemonics,
-    ...wallet.createWallet().deriveAddress(0)
+  const newWallet = wallet.createWallet(128)
+  return {
+    mnemonic: newWallet.mnemonics,
+    ...newWallet.deriveAddress(0)
   }
-  return newWallet
 }
 
 export function createFromMnemonic(mnemonic: string): any {
