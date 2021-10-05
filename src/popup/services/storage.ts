@@ -21,3 +21,11 @@ export async function setStorageItem(key: string, value: any): Promise<void> {
     console.warn(err)
   }
 }
+
+export async function removeStorageItem(key: string): Promise<void> {
+  try {
+    await localforage.removeItem(key)
+  } catch (err) {
+    console.warn(err)
+  }
+}
