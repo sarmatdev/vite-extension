@@ -131,7 +131,7 @@ export default defineComponent({
   setup() {
     const web3 = useWeb3()
 
-    const selected = ref(config.networks[0])
+    const selected = ref(config.networks[1])
 
     watch(
       selected,
