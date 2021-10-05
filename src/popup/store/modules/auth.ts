@@ -1,4 +1,4 @@
-import { Commit } from 'vuex'
+import { Commit, Dispatch } from 'vuex'
 import { setStorageItem } from '@/services/storage'
 
 export interface AuthState {
@@ -13,17 +13,24 @@ const state = {
 const mutations = {
   setPassword(state: AuthState, password: string): void {
     state.password = password
-    state.isAuth = true
   },
   setAuth(state: AuthState, auth: boolean): void {
     state.isAuth = auth
-    setStorageItem('isAuth', auth)
   }
 }
 const actions = {
-  storePassword({ commit }: { commit: Commit }, password: string): void {
+  storePassword(
+    { commit, dispatch }: { commit: Commit; dispatch: Dispatch },
+    password: string
+  ): void {
     commit('setPassword', password)
     setStorageItem('password', password)
+    dispatch('storeAuth', true)
+  },
+  storeAuth({ commit }: { commit: Commit }, auth: boolean): void {
+    console.log('storeAuth')
+    commit('setAuth', auth)
+    setStorageItem('isAuth', auth)
   }
 }
 const getters = {

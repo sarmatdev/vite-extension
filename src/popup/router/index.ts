@@ -3,6 +3,7 @@ import { getStorageItem } from '@/services/storage'
 
 async function checkAuth(to: any, from: any, next: any) {
   const isAuth = await getStorageItem('isAuth')
+  console.log('isAuth', isAuth)
 
   if (isAuth) {
     next()
@@ -22,6 +23,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/welcome',
     name: 'Welcome',
     component: () => import('../views/Welcome.vue')
+  },
+  {
+    path: '/create-password',
+    name: 'CreatePassword',
+    component: () => import('../views/CreatePassword.vue')
   },
   {
     path: '/create-wallet',

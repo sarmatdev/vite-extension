@@ -1,6 +1,6 @@
-import { setStorageItem } from '@/services/storage'
+import { setStorageItem, removeStorageItem } from '@/services/storage'
 import { encryptString } from '@/services/crypto'
-import { v4 as uuidv4 } from 'uuid'
+import { nanoid } from 'nanoid'
 import { Commit } from 'vuex'
 import { find } from 'lodash-es'
 
@@ -26,15 +26,13 @@ const mutations = {
     state.accounts.push(account)
   },
   setActive(state: WalletsState, address: string): void {
-    // @ts-ignore
-    console.log(address)
     const active = find(state.accounts, { address: address })
     state.active = active
   }
 }
 const actions = {
   storeWallet({ commit }: { commit: Commit }, wallet: any) {
-    const salt = uuidv4().replace(/-/g, '')
+    const salt = nanoid(24)
 
     const encryptedWallet = {
       ...wallet,
@@ -42,11 +40,11 @@ const actions = {
       salt
     }
 
-    console.log('salt', salt)
-    console.log('encryptedWallet', encryptedWallet)
-
     commit('setWallet', encryptedWallet)
     setStorageItem(wallet.name, encryptedWallet)
+  },
+  deleteWallet(_, key: string) {
+    removeStorageItem(key)
   }
 }
 const getters = {

@@ -5,7 +5,7 @@
       :src="require(`@/assets/icons/${name}.svg`)"
       :width="iconSize"
       :height="iconSize"
-      alt=""
+      :alt="`${name} icon`"
     />
   </div>
 </template>

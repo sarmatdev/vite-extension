@@ -12,7 +12,7 @@ export interface SendTokens {
 }
 
 const state = reactive({
-  network: config.networks[1]
+  network: { ...config.networks[1], isConnected: false }
 })
 
 const { createAccountBlock } = accountBlock
@@ -45,13 +45,16 @@ export function useWeb3() {
     return result
   }
 
-  function handleNetworkChanged(chainId: number) {
-    state.network = config.networks[chainId]
+  function handleNetworkChanged(selected: any) {
+    state.network.isConnected = false
+    state.network = selected
+    console.log('state.network', state.network)
     const newProvider = new HTTP_RPC(state.network.httpUrl)
 
     provider.setProvider(
       newProvider,
       () => {
+        state.network.isConnected = true
         console.log(`Network changed to ${state.network.name} ✅`)
         return
       },
@@ -61,6 +64,7 @@ export function useWeb3() {
 
   return {
     provider,
+    network: state.network,
     sendTokens,
     handleNetworkChanged
   }

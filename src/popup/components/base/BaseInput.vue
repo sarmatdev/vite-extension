@@ -1,44 +1,41 @@
 <template>
-  <div class="flex flex-col">
+  <div>
     <label
-      @click="this.$refs.input.focus()"
-      class="text-base text-gray-600 cursor-pointer"
-      v-if="label"
+      for="input"
+      class="block pl-1 font-medium cursor-pointer text-gray-700"
       >{{ label }}</label
     >
-    <div
-      :class="{ 'border-blue-300': focusStatus }"
-      class="
-        flex
-        justify-between
-        items-center
-        p-1
-        bg-white
-        text-gray-600
-        border-2
-        rounded-md
-      "
-    >
+    <div class="relative rounded-md shadow-sm">
       <input
         :value="modelValue"
-        @focus="focusChange"
-        @blur="focusChange"
         @input="$emit('update:modelValue', $event.target.value)"
         ref="input"
-        class="w-full bg-white p-1.5 rounded-lg text-xs outline-none"
+        class="
+          block
+          w-full
+          pr-10
+          border-gray-300
+          font-medium
+          text-grey-900
+          placeholder-gray-400
+          focus:outline-none focus:ring-blue-500 focus:border-blue-500
+          caret-blue-600
+          rounded-md
+        "
         :type="type"
         :placeholder="placeholder"
-        :disabled="disabled"
       />
-      <BaseIcon
-        v-if="icon"
-        @click="$emit('iconEvent', $event.target)"
-        :name="icon"
-        size="sm"
-        class="cursor-pointer"
-      />
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+        <BaseIcon
+          v-if="icon"
+          @click="$emit('iconEvent', $event.target)"
+          :name="icon"
+          class="h-5 w-5 cursor-pointer"
+          aria-hidden="true"
+        />
+      </div>
     </div>
-    <ul v-if="errors.length" class="absolute top-10 text-red-400 text-sm">
+    <ul v-if="errors.length" class="pl-1 text-sm text-red-600">
       <li v-for="(error, idx) in errors" :key="idx">{{ error }}</li>
     </ul>
   </div>
@@ -66,7 +63,7 @@ export default defineComponent({
       }
     }
   },
-  setup(props) {
+  setup() {
     const { focusStatus, focusChange } = useFocus()
     return {
       focusStatus,

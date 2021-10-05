@@ -1,14 +1,24 @@
 <template>
-  <div :tabindex="tabindex" class="base-textarea">
-    <label @click="this.$refs.textarea.focus()" class="base-textarea__label">{{
+  <div>
+    <label class="block pl-1 font-medium cursor-pointer text-gray-700">{{
       label
     }}</label>
     <textarea
-      class="base-textarea__field"
+      class="
+        block
+        w-full
+        h-full
+        pr-10
+        border-gray-300
+        font-medium
+        text-grey-900
+        placeholder-gray-400
+        focus:outline-none focus:ring-blue-500 focus:border-blue-500
+        caret-blue-600
+        rounded-md
+      "
       :class="{ 'border-blue-300': focusStatus }"
       :value="modelValue"
-      @focus="focusChange"
-      @blur="focusChange"
       @input="$emit('update:modelValue', $event.target.value)"
       ref="textarea"
       type="text"
@@ -27,10 +37,6 @@ export default defineComponent({
     modelValue: [String, Number],
     placeholder: String,
     label: String,
-    tabindex: {
-      type: Number,
-      default: 0
-    },
     readonly: {
       type: Boolean,
       default: false
@@ -45,15 +51,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss">
-.base-textarea {
-  @apply flex flex-col items-start;
-  &__label {
-    @apply text-gray-600 text-left font-medium cursor-pointer;
-  }
-  &__field {
-    @apply w-full border-2 text-gray-600 px-5 py-2.5 outline-none rounded-md font-medium resize-none h-24;
-  }
-}
-</style>

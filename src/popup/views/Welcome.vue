@@ -1,6 +1,6 @@
 <template>
-  <div class="px-2">
-    <h1 class="text-center text-2xl">Welcome to</h1>
+  <div class="p-2">
+    <h1 class="text-2xl text-gray-600 text-center font-bold">Welcome to</h1>
     <img
       class="mt-12 mb-6"
       src="assets/images/vite-logo-blue@2x.png"
@@ -11,8 +11,10 @@
       <p class="">You can import an existing wallet or create a new one</p>
     </div>
     <div class="flex justify-around items-center space-x-3">
-      <BaseButton size="lg" color="blue" to="/create-wallet">Create</BaseButton>
-      <BaseButton size="lg" color="blue" outline to="/import-wallet"
+      <BaseButton size="lg" color="gradient" to="/create-wallet"
+        >Create</BaseButton
+      >
+      <BaseButton size="lg" color="gradient-reverse" to="/import-wallet"
         >Import</BaseButton
       >
     </div>
