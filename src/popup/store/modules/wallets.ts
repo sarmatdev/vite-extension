@@ -1,4 +1,4 @@
-import { setStorageItem } from '@/services/storage'
+import { setStorageItem, removeStorageItem } from '@/services/storage'
 import { encryptString } from '@/services/crypto'
 import { nanoid } from 'nanoid'
 import { Commit } from 'vuex'
@@ -42,6 +42,9 @@ const actions = {
 
     commit('setWallet', encryptedWallet)
     setStorageItem(wallet.name, encryptedWallet)
+  },
+  deleteWallet(_, key: string) {
+    removeStorageItem(key)
   }
 }
 const getters = {
