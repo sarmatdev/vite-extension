@@ -11,14 +11,14 @@
           shadow-sm
           pl-3
           pr-10
-          py-2
+          py-1
           text-left
           cursor-pointer
           focus:outline-none
           focus:ring-1
           focus:ring-blue-500
           focus:border-blue-500
-          sm:text-sm
+          text-sm
         "
       >
         <div class="flex items-center">
@@ -61,7 +61,7 @@
             shadow-lg
             max-h-60
             rounded-md
-            py-1
+            p-1
             text-base
             ring-1 ring-black ring-opacity-5
             overflow-auto
@@ -78,8 +78,8 @@
           >
             <li
               :class="[
-                active ? 'text-white bg-blue-600' : 'text-gray-900',
-                'cursor-pointer select-none relative py-2 pl-3 pr-9'
+                active ? 'text-white rounded-md bg-blue-500' : 'text-gray-900',
+                'cursor-pointer select-none relative py-1 pl-3 pr-9'
               ]"
             >
               <div class="flex items-center">
