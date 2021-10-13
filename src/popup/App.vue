@@ -1,19 +1,21 @@
 <template>
   <div class="box-container">
     <Header />
+    <Notifications />
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-/* eslint-disabled */
 import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
+import Notifications from '@/components/Notifications.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    Header
+    Header,
+    Notifications
   }
 })
 </script>
