@@ -10,9 +10,18 @@ const password = computed(() => store.getters['settings/password'])
 async function checkAuth(to: any, from: any, next: any) {
   if (isLocked.value) {
     next({ path: "/lock" });
-  } else if (!accounts.value.length && !password.value) {
+  } else if (!password.value) {
     next({ path: "/create-password" });
-  } 
+  } else if (!accounts.value.length) {
+    next({ path: "/welcome" });
+  }
+  next()
+}
+
+async function checLock(to: any, from: any, next: any) {
+  if(!isLocked.value) {
+    next(false)
+  }
   next()
 }
 
@@ -38,12 +47,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create-password',
     name: 'CreatePassword',
     component: () => import('../views/CreatePassword.vue'),
-    beforeEnter: checkAuth
+    beforeEnter: checLock
   },
   {
     path: '/lock',
     name: 'Lock',
-    component: () => import('../views/Lock.vue')
+    component: () => import('../views/Lock.vue'),
+    beforeEnter: checLock
   },
   {
     path: '/create-wallet',
