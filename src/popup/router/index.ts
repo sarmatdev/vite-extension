@@ -30,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/CreatePassword.vue')
   },
   {
+    path: '/lock',
+    name: 'Lock',
+    component: () => import('../views/Lock.vue')
+  },
+  {
     path: '/create-wallet',
     name: 'CreateWallet',
     component: () => import('../views/wallet/CreateWallet.vue')
