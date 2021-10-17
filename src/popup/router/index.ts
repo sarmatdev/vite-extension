@@ -18,7 +18,7 @@ async function checkAuth(to: any, from: any, next: any) {
   next()
 }
 
-async function checLock(to: any, from: any, next: any) {
+async function checkLock(to: any, from: any, next: any) {
   if(!isLocked.value) {
     next(false)
   }
@@ -47,13 +47,13 @@ const routes: Array<RouteRecordRaw> = [
     path: '/create-password',
     name: 'CreatePassword',
     component: () => import('../views/CreatePassword.vue'),
-    beforeEnter: checLock
+    beforeEnter: checkLock
   },
   {
     path: '/lock',
     name: 'Lock',
     component: () => import('../views/Lock.vue'),
-    beforeEnter: checLock
+    beforeEnter: checkLock
   },
   {
     path: '/create-wallet',
