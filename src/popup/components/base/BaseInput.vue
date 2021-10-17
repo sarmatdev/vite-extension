@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="relative">
     <label
       for="input"
-      class="block pl-1 font-medium cursor-pointer text-gray-700"
+      class="block pl-1 font-semibold cursor-pointer text-gray-700"
       >{{ label }}</label
     >
     <div class="relative rounded-md shadow-sm">
@@ -16,10 +16,12 @@
           pr-10
           border-gray-300
           font-medium
-          text-grey-900
+          text-sm text-gray-900
           placeholder-gray-400
+          transition-all
           focus:outline-none focus:ring-blue-500 focus:border-blue-500
           caret-blue-600
+          hover:ring-gray-900 hover:border-gray-900
           rounded-md
         "
         :type="type"
@@ -30,12 +32,15 @@
           v-if="icon"
           @click="$emit('iconEvent', $event.target)"
           :name="icon"
-          class="h-5 w-5 cursor-pointer"
+          class="h-4 w-4 cursor-pointer"
           aria-hidden="true"
         />
       </div>
     </div>
-    <ul v-if="errors.length" class="pl-1 text-sm text-red-600">
+    <ul
+      v-if="errors.length"
+      class="absolute left-0 -bottom-5 font-medium text-sm text-red-600"
+    >
       <li v-for="(error, idx) in errors" :key="idx">{{ error }}</li>
     </ul>
   </div>
