@@ -11,6 +11,7 @@ import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
 import Notifications from '@/components/Notifications.vue'
 
+
 export default defineComponent({
   name: 'App',
   components: {

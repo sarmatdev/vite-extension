@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import PasswordInput from '@/components/PasswordInput.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -67,10 +67,10 @@ export default defineComponent({
     function unLock(): void {
       lV$.value.$touch()
       if (!lV$.value.password.$error) {
-        store.dispatch('settings/storeIsLocked', true).finally(() => {
+        store.dispatch('settings/storeIsLocked', false).finally(() => {
           console.log('stored')
         })
-        router.push('/')
+        router.push('/home')
       }
     }
 

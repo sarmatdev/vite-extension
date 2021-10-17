@@ -196,7 +196,7 @@ export default defineComponent({
         privateKey: fromMnemonic.value.privateKey
       })
 
-      router.push('/')
+      router.push('/home')
     }
 
     const passwordVisible = ref(false)
