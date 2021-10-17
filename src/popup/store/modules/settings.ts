@@ -2,12 +2,14 @@ import { Commit } from 'vuex'
 
 export interface SettingsState {
   isLocked: boolean
-  password: string
+  password: string,
+  timeout: number
 }
 
 const state: SettingsState = {
-  isLocked: false,
-  password: ''
+  isLocked: true,
+  password: '',
+  timeout: 30 * 60 * 1000
 }
 
 const mutations = {
@@ -16,7 +18,10 @@ const mutations = {
   },
   setPassword(state: SettingsState, password: string): void {
     state.password = password
-  }
+  },
+  setTimeout(state: SettingsState, timeout: number) {
+    state.timeout = timeout;
+  },
 }
 const actions = {
   storePassword(
@@ -35,7 +40,8 @@ const actions = {
 
 const getters = {
   isLocked: (s: SettingsState) => s.isLocked,
-  password: (s: SettingsState) => s.password
+  password: (s: SettingsState) => s.password,
+  timeout: (s: SettingsState) => s.timeout
 }
 
 export default {

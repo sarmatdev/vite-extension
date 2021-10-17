@@ -1,20 +1,29 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { getStorageItem } from '@/services/storage'
+import { computed } from 'vue';
+//? with useStore dont work
+import store from '../store'
+
+const isLocked = computed(() => store.getters['settings/isLocked'])
+const accounts = computed(() => store.getters['wallets/accounts'])
+const password = computed(() => store.getters['settings/password'])
 
 async function checkAuth(to: any, from: any, next: any) {
-  const isAuth = await getStorageItem('isAuth')
-  console.log('isAuth', isAuth)
-
-  if (isAuth) {
-    next()
-  } else {
-    next('/welcome')
-  }
+  if (isLocked.value) {
+    next({ path: "/lock" });
+  } else if (!accounts.value.length && !password.value) {
+    next({ path: "/create-password" });
+  } 
+  next()
 }
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: "/",
+    name: "AuthRoute",
+    component: () => import('../AuthRoute.vue')
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: () => import('../views/Home.vue'),
     beforeEnter: checkAuth
@@ -22,12 +31,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/welcome',
     name: 'Welcome',
-    component: () => import('../views/Welcome.vue')
+    component: () => import('../views/Welcome.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/create-password',
     name: 'CreatePassword',
-    component: () => import('../views/CreatePassword.vue')
+    component: () => import('../views/CreatePassword.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/lock',
@@ -37,12 +48,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/create-wallet',
     name: 'CreateWallet',
-    component: () => import('../views/wallet/CreateWallet.vue')
+    component: () => import('../views/wallet/CreateWallet.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/import-wallet',
     name: 'ImportWallet',
-    component: () => import('../views/wallet/ImportWallet.vue')
+    component: () => import('../views/wallet/ImportWallet.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/about',
@@ -53,7 +66,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/manage-assets',
     name: 'ManageAssets',
-    component: () => import('../views/ManageAssets.vue')
+    component: () => import('../views/ManageAssets.vue'),
+    beforeEnter: checkAuth
   },
   {
     path: '/menu',
