@@ -1,30 +1,49 @@
 <template>
-  <div class="p-2 h-full flex flex-col justify-between">
-    <section>
-      <h1 class="text-lg">Create Password</h1>
+  <div class="p-2 h-full">
+    <section class="flex flex-col space-y-6 mt-10">
+      <h1 class="text-gray-600 text-2xl font-black text-center cursor-default">
+        Create Password
+      </h1>
       <PasswordInput
-        v-model="password"
+        @input="cpV$.password.$touch"
+        v-model="state.password"
         label="Password"
         placeholder="Input the password"
+        :errors="passwordErrors"
       />
       <PasswordInput
-        v-model="passwordConfirm"
+        @input="cpV$.repeatPassword.$touch"
+        v-model="state.repeatPassword"
         class="mt-2"
         label="Confirm password"
-        placeholder="Input the password"
+        placeholder="Confirm the password"
+        :errors="repeatPasswordErrors"
       />
     </section>
-    <section class="w-full p-2 fixed bottom-0 right-0">
-      <BaseButton @click="savePassword" block outline> Create </BaseButton>
+    <section
+      class="
+        px-2
+        py-8
+        fixed
+        inset-x-0
+        bottom-0
+        rounded-t-2xl
+        bg-blue-200
+        flex
+        items-center
+      "
+    >
+      <BaseButton @click="savePassword" block color="blue"> Create </BaseButton>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import PasswordInput from '@/components/PasswordInput.vue'
+import useValidate from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'CreatePassword',
@@ -35,20 +54,29 @@ export default defineComponent({
     const store = useStore()
     const router = useRouter()
 
-    const password = ref('')
-    const passwordConfirm = ref('')
+    const state = reactive({
+      password: '',
+      repeatPassword: ''
+    })
+
+    const { cpV$, passwordErrors, repeatPasswordErrors } = useValidate(state)
 
     function savePassword() {
-      store.dispatch('auth/storePassword', password.value).finally(() => {
-        console.log('stored')
-      })
-      router.push('/')
+      cpV$.value.$touch()
+      if (!cpV$.value.password.$error && !cpV$.value.repeatPassword.$error) {
+        store.dispatch('settings/storePassword', state.password).finally(() => {
+          console.log('stored')
+        })
+        router.push('/home')
+      }
     }
 
     return {
-      password,
-      passwordConfirm,
-      savePassword
+      cpV$,
+      state,
+      savePassword,
+      passwordErrors,
+      repeatPasswordErrors
     }
   }
 })

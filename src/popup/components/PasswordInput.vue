@@ -2,6 +2,7 @@
   <BaseInput
     :icon="inputIcon"
     :type="inputType"
+    :errors="errors"
     @iconEvent="showPassword = !showPassword"
   />
 </template>
@@ -11,6 +12,12 @@ import { defineComponent, ref, computed } from 'vue'
 
 export default defineComponent({
   name: 'PasswordInput',
+  props: {
+    errors: {
+      type: Array,
+      default: () => []
+    }
+  },
   setup() {
     const showPassword = ref(false)
 
