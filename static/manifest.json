@@ -9,39 +9,23 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
-  "permissions": [
-    "storage",
-    "unlimitedStorage",
-    "activeTab",
-    "notifications"
-  ],
+  "permissions": ["storage", "unlimitedStorage", "activeTab", "notifications"],
   "browser_action": {
     "default_title": "Vite Wallet",
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
-      "matches": [
-        "file://*/*",
-        "http://*/*",
-        "https://*/*"
-      ],
-      "js": [
-        "content-script.js"
-      ],
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
+      "js": ["content-script.js"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self'; object-src 'self'",
-  "web_accessible_resources": [
-    "index.html",
-    "inject-script.js"
-  ]
+  "web_accessible_resources": ["index.html", "inject-script.js"]
 }

@@ -34,6 +34,7 @@ yarn install
 ```
 
 ## Development
+
 Script `dev:app` runs app like regular Vue app on page, with access to the vue-devtools.
 
 Script `dev:extension` runs app in watch mode via webpack and have full access to the Chrome Extension API during the development.

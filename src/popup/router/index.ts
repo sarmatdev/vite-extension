@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { computed } from 'vue';
+import { computed } from 'vue'
 //? with useStore dont work
 import store from '../store'
 
@@ -9,17 +9,17 @@ const password = computed(() => store.getters['settings/password'])
 
 async function checkAuth(to: any, from: any, next: any) {
   if (isLocked.value) {
-    next({ path: "/lock" });
+    next({ path: '/lock' })
   } else if (!password.value) {
-    next({ path: "/create-password" });
+    next({ path: '/create-password' })
   } else if (!accounts.value.length) {
-    next({ path: "/welcome" });
+    next({ path: '/welcome' })
   }
   next()
 }
 
 async function checkLock(to: any, from: any, next: any) {
-  if(!isLocked.value) {
+  if (!isLocked.value) {
     next(false)
   }
   next()
@@ -27,8 +27,8 @@ async function checkLock(to: any, from: any, next: any) {
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "AuthRoute",
+    path: '/',
+    name: 'AuthRoute',
     component: () => import('../AuthRoute.vue')
   },
   {
