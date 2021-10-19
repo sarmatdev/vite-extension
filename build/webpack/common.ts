@@ -18,7 +18,8 @@ export default {
   entry: {
     background: [fromSrc('/background/index.ts')],
     popup: fromSrc('/popup/index.ts'),
-    'content-script': fromSrc('/content/index.ts')
+    'content-script': fromSrc('/content/index.ts'),
+    'inject-script': fromSrc('/content/injectScript.ts')
   },
   output: {
     path: resolve('./dist'),
