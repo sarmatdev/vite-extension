@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="fixed inset-x-0 top-0 z-50 bg-blue-200 flex p-2 items-center">
-      <BaseToggle icon="chevron-left" to="/home" />
+      <BaseToggle icon="chevron-left" to="/" />
       <span class="ml-20 text-blue-400"> Asset Management </span>
     </div>
     <div class="flex justify-between bg-blue-200">
