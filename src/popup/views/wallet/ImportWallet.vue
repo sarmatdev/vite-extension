@@ -46,7 +46,7 @@ export default defineComponent({
           ...importedWallet.value
         })
 
-        router.push('/home')
+        router.push('/')
       }
     }
 

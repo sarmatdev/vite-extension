@@ -70,7 +70,7 @@ export default defineComponent({
         store.dispatch('settings/storeIsLocked', false).finally(() => {
           console.log('stored')
         })
-        router.push('/home')
+        router.push('/')
       }
     }
 

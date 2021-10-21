@@ -67,7 +67,7 @@ export default defineComponent({
         store.dispatch('settings/storePassword', state.password).finally(() => {
           console.log('stored')
         })
-        router.push('/home')
+        router.push('/')
       }
     }
 
