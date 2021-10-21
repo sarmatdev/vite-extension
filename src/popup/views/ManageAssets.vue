@@ -33,40 +33,12 @@
           fixed
           inset-x-0
           bottom-0
-          rounded-t-2xl
+        
           bg-blue-200
-          overflow-y-scroll
-          h-80
+          
         "
       >
-        <div
-          v-for="token in filteredTokens"
-          :key="token.tokenId"
-          @click="selectToken(token)"
-          class="w-full cursor-pointer"
-          :class="hasCheck(token) ? 'bg-blue-400' : 'hover:bg-blue-300'"
-        >
-          <div class="flex justify-between items-center p-3">
-            <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
-            <div class="text-left">
-              <p class="text-black font-semibold">
-                {{ 0 + ' ' + token.tokenSymbol }}
-              </p>
-              <p>{{ compressAddress(token.tokenId) }}</p>
-            </div>
-            <BaseIcon
-              v-if="hasCheck(token)"
-              class="text-black"
-              name="check-circle"
-            />
-            <BaseIcon
-              v-if="!hasCheck(token)"
-              class="text-black"
-              name="circle"
-            />
-          </div>
-          <hr class="bg-white text-white border-none h-0.5" />
-        </div>
+        <TokenList :tokens="filteredTokens" selector />
         <p
           v-if="!filteredTokens.length"
           class="text-2xl text-blue-900 text-center font-bold mt-36"
@@ -87,55 +59,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, ComputedRef } from 'vue'
+import TokenList from '@/components/lists/TokenList.vue'
 import { useStore } from 'vuex'
-import { compressAddress } from '@/helpers/string'
+import { IVitexToken } from '@/types'
 
 export default defineComponent({
   name: 'ManagseAssets',
+  components: { TokenList },
   setup() {
     const store = useStore()
     const navRoute = ref('Search')
 
-    const tokens = computed(() => {
-      return store.getters['account/tokens']
+    const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
+      return store.getters['account/vitexTokens']
     })
-
-    console.log(tokens.value)
 
     const filter = ref('')
     const filteredTokens = computed(() => {
-      return tokens.value.filter(
-        (el: any) =>
-          el.tokenName.toLowerCase().includes(filter.value.toLowerCase()) ||
-          el.tokenSymbol.toLowerCase().includes(filter.value.toLowerCase())
-      )
+      return tokens.value
+        .filter(
+          (el: IVitexToken) =>
+            el.name.toLowerCase().includes(filter.value.toLowerCase()) ||
+            el.originalSymbol.toLowerCase().includes(filter.value.toLowerCase())
+        )
     })
 
-    const selectedTokens = computed(() => {
-      return store.getters['account/selectedTokens']
-    })
-
-    function hasCheck(token: any): boolean {
-      return selectedTokens.value.filter((el: any) =>
-        el.tokenId.includes(token.tokenId)
-      ).length
-    }
-    function selectToken(token: any): void {
-      if (hasCheck(token)) {
-        store.commit('account/removeSelectedTokens', token)
-      } else {
-        store.commit('account/addSelectedTokens', token)
-      }
-    }
+    
 
     return {
       navRoute,
       filter,
-      selectedTokens,
-      compressAddress,
-      hasCheck,
-      selectToken,
       tokens,
       filteredTokens
     }

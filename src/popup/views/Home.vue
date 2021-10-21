@@ -16,28 +16,7 @@
         </BaseLink>
       </div>
       <div v-if="navRoute === 'Assets'" class="overflow-y-scroll h-60">
-        <span
-          v-for="selectedToken in selectedTokens"
-          :key="selectedToken.tokenId"
-          class="
-            flex
-            py-2.5
-            px-2.5
-            cursor-pointer
-            transition
-            duration-100
-            ease-in-out
-            hover:bg-blue-300
-          "
-        >
-          <img class="h-10" src="../assets/images/logo-blue1.svg" alt="" />
-          <div class="ml-2 leading-tight">
-            <span class="font-bold text-black"
-              >0 {{ selectedToken.tokenSymbol }}</span
-            >
-            <span class="block"> {{ selectedToken.tokenName }}</span>
-          </div>
-        </span>
+        <TokenList :tokens="selectedTokens" />
         <BaseToggle
           class="
             fixed
@@ -55,66 +34,31 @@
         v-if="navRoute === 'Activity'"
         class="overflow-y-scroll h-60 text-sm"
       >
-        <div v-for="(activityMockItem, idx) in activityMock" :key="idx">
-          <div class="p-3">
-            <span class="text-left">
-              {{ activityMockItem.timestamp }}
-            </span>
-            <div class="flex justify-between items-center">
-              <BaseIcon
-                v-if="activityMockItem.status === 'Completed'"
-                class="text-black"
-                name="send"
-              />
-              <BaseIcon
-                v-if="activityMockItem.status === 'Pending'"
-                class="text-black"
-                name="clock"
-              />
-              <div class="text-left flex flex-col">
-                <span class="text-black font-semibold">
-                  {{ activityMockItem.blockType }}
-                </span>
-                <span>
-                  {{ activityMockItem.status }}
-                </span>
-              </div>
-              <div class="text-right">
-                <p class="text-black font-semibold">
-                  {{ activityMockItem.amount + ' ' + activityMockItem.token }}
-                </p>
-                <p>From: {{ compressAddress(activityMockItem.address) }}</p>
-                <p>To: {{ compressAddress(activityMockItem.toAddress) }}</p>
-              </div>
-            </div>
-          </div>
-          <hr class="bg-white border-none h-0.5" />
-        </div>
+        <TransactionList :transactions="activityMock" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onBeforeMount } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import useTokens from '@/composables/useTokens'
 import { useStore } from 'vuex'
 import AccountInfo from '@/components/AccountInfo.vue'
-import { compressAddress } from '@/helpers/string'
+import TokenList from '@/components/lists/TokenList.vue'
+import TransactionList from '@/components/lists/TransactionList.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
-    AccountInfo
+    AccountInfo,
+    TokenList,
+    TransactionList
   },
   setup() {
     const { loadNativeAssetBalance, getTokenInfoList } = useTokens()
     const name = ref('test')
     const store = useStore()
-
-    onBeforeMount(() => {
-      store.dispatch('account/fetchTokens')
-    })
 
     const selectedTokens = computed(() => {
       return store.getters['account/selectedTokens']
@@ -172,8 +116,7 @@ export default defineComponent({
       name,
       selectedTokens,
       navRoute,
-      activityMock,
-      compressAddress
+      activityMock
     }
   }
 })

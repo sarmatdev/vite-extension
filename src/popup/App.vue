@@ -10,6 +10,7 @@
 import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
 import Notifications from '@/components/Notifications.vue'
+import {useStore } from 'vuex'
 
 
 export default defineComponent({
@@ -17,6 +18,11 @@ export default defineComponent({
   components: {
     Header,
     Notifications
+  },
+  setup() {
+    const store = useStore()
+    store.dispatch('account/fetchVitexTokens')
+
   }
 })
 </script>
