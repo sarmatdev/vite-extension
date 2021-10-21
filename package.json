@@ -22,6 +22,7 @@
     "@vuelidate/core": "^2.0.0-alpha.26",
     "@vuelidate/validators": "^2.0.0-alpha.22",
     "aes-js": "^3.1.2",
+    "axios": "^0.23.0",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
     "localforage": "^1.10.0",
