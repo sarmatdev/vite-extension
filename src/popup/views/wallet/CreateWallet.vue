@@ -44,18 +44,16 @@
           rounded-t-md
         "
       >
-        <BaseCheckBox
-          v-model="agree"
-          :options="[
-            'I understand that if you lose your recovery phrase, you will not beable to access my funds'
-          ]"
-        />
+        <BaseCheckbox v-model="agree">
+          I understand that if you lose your recovery phrase, you will not
+          beable to access my funds
+        </BaseCheckbox>
 
         <BaseButton
           color="blue"
           size="lg"
           @click="continueToConfirm"
-          :disabled="!agree.length"
+          :disabled="!agree"
           >Continue</BaseButton
         >
       </section>
@@ -139,7 +137,7 @@ export default defineComponent({
     })
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
     console.log(mnemonic)
-    const agree = ref([])
+    const agree = ref(false)
 
     const state = reactive({
       password: '',

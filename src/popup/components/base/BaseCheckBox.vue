@@ -1,45 +1,33 @@
 <template>
-  <div>
-    <div class="checkbox-form">
-      <div class="answers">
-        <label v-for="(option, idx) of options" :key="idx" class="item">
-          <span :for="option">{{ option }}</span>
-          <input
-            :id="option"
-            v-model="checked"
-            type="checkbox"
-            :value="option"
-            @change="onChange"
-          />
-          <span class="checkmark" />
-        </label>
-      </div>
-    </div>
+  <div class="max-w-sm mx-auto cursor-pointer">
+    <label class="inline-flex items-center cursor-pointer">
+      <input
+        @change="$emit('update:modelValue', $event.target.checked)"
+        v-bind="$attrs"
+        type="checkbox"
+        class="
+          cursor-pointer
+          text-blue-500
+          w-4
+          h-4
+          mr-2
+          focus:ring-blue-400 focus:ring-opacity-25
+          border border-gray-300
+          rounded
+        "
+      />
+      <slot />
+    </label>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 export default defineComponent({
   props: {
-    options: {
-      type: Array,
-      required: false,
-      default: () => []
-    }
+    modelValue: Boolean
   },
-  setup(_, { emit }) {
-    const checked = ref([])
-
-    function onChange() {
-      emit('update:modelValue', checked.value)
-    }
-
-    return {
-      checked,
-      onChange
-    }
-  }
+  emits: ['update:modelValue', 'change']
 })
 </script>
 

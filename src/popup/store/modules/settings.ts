@@ -2,7 +2,7 @@ import { Commit } from 'vuex'
 
 export interface SettingsState {
   isLocked: boolean
-  password: string,
+  password: string
   timeout: number
 }
 
@@ -20,20 +20,14 @@ const mutations = {
     state.password = password
   },
   setTimeout(state: SettingsState, timeout: number) {
-    state.timeout = timeout;
-  },
+    state.timeout = timeout
+  }
 }
 const actions = {
-  storePassword(
-    { commit }: { commit: Commit},
-    password: string
-  ): void {
+  storePassword({ commit }: { commit: Commit }, password: string): void {
     commit('setPassword', password)
   },
-  storeIsLocked(
-{ commit }: { commit: Commit},
-    isLocked: boolean
-  ): void {
+  storeIsLocked({ commit }: { commit: Commit }, isLocked: boolean): void {
     commit('setLock', isLocked)
   }
 }

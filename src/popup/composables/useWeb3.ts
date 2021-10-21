@@ -63,6 +63,7 @@ export function useWeb3() {
   }
 
   return {
+    state,
     provider,
     network: state.network,
     sendTokens,
