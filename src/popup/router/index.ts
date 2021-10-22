@@ -79,7 +79,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/recieve',
     name: 'Recieve',
     component: () => import('../views/Recieve.vue'),
-    // beforeEnter: checkAuth
+    meta: {
+      requiredAccount: true,
+      authenticate: true,
+    }
   }
 ]
 
