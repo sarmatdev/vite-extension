@@ -1,8 +1,7 @@
 import { Commit } from 'vuex'
-import { IVitexToken} from '@/types'
+import { IVitexToken } from '@/types'
 import { getTokens } from '@/api/tokens.api'
 import { getExchangeRate } from '@/api/exchange-rate.api'
-
 
 export interface AccountState {
   balance: string
@@ -19,7 +18,6 @@ const state: AccountState = {
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
-    console.log(balance)
     state.balance = balance
   },
   setVitexTokens(state: AccountState, vitexTokens: Array<IVitexToken>) {
@@ -42,25 +40,24 @@ const actions = {
     const vitexTokens = await getTokens()
     commit('setVitexTokens', vitexTokens)
   },
- async fetchPrices(context) {
-  const prices = []
-  await context.getters.vitexTokens.forEach( async (el) => {
-    const res = await getExchangeRate(el.tokenId)
-    //@ts-ignore
-    if(res.data.data.length) {
-    //@ts-ignore
-      prices.push(res.data.data[0])
-    }
-  })
-  context.commit('setPrices', prices)
+  async fetchPrices(context) {
+    const prices = []
+    await context.getters.vitexTokens.forEach(async (el) => {
+      const res = await getExchangeRate(el.tokenId)
+      //@ts-ignore
+      if (res.data.data.length) {
+        //@ts-ignore
+        prices.push(res.data.data[0])
+      }
+    })
+    context.commit('setPrices', prices)
   }
 }
 const getters = {
   balance: (s: AccountState) => s.balance,
   vitexTokens: (s: AccountState) => s.vitexTokens,
   selectedTokens: (s: AccountState) => s.selectedTokens,
-  prices: (s: AccountState) => s.prices,
-
+  prices: (s: AccountState) => s.prices
 }
 
 export default {

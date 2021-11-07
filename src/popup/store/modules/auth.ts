@@ -1,5 +1,5 @@
 import { Commit } from 'vuex'
-import { setStorageItem } from '@/services/storage'
+import { saveValue } from '../../../services/storage'
 
 export interface AuthState {
   isAuth: boolean
@@ -16,7 +16,7 @@ const mutations = {
 const actions = {
   storeAuth({ commit }: { commit: Commit }, auth: boolean): void {
     commit('setAuth', auth)
-    setStorageItem('isAuth', auth)
+    // setStorageItem('isAuth', auth)
   }
 }
 const getters = {

@@ -3,12 +3,13 @@ import { useStore } from 'vuex'
 import { ViteAPI, accountBlock } from '@vite/vitejs'
 import HTTP_RPC from '@vite/vitejs-http'
 import config from '@/config'
-import { decryptString } from '@/services/crypto'
+import { decryptString } from '../../services/crypto'
 
 export interface SendTokens {
   toAddress?: string
   tokenId?: string
   amount?: string
+  urlIcon?: string
 }
 
 const state = reactive({
@@ -48,14 +49,12 @@ export function useWeb3() {
   function handleNetworkChanged(selected: any) {
     state.network.isConnected = false
     state.network = selected
-    console.log('state.network', state.network)
     const newProvider = new HTTP_RPC(state.network.httpUrl)
 
     provider.setProvider(
       newProvider,
       () => {
         state.network.isConnected = true
-        console.log(`Network changed to ${state.network.name} ✅`)
         return
       },
       true

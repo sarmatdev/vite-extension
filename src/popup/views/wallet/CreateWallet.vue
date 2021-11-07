@@ -60,7 +60,7 @@
     </main>
     <transition name="slide">
       <main v-if="step == 2" class="confirm_mnemonic">
-        <section class="text-center grid grid-cols-1 gap-y-8 p-3">
+        <section class="grid grid-cols-1 gap-y-8 p-3">
           <BaseInput
             v-model="name"
             placeholder="Name"
@@ -71,7 +71,7 @@
             v-model="mnemonicForConfirmString"
             readonly
           ></BaseTextarea>
-          <ul class="grid grid-cols-3 gap-2">
+          <ul class="grid grid-cols-3 gap-2 text-center">
             <li
               v-for="(mnemonicItem, idx) in randomMnemonic"
               :key="idx"
@@ -117,7 +117,7 @@ import {
   createRandom,
   validateMnemonic,
   createFromMnemonic
-} from '@/services/account'
+} from '../../../services/account'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 
@@ -136,7 +136,6 @@ export default defineComponent({
         .sort(() => Math.round(Math.random() * 100) - 50)
     })
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
-    console.log(mnemonic)
     const agree = ref(false)
 
     const state = reactive({

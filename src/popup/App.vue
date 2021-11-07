@@ -10,7 +10,7 @@
 import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
 import Notifications from '@/components/Notifications.vue'
-import {useStore } from 'vuex'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'App',
@@ -21,7 +21,6 @@ export default defineComponent({
   setup() {
     const store = useStore()
     store.dispatch('account/fetchVitexTokens')
-
   }
 })
 </script>
@@ -30,6 +29,16 @@ export default defineComponent({
 ::-webkit-scrollbar {
   width: 0;
   background: transparent;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 body {

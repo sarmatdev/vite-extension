@@ -16,7 +16,6 @@ const items = ref<Notification[]>([])
 export function useNotifications() {
   function notify(payload: Notification) {
     items.value.push({ ...payload, timestamp: Date.now() })
-    console.log(items.value)
   }
 
   function chromeNotify(params: chromeNotification): void {

@@ -1,1 +1,2 @@
-console.log('Hello from background!')
+import { setupExtensionMessageListeners } from './messageListener'
+setupExtensionMessageListeners()

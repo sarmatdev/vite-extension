@@ -1,5 +1,5 @@
-import { setStorageItem, removeStorageItem } from '@/services/storage'
-import { encryptString } from '@/services/crypto'
+import { saveValue, removeValue } from '../../../services/storage'
+import { encryptString } from '../../../services/crypto'
 import { nanoid } from 'nanoid'
 import { Commit } from 'vuex'
 import { find } from 'lodash-es'
@@ -41,10 +41,10 @@ const actions = {
     }
 
     commit('setWallet', encryptedWallet)
-    setStorageItem(wallet.name, encryptedWallet)
+    // setStorageItem(wallet.name, encryptedWallet)
   },
   deleteWallet(_, key: string) {
-    removeStorageItem(key)
+    // removeStorageItem(key)
   }
 }
 const getters = {

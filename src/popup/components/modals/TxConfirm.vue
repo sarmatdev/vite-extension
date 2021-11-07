@@ -28,18 +28,12 @@
         /></base-button>
       </header>
       <section class="p-4 flex flex-col items-center">
-        <img
-          class="h-8"
-          src="@/assets/images/logo-blue1.svg"
-          alt="Token Logo"
-        />
+        <img class="h-8" :src="params.urlIcon" alt="Token Logo" />
         <h3 class="text-2xl font-bold mt-2">{{ props.params?.amount }} VITE</h3>
         <div class="mt-4 flex items-center">
           <div class="p-2 text-left bg-blue-100 rounded-lg">
             <p>From</p>
-            {{
-              compressAddress('0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d', 5)
-            }}
+            {{ compressAddress(active.address, 10) }}
           </div>
           <div
             class="
@@ -58,7 +52,7 @@
           </div>
           <div class="p-2 text-right bg-blue-100 rounded-lg">
             <p>To</p>
-            {{ compressAddress(props.params?.toAddress, 5) }}
+            {{ compressAddress(props.params?.toAddress, 10) }}
           </div>
         </div>
       </section>
@@ -71,11 +65,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, PropType } from 'vue'
+import { defineComponent, ref, computed, watch, PropType } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useWeb3, SendTokens } from '@/composables/useWeb3'
 import useNumbers from '@/composables/useNumbers'
 import config from '@/config'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'TxConfirm',
@@ -89,10 +84,13 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
+    const store = useStore()
     const { sendTokens } = useWeb3()
     const { formatUnits } = useNumbers()
     const showModal = ref(false)
     const loading = ref(false)
+
+    const active = computed(() => store.getters['wallets/active'])
 
     function closeModal() {
       emit('close')
@@ -120,12 +118,12 @@ export default defineComponent({
     watch(
       () => props.show,
       (show) => {
-        console.log(show)
         showModal.value = show
       }
     )
 
     return {
+      active,
       showModal,
       closeModal,
       send,

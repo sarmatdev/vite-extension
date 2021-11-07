@@ -1,5 +1,6 @@
 import * as path from 'path'
 import merge from 'webpack-merge'
+const ExtensionReloader = require('webpack-ext-reloader')
 import * as Webpack from 'webpack'
 import common from './common'
 
@@ -16,5 +17,10 @@ export default merge(common, {
     port: 8080
   },
   devtool: 'cheap-module-source-map',
-  plugins: [new Webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new Webpack.HotModuleReplacementPlugin(),
+    new ExtensionReloader({
+      reloadPage: true
+    })
+  ]
 } as Webpack.Configuration)

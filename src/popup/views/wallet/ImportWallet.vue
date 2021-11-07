@@ -22,7 +22,7 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { createFromMnemonic } from '@/services/account'
+import { createFromMnemonic } from '../../../services/account'
 
 export default defineComponent({
   name: 'Import wallet',
