@@ -20,7 +20,12 @@ export default merge(common, {
   plugins: [
     new Webpack.HotModuleReplacementPlugin(),
     new ExtensionReloader({
-      reloadPage: true
+      reloadPage: true,
+      entries: {
+        contentScript: 'content-script',
+        background: 'background',
+        extensionPage: 'popup'
+      }
     })
   ]
 } as Webpack.Configuration)

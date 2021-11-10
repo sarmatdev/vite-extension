@@ -16,10 +16,10 @@ export default {
   context: path.resolve(__dirname, '../../src'),
   mode: process.env.NODE_ENV,
   entry: {
-    background: [fromSrc('/background/index.ts')],
+    background: [fromSrc('/background/index.js')],
     popup: fromSrc('/popup/index.ts'),
-    'content-script': fromSrc('/content/index.ts'),
-    'inject-script': fromSrc('/content/injectScript.ts')
+    'content-script': fromSrc('/content/index.js'),
+    'inject-script': fromSrc('/content/injectScript.js')
   },
   output: {
     path: resolve('./dist'),
@@ -93,6 +93,7 @@ export default {
       filename: '[name].[contenthash].css'
     }),
     new HtmlWebpackPlugin({
+      filename: 'popup.html',
       template: path.resolve(__dirname, '../../src/popup/index.html')
     }),
     new CopyWebpackPlugin({
@@ -110,7 +111,9 @@ export default {
   devtool: 'cheap-module-source-map',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../../src/popup')
+      '@': path.resolve(__dirname, '../../src/popup'),
+      '~': path.resolve('../../src'),
+      services: path.resolve('../../src/services')
     },
     extensions: ['.ts', '.js', '.vue'],
     plugins: [new TsconfigPathsPlugin()]
