@@ -1,3 +1,6 @@
+import apiService from '../services/APIService'
+import { msgToContentScript } from '../services/APIService'
+import * as storage from '../services/StorageService'
 import {
   HARMONY_REQUEST_TYPE,
   HARMONY_RESPONSE_TYPE,
@@ -19,9 +22,7 @@ import {
   GET_TAB_ID_INNER_EVENT_REQUEST,
   POPUP_CLOSED
 } from '../types'
-import walletAPI from 'src/services/walletAPI'
-import { msgToContentScript } from '../services/walletAPI'
-import * as storage from '../services/storage'
+import * as lock from './lock'
 
 function externalMessageListener(message, sender, sendResponse) {
   const { messageSource, payload } = message
@@ -29,18 +30,31 @@ function externalMessageListener(message, sender, sendResponse) {
   if (!messageSource || !payload || messageSource !== HARMONY_REQUEST_TYPE) {
     return false
   }
+
+  if (lock.isLocked(sender)) {
+    sendResponse({ isLocked: true })
+    console.log('Wallet is currently locked by other tab')
+    return
+  }
+  lock.lock(sender)
   const { type } = payload
   switch (type) {
+    case THIRDPARTY_SIGN_REQUEST:
+      apiService.prepareSignTransaction(sender, payload.payload)
+      break
     case THIRDPARTY_GET_ACCOUNT_REQUEST:
-      walletAPI.getAccount(sender)
+      apiService.getAccount(sender)
       break
     case THIRDPARTY_PERSONAL_SIGN_REQUEST:
-      walletAPI.sign(sender, payload.payload)
+      console.log('THIRDPARTY_PERSONAL_SIGN_REQUEST ===> ', payload)
+      apiService.sign(sender, payload.payload)
+      break
+    case THIRDPARTY_FORGET_IDENTITY_REQUEST:
+      apiService.forgetIdentity(sender)
       break
     default:
       console.warn('Unknown message from content script - ', message)
   }
-
   sendResponse()
   return true
 }
@@ -53,27 +67,27 @@ function internalMessageListener(message, sender, sendResponse) {
   }
   switch (action) {
     case GET_WALLET_SERVICE_STATE: {
-      const state = walletAPI.getState()
+      const state = apiService.getState()
       sendResponse({ state })
       break
     }
     case THIRDPARTY_SIGNATURE_KEY_SUCCESS_RESPONSE:
-      walletAPI.onGetSignatureKeySuccess(payload)
+      apiService.onGetSignatureKeySuccess(payload)
       break
     case THIRDPARTY_SIGNATURE_KEY_REJECT_RESPONSE:
-      walletAPI.onGetSignatureKeyReject(payload)
+      apiService.onGetSignatureKeyReject(payload)
       break
     case THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE:
-      walletAPI.onPersonalSignSuccess(payload)
+      apiService.onPersonalSignSuccess(payload)
       break
     case THIRDPARTY_PERSONAL_SIGN_REJECT_RESPONSE:
-      walletAPI.onPersonalSignReject(payload)
+      apiService.onPersonalSignReject(payload)
       break
     case THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE:
-      walletAPI.onGetAccountSuccess(payload)
+      apiService.onGetAccountSuccess(payload)
       break
     case THIRDPARTY_GET_ACCOUNT_REJECT_RESPONSE:
-      walletAPI.onGetAccountReject(payload)
+      apiService.onGetAccountReject(payload)
       break
     default:
       console.log('Unknown internal action received - ', action)
@@ -101,6 +115,7 @@ function onConnectListener(externalPort) {
                     sender: tab.id
                   })
                 )
+                lock.unlock()
                 break
               }
             }
@@ -108,7 +123,6 @@ function onConnectListener(externalPort) {
         })
       })
     } else {
-      // @ts-ignore
       const { AppState } = await storage.getValue('AppState')
       storage.saveValue({
         AppState: { ...AppState, lastClosed: Date.now() }
@@ -118,12 +132,16 @@ function onConnectListener(externalPort) {
 }
 
 export function getTabId({ action }, sender, sendResponse) {
-  if (action !== GET_TAB_ID_INNER_EVENT_REQUEST) {
+  try {
+    if (action !== GET_TAB_ID_INNER_EVENT_REQUEST) {
+      return false
+    }
+    console.log('🚨', sender)
+    sendResponse(sender.tab.id)
+    return true
+  } catch (_) {
     return false
   }
-
-  sendResponse(sender.tab.id)
-  return true
 }
 
 export function setupExtensionMessageListeners() {
