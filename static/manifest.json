@@ -17,7 +17,7 @@
   ],
   "browser_action": {
     "default_title": "Vite Wallet",
-    "default_popup": "index.html"
+    "default_popup": "popup.html"
   },
   "background": {
     "scripts": [
@@ -41,7 +41,7 @@
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "web_accessible_resources": [
-    "index.html",
+    "popup.html",
     "inject-script.js"
   ]
 }
