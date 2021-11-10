@@ -7,8 +7,6 @@
       class="
         block
         w-full
-        h-full
-        pr-10
         border-gray-300
         font-medium
         text-grey-900

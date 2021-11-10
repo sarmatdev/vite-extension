@@ -6,7 +6,6 @@ const modules = {}
 requireModule.keys().forEach((fileName) => {
   if (fileName === './index.ts') return
   const moduleName = camelCase(fileName.replace(/(\.\/|\.ts)/g, ''))
-  //@ts-ignore
   modules[moduleName] = requireModule(fileName).default
 })
 
