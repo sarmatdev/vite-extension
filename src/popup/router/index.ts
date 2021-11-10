@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import { saveValue, getValue } from '../../services/storage'
+import { saveValue, getValue } from '../../services/StorageService'
 import { computed } from 'vue'
 //? with useStore dont work
 import store from '../store'

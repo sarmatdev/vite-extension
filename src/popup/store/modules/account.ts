@@ -18,6 +18,7 @@ const state: AccountState = {
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
+    console.log(balance)
     state.balance = balance
   },
   setVitexTokens(state: AccountState, vitexTokens: Array<IVitexToken>) {

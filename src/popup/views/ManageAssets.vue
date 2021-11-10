@@ -28,16 +28,7 @@
             : 'All assets added'
         }}
       </p>
-      <div
-        class="
-          fixed
-          inset-x-0
-          bottom-0
-        
-          bg-blue-200
-          
-        "
-      >
+      <div class="fixed inset-x-0 bottom-0 bg-blue-200">
         <TokenList :tokens="filteredTokens" selector />
         <p
           v-if="!filteredTokens.length"
@@ -77,15 +68,12 @@ export default defineComponent({
 
     const filter = ref('')
     const filteredTokens = computed(() => {
-      return tokens.value
-        .filter(
-          (el: IVitexToken) =>
-            el.name.toLowerCase().includes(filter.value.toLowerCase()) ||
-            el.originalSymbol.toLowerCase().includes(filter.value.toLowerCase())
-        )
+      return tokens.value.filter(
+        (el: IVitexToken) =>
+          el.name.toLowerCase().includes(filter.value.toLowerCase()) ||
+          el.originalSymbol.toLowerCase().includes(filter.value.toLowerCase())
+      )
     })
-
-    
 
     return {
       navRoute,

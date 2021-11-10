@@ -12,7 +12,7 @@ export default function useTokens() {
   async function loadNativeAssetBalance() {
     const { balanceInfoMap } = await provider.request(
       'ledger_getAccountInfoByAddress',
-      active.value.address
+      'vite_9b271531e7e6505cf7f593778288709fb478b2c436c57f0605'
     )
 
     const balance = balanceInfoMap[config.nativeAsset.tokenId].balance

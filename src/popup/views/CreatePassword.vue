@@ -20,19 +20,7 @@
         :errors="repeatPasswordErrors"
       />
     </section>
-    <section
-      class="
-        px-2
-        py-8
-        fixed
-        inset-x-0
-        bottom-0
-        rounded-t-2xl
-        bg-blue-200
-        flex
-        items-center
-      "
-    >
+    <section class="w-full p-2 fixed bottom-0 right-0 rounded-md bg-blue-300">
       <BaseButton @click="savePassword" block color="blue"> Create </BaseButton>
     </section>
   </div>
@@ -41,7 +29,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import PasswordInput from '@/components/PasswordInput.vue'
 import useValidate from '@/composables/useValidate'
 
@@ -53,10 +41,11 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
 
     const state = reactive({
-      password: '',
-      repeatPassword: ''
+      password: 'qwertyqwe',
+      repeatPassword: 'qwertyqwe'
     })
 
     const { cpV$, passwordErrors, repeatPasswordErrors } = useValidate(state)
@@ -66,8 +55,8 @@ export default defineComponent({
       if (!cpV$.value.password.$error && !cpV$.value.repeatPassword.$error) {
         store.dispatch('settings/storePassword', state.password).finally(() => {
           console.log('stored')
+          router.push(route.redirectedFrom)
         })
-        router.push('/')
       }
     }
 

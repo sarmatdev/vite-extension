@@ -1,24 +1,6 @@
 <template>
   <div class="p-2">
-    <div class="text-center mb-2">
-      <h1 class="text-gray-600 text-2xl font-black cursor-default">
-        Wallet creation
-      </h1>
-      <div class="flex justify-around items-center mx-6">
-        <span
-          class="cursor-default"
-          :class="step == 1 ? 'font-bold' : 'font-light'"
-          >Create mnemonic</span
-        >
-        <BaseIcon name="chevron-right" />
-        <span
-          class="cursor-default"
-          :class="step == 2 ? 'font-bold' : 'font-light'"
-          >Confirm mnemonic</span
-        >
-      </div>
-    </div>
-    <main v-if="step == 1" class="create_wallet">
+    <main v-if="scene == 1">
       <section class="h-full">
         <BaseWarning name="info">
           Write down or copy this phrase in the correct order and keep it in a
@@ -40,7 +22,7 @@
           fixed
           bottom-0
           right-0
-          bg-blue-100
+          bg-blue-300
           rounded-t-md
         "
       >
@@ -59,7 +41,7 @@
       </section>
     </main>
     <transition name="slide">
-      <main v-if="step == 2" class="confirm_mnemonic">
+      <main v-if="scene == 2" class="confirm_mnemonic">
         <section class="grid grid-cols-1 gap-y-8 p-3">
           <BaseInput
             v-model="name"
@@ -115,9 +97,9 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import {
   createRandom,
-  validateMnemonic,
+  validatePrivateKey,
   createFromMnemonic
-} from '../../../services/account'
+} from '../../../services/AccountService'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 
@@ -127,7 +109,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    let step = ref(1)
+    let scene = ref(1)
     const wallet = createRandom()
     const mnemonic = wallet.mnemonic
     const randomMnemonic = computed(() => {
@@ -156,7 +138,7 @@ export default defineComponent({
     const v$ = useVuelidate(rules, state)
 
     function continueToConfirm() {
-      step.value = 2
+      scene.value = 2
     }
 
     const mnemonicForConfirm = ref([])
@@ -177,7 +159,7 @@ export default defineComponent({
     }
 
     const mnemonicConfirmed = computed(() => {
-      return validateMnemonic(mnemonicForConfirmString.value)
+      return validatePrivateKey(mnemonicForConfirmString.value)
     })
 
     const fromMnemonic = computed(() => {
@@ -201,7 +183,7 @@ export default defineComponent({
 
     return {
       store,
-      step,
+      scene,
       router,
       v$,
       state,

@@ -1,7 +1,5 @@
 <template>
-  <label class="block pl-1 font-semibold cursor-pointer text-gray-700"
-    >Select token</label
-  >
+  <label>Select token</label>
   <Listbox v-model="selectedToken" v-slot="{ open }">
     <div class="relative mt-1">
       <ListboxButton
@@ -16,19 +14,21 @@
           pr-10
           text-left
           rounded-lg
-          ring-1
+          shadow-md
+          ring-2
           cursor-pointer
+          focus:outline-none
           transition
           duration-150
         "
       >
-        <img class="h-8 mr-2" :src="selectedValue.urlIcon" alt="" />
+        <img class="h-8 mr-2" src="../assets/images/logo-blue1.svg" alt="" />
         <span class="block truncate flex-center">
           <span class="text-base mr-2 text-black font-medium">
-            {{ selectedValue.originalSymbol }}
+            {{ selectedValue.tokenSymbol }}
           </span>
           <span class="text-sm text-gray-400">
-            {{ selectedValue.name }}
+            {{ selectedValue.tokenName }}
           </span>
         </span>
         <span
@@ -74,7 +74,6 @@
             ring-1 ring-black ring-opacity-5
             focus:outline-none
             sm:text-sm
-            z-50
           "
         >
           <ListboxOption
@@ -90,7 +89,11 @@
                 'cursor-pointer select-none relative py-2 border-t px-4 flex items-center'
               ]"
             >
-              <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
+              <img
+                class="h-8 mr-2"
+                src="../assets/images/logo-blue1.svg"
+                alt=""
+              />
               <span
                 :class="[
                   selected ? 'font-medium ' : 'font-normal',
@@ -98,10 +101,10 @@
                 ]"
               >
                 <p class="text-base mr-2 text-black font-medium">
-                  {{ token.originalSymbol }}
+                  {{ token.tokenSymbol }}
                 </p>
                 <p class="text-sm text-gray-400">
-                  {{ token.name }}
+                  {{ token.tokenName }}
                 </p>
               </span>
               <span
@@ -152,8 +155,9 @@ export default {
     const store = useStore()
 
     const tokens = computed(() => {
-      return store.getters['account/vitexTokens']
+      return store.getters['account/tokens']
     })
+    console.log(tokens)
     const selectedToken = ref(null)
     const selectedValue = computed(() => {
       return selectedToken.value ? selectedToken.value : tokens.value[0]

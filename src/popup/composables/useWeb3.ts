@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 import { ViteAPI, accountBlock } from '@vite/vitejs'
 import HTTP_RPC from '@vite/vitejs-http'
 import config from '@/config'
-import { decryptString } from '../../services/crypto'
+import { decryptString } from '../../services/CryptoService'
 
 export interface SendTokens {
   toAddress?: string

@@ -26,4 +26,3 @@ export function post(url: string, data: any) {
     data
   })
 }
-
