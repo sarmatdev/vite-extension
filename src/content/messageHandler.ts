@@ -1,8 +1,9 @@
 import { HARMONY_REQUEST_TYPE, HARMONY_RESPONSE_TYPE } from '../types'
 import {
+  TRANSACTIONTYPE,
   FACTORYTYPE,
-  ONEWALLET_SERVICE_EVENT_REQUEST,
-  ONEWALLET_SERVICE_EVENT_RESPONSE,
+  VITE_SERVICE_EVENT_REQUEST,
+  VITE_SERVICE_EVENT_RESPONSE,
   POPUP_CLOSED
 } from '../types'
 
@@ -23,15 +24,15 @@ const waitForResponse = (type: any) => {
       if (message.type === type) {
         resolve(message.payload)
       }
-      window.removeEventListener(ONEWALLET_SERVICE_EVENT_RESPONSE, handler)
+      window.removeEventListener(VITE_SERVICE_EVENT_RESPONSE, handler)
     })
-    window.addEventListener(ONEWALLET_SERVICE_EVENT_RESPONSE, handler)
+    window.addEventListener(VITE_SERVICE_EVENT_RESPONSE, handler)
   })
 }
 
 const sendMessageToContentScript = (payload: any) => {
   window.dispatchEvent(
-    new CustomEvent(ONEWALLET_SERVICE_EVENT_REQUEST, {
+    new CustomEvent(VITE_SERVICE_EVENT_REQUEST, {
       detail: {
         type: HARMONY_REQUEST_TYPE,
         payload

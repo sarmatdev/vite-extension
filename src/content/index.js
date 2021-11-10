@@ -1,15 +1,14 @@
-// @ts-nocheck
 import {
   HARMONY_REQUEST_TYPE,
   HARMONY_RESPONSE_TYPE,
-  ONEWALLET_SERVICE_EVENT_REQUEST,
-  ONEWALLET_SERVICE_EVENT_RESPONSE,
+  VITE_SERVICE_EVENT_REQUEST,
+  VITE_SERVICE_EVENT_RESPONSE,
   GET_TAB_ID_INNER_EVENT_REQUEST,
   POPUP_CLOSED
 } from '../types'
 
 window.onerror = function (message, error) {
-  console.error('One Wallet service call failed,', message, ', error: ', error)
+  console.error('Vite Wallet service call failed,', message, ', error: ', error)
 }
 
 let currentTabId = null
@@ -24,7 +23,7 @@ chrome.runtime.sendMessage(
 
 // Content script
 window.addEventListener(
-  ONEWALLET_SERVICE_EVENT_REQUEST,
+  VITE_SERVICE_EVENT_REQUEST,
   function (event) {
     const exec = () => {
       if (
@@ -74,7 +73,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
   delete message.message.payload.sender
 
   window.dispatchEvent(
-    new CustomEvent(ONEWALLET_SERVICE_EVENT_RESPONSE, {
+    new CustomEvent(VITE_SERVICE_EVENT_RESPONSE, {
       detail: message
     })
   )
@@ -83,15 +82,15 @@ chrome.runtime.onMessage.addListener(async (message) => {
   return true
 })
 
-function injectScript() {
+const injectScript = () => {
   try {
     const node = document.head || document.documentElement
     const script = document.createElement('script')
     script.setAttribute('type', 'text/javascript')
     script.setAttribute('src', chrome.extension.getURL('inject-script.js'))
     node.appendChild(script)
-    console.info('✅ ViteWallet provider injected')
+    console.info('Vite provider injected')
   } catch (e) {
-    console.error('🚨 ViteWallet provider injection failed', e)
+    console.error('Vite provider injection failed', e)
   }
 }
