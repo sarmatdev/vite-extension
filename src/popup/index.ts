@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router.js'
+import router from './router/index'
 import store from './store'
 import { FROM_BACK_TO_POPUP, CLOSE_WINDOW } from '../types'
 
