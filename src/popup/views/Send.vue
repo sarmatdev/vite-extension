@@ -3,13 +3,14 @@
     <TokenSelect v-model="token" />
     <base-input v-model="toAddress" class="mt-2" label="Address"></base-input>
     <base-input v-model="amount" type="number" class="mt-2" label="Amount" />
+
     <base-button @click="isOpen = true" class="mt-2" color="green" block
       >Send</base-button
     >
     <TxConfirm
       :show="isOpen"
       @close="closeModal"
-      :params="{ amount, toAddress }"
+      :params="{ amount, toAddress, urlIcon: token.urlIcon }"
     />
   </div>
 </template>
@@ -30,7 +31,7 @@ export default defineComponent({
     const { formatUnits } = useNumbers()
     const isOpen = ref(false)
     const amount = ref('0')
-    const token = ref(null)
+    const token = ref(undefined)
     const rawAmount = ref('')
     const toAddress = ref('')
 

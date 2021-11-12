@@ -1,58 +1,64 @@
-import useTokens from '@/composables/useTokens'
 import { Commit } from 'vuex'
+import { IVitexToken } from '@/types'
+import { getTokens } from '@/api/tokens.api'
+import { getExchangeRate } from '@/api/exchange-rate.api'
 
-export interface IToken {
-  decimals: number
-  index: number
-  isOwnerBurnOnly: boolean
-  isReIssuable: boolean
-  maxSupply: string
-  owner: string
-  ownerBurnOnly: boolean
-  tokenId: string
-  tokenName: string
-  tokenSymbol: string
-  totalSupply: string
-}
 export interface AccountState {
   balance: string
-  tokens: Array<IToken>
-  selectedTokens: Array<IToken>
+  vitexTokens: Array<IVitexToken>
+  selectedTokens: Array<IVitexToken>
+  prices: Array<any>
 }
 
 const state: AccountState = {
   balance: '',
-  tokens: [],
-  selectedTokens: []
+  vitexTokens: [],
+  selectedTokens: [],
+  prices: []
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
     console.log(balance)
     state.balance = balance
   },
-  setTokens(state: AccountState, tokens: Array<IToken>) {
-    state.tokens = tokens
+  setVitexTokens(state: AccountState, vitexTokens: Array<IVitexToken>) {
+    state.vitexTokens = vitexTokens
   },
-  addSelectedTokens(state: AccountState, selectedToken: IToken) {
+  addSelectedTokens(state: AccountState, selectedToken: IVitexToken) {
     state.selectedTokens.push(selectedToken)
   },
-  removeSelectedTokens(state: AccountState, selectedToken: IToken) {
+  removeSelectedTokens(state: AccountState, selectedToken: IVitexToken) {
     state.selectedTokens = state.selectedTokens.filter(
       (el) => el.tokenId !== selectedToken.tokenId
     )
+  },
+  setPrices(state: AccountState, prices) {
+    state.prices = prices
   }
 }
 const actions = {
-  async fetchTokens({ commit }: { commit: Commit }) {
-    const { getTokenInfoList } = useTokens()
-    const tokens = await getTokenInfoList()
-    commit('setTokens', tokens.tokenInfoList)
+  async fetchVitexTokens({ commit }: { commit: Commit }) {
+    const vitexTokens = await getTokens()
+    commit('setVitexTokens', vitexTokens)
+  },
+  async fetchPrices(context) {
+    const prices = []
+    await context.getters.vitexTokens.forEach(async (el) => {
+      const res = await getExchangeRate(el.tokenId)
+      //@ts-ignore
+      if (res.data.data.length) {
+        //@ts-ignore
+        prices.push(res.data.data[0])
+      }
+    })
+    context.commit('setPrices', prices)
   }
 }
 const getters = {
   balance: (s: AccountState) => s.balance,
-  tokens: (s: AccountState) => s.tokens,
-  selectedTokens: (s: AccountState) => s.selectedTokens
+  vitexTokens: (s: AccountState) => s.vitexTokens,
+  selectedTokens: (s: AccountState) => s.selectedTokens,
+  prices: (s: AccountState) => s.prices
 }
 
 export default {

@@ -1,36 +1,39 @@
 <template>
   <div class="auth-page"></div>
 </template>
-<script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { setStorageItem, getStorageItem } from './services/storage'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-export default defineComponent({
-  name: 'AuthRoute',
-  setup() {
-    const AppState = getStorageItem('AppState')
-    const store = useStore()
-    const router = useRouter()
-    const password = computed(() => store.getters['settings/password'])
-    const timeout = computed(() => store.getters['settings/timeout'])
-    const accounts = computed(() => store.getters['wallets/accounts'])
-
+<script>
+import { mapState, mapGetters } from 'vuex'
+import * as storage from '../services/StorageService'
+export default {
+  computed: {
+    ...mapGetters(['getPinCode']),
+    ...mapState({
+      accounts: (state) => state.wallets.accounts,
+      timeout: (state) => state.settings.auth.timeout
+    })
+  },
+  async created() {
+    const { AppState } = await storage.getValue('AppState')
     if (AppState) {
-      const lastClosed = AppState
-      if (lastClosed && accounts.value.length && password.value) {
+      const { lastClosed } = AppState
+      if (lastClosed && this.accounts.length && this.getPinCode) {
         const now = Date.now()
-        //@ts-ignore
         const offset = now - lastClosed
-        if (offset >= timeout.value) {
-          store.dispatch('settings/storeIsLocked', true)
-          router.push('/lock')
+        if (offset >= this.timeout) {
+          this.$store.dispatch('settings/setLockState', true)
+          this.$router.push('/lock')
+          return
         }
       }
     }
-    setStorageItem('AppState', { ...AppState, lastOpened: Date.now() })
-    router.push('/home')
+    storage.saveValue({ AppState: { ...AppState, lastOpened: Date.now() } })
+    this.$router.push('/home')
   }
-})
+}
 </script>
-<style></style>
+<style>
+.auth-page {
+  width: 370px;
+  height: 600px;
+}
+</style>

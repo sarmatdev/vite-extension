@@ -1,6 +1,5 @@
 <template>
   <div class="box-container">
-    <Header />
     <Notifications />
     <router-view />
   </div>
@@ -8,29 +7,36 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Header from '@/components/Header.vue'
 import Notifications from '@/components/Notifications.vue'
+import { APP_CONNECT } from '../types'
 
 export default defineComponent({
-  name: 'App',
   components: {
-    Header,
     Notifications
+  },
+  setup() {
+    chrome.runtime.connect({ name: APP_CONNECT })
   }
 })
 </script>
 
-<style lang="scss">
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 ::-webkit-scrollbar {
   width: 0;
   background: transparent;
 }
-
 body {
   width: 360px;
   height: 600px;
 }
-
 .box-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -48,7 +54,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0px 5px 15px #00000033;
+  box-shadow: 0px 5px 15px #0044ff5b;
 }
 </style>

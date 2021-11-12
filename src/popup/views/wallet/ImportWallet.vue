@@ -3,17 +3,19 @@
     <h1 class="text-2xl text-gray-600 text-center font-bold">Import wallet</h1>
     <section>
       <BaseInput v-model="name" label="Wallet Name"></BaseInput>
+      <select v-model="importWay">
+        <option :value="0">Private key</option>
+        <option :value="1">Mnemonic</option>
+      </select>
       <BaseTextarea
         class="mt-2"
-        label="Mnemonic phrase"
+        :label="sourceLabel"
         v-model.trim="source"
       ></BaseTextarea>
     </section>
 
-    <section class="w-full p-2 fixed bottom-0 right-0">
-      <BaseButton @click="importWallet" size="lg" color="blue"
-        >Import</BaseButton
-      >
+    <section class="w-full p-2 fixed bottom-0 right-0 rounded-md bg-blue-300">
+      <BaseButton @click="importWallet" color="blue" block>Import</BaseButton>
     </section>
   </div>
 </template>
@@ -22,38 +24,70 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { createFromMnemonic } from '@/services/account'
+import { useNotifications } from '@/composables/useNotifications'
+import { nanoid } from 'nanoid'
+
+import {
+  createFromMnemonic,
+  createFromPrivateKey,
+  createAccount
+} from '../../../services/AccountService'
+import { decryptString } from '../../../services/CryptoService'
 
 export default defineComponent({
   name: 'Import wallet',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { notify } = useNotifications()
 
+    const importWay = ref(0)
     const source = ref('')
+    const isWalletGenerated = ref(false)
 
+    const sourceLabel = computed(() => {
+      return importWay.value === 0 ? 'Your private key' : 'Your mnemonic'
+    })
+
+    const password = computed(() => store.getters['settings/password'])
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
     const name = ref(`Wallet ${accountsNum.value + 1}`)
 
-    const importedWallet = computed(() => {
-      return createFromMnemonic(source.value)
-    })
+    function checkSource() {
+      const res =
+        importWay.value === 0
+          ? createFromPrivateKey(source.value)
+          : createFromMnemonic(source.value)
+
+      if (res.code) {
+        notify({ message: res.message, type: 'red' })
+      }
+
+      return res
+    }
+
+    function decryptPassword(): string {
+      return decryptString(password.value.payload, password.value.salt)
+    }
 
     function importWallet() {
-      if (importedWallet.value) {
-        store.dispatch('wallets/storeWallet', {
-          name: name.value,
-          ...importedWallet.value
-        })
+      const account = checkSource()
+      const decrypt = decryptPassword()
 
-        router.push('/home')
+      const wallet = createAccount(name.value, account.privateKey, decrypt)
+      console.log('wallet', wallet)
+      if (wallet) {
+        store.commit('wallets/setWallet', wallet)
+        router.push('/')
       }
     }
 
     return {
       name,
       source,
-      importedWallet,
+      sourceLabel,
+      importWay,
+      isWalletGenerated,
       accountsNum,
       importWallet
     }

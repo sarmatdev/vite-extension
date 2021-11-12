@@ -22,12 +22,18 @@
     "@vuelidate/core": "^2.0.0-alpha.26",
     "@vuelidate/validators": "^2.0.0-alpha.22",
     "aes-js": "^3.1.2",
+    "animate.css": "^4.1.1",
+    "axios": "^0.23.0",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
+    "crypto-js": "^4.1.1",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "nanoid": "^3.1.28",
+    "post-message-stream": "^3.0.0",
     "qr-code-styling": "^1.6.0-rc.1",
+    "qrcode.vue": "^3.3.3",
+    "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
@@ -62,6 +68,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^2.0.0-0",
+    "@webpack-cli/serve": "^1.6.0",
     "autoprefixer": "^9",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
@@ -101,6 +108,7 @@
     "vue-loader": "^16.1.2",
     "webpack": "^5.10.3",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-ext-reloader": "^1.1.8"
   }
 }

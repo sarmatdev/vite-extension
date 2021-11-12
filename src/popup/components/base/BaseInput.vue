@@ -19,7 +19,7 @@
           text-sm text-gray-900
           placeholder-gray-400
           transition-all
-          focus:outline-none focus:ring-blue-500 focus:border-blue-500
+          focus:border-blue-500
           caret-blue-600
           hover:ring-gray-900 hover:border-gray-900
           rounded-md
