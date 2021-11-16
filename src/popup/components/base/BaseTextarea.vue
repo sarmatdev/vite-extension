@@ -1,12 +1,17 @@
 <template>
   <div>
-    <label class="block pl-1 font-medium cursor-pointer text-gray-700">{{
-      label
-    }}</label>
+    <label
+      :for="label"
+      class="block pl-1 font-medium cursor-pointer text-gray-700"
+      >{{ label }}</label
+    >
     <textarea
+      :id="label"
       class="
         block
         w-full
+        h-20
+        resize-none
         border-gray-300
         font-medium
         text-grey-900

@@ -6,18 +6,18 @@
   >
     <label
       @click="open = true"
-      class="absolute left-0 -top-8 py-2 text-base text-gray-600 cursor-pointer"
+      class="absolute left-0 -top-8 py-2 text-base text-black cursor-pointer"
       >{{ label }}</label
     >
 
     <div
-      class="p-1 text-gray-600 border-2 rounded-md cursor-pointer"
-      :class="{ 'border-2 border-blue-300 border-b-0': open }"
+      class="text-black py-2 border-2 rounded-md cursor-pointer"
+      :class="{ 'border-blue-300': open }"
       @click="open = !open"
     >
       {{ !selected ? options[0] : selected }}
       <BaseIcon
-        class="absolute right-2 top-2"
+        class="absolute right-3 top-3 z-20 transition-all"
         :class="{ 'transform rotate-180': open }"
         name="chevron-down"
       />
@@ -25,19 +25,19 @@
 
     <div
       class="
-        rounded-b-md
+        rounded-md
         absolute
         left-0
         right-0
-        top-7
+        top-0
         bg-white
-        border-2 border-t-0 border-blue-300
+        ring-2 ring-blue-300
         overflow-hidden
       "
       :class="{ hidden: !open }"
     >
       <div
-        class="p-l-4 select-none cursor-pointer hover:bg-blue-300"
+        class="py-2 select-none text-black cursor-pointer hover:bg-blue-300"
         v-for="(option, idx) of options"
         :key="idx"
         @click="selectOption(option)"
