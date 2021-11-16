@@ -25,7 +25,7 @@ export default defineComponent({
       return showPassword.value ? 'text' : 'password'
     })
     const inputIcon = computed(() => {
-      return showPassword.value ? 'eye-off' : 'eye'
+      return showPassword.value ? 'eye' : 'eye-off'
     })
 
     return {
