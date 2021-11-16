@@ -1,12 +1,13 @@
 <template>
   <div class="relative">
     <label
-      for="input"
-      class="block pl-1 font-semibold cursor-pointer text-gray-700"
+      :for="label"
+      class="block pb-1 font-semibold cursor-pointer text-gray-700"
       >{{ label }}</label
     >
     <div class="relative rounded-md shadow-sm">
       <input
+        :id="label"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         ref="input"
@@ -14,6 +15,7 @@
           block
           w-full
           pr-10
+          py-3
           border-gray-300
           font-medium
           text-sm text-gray-900
@@ -32,14 +34,14 @@
           v-if="icon"
           @click="$emit('iconEvent', $event.target)"
           :name="icon"
-          class="h-4 w-4 cursor-pointer"
+          class="h-5 w-5 cursor-pointer"
           aria-hidden="true"
         />
       </div>
     </div>
     <ul
       v-if="errors.length"
-      class="absolute left-0 -bottom-5 font-medium text-sm text-red-600"
+      class="absolute left-0 -bottom-6 font-medium text-sm text-red-600"
     >
       <li v-for="(error, idx) in errors" :key="idx">{{ error }}</li>
     </ul>
@@ -48,7 +50,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import useFocus from '@/composables/useFocus'
 export default defineComponent({
   name: 'BaseInput',
   props: {
@@ -66,13 +67,6 @@ export default defineComponent({
       default: () => {
         return []
       }
-    }
-  },
-  setup() {
-    const { focusStatus, focusChange } = useFocus()
-    return {
-      focusStatus,
-      focusChange
     }
   }
 })

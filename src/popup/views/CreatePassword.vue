@@ -1,9 +1,11 @@
 <template>
   <div class="p-2 h-full">
     <section class="flex flex-col space-y-6 mt-10">
-      <h1 class="text-gray-600 text-2xl font-black text-center cursor-default">
-        Create Password
-      </h1>
+      <h1>Create Password</h1>
+      <p class="text-center mx-8 ">
+        Save the password to a safe place. You will need it to unlock your
+        wallet.
+      </p>
       <PasswordInput
         @input="cpV$.password.$touch"
         v-model="state.password"
@@ -20,7 +22,9 @@
         :errors="repeatPasswordErrors"
       />
     </section>
-    <section class="w-full p-2 fixed bottom-0 right-0 rounded-md bg-blue-300">
+    <section
+      class="w-full px-4 py-8 fixed bottom-0 right-0 rounded-xl bg-blue-300"
+    >
       <BaseButton @click="savePassword" block color="blue"> Create </BaseButton>
     </section>
   </div>

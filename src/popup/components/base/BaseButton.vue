@@ -112,10 +112,7 @@ export default defineComponent({
       if (props.loading) {
         return `bg-gradient-to-tr from-${fromColor}-50 to-${toColor}-50`
       }
-      return `
-        bg-gradient-to-tr from-${fromColor}-500 to-${toColor}-500
-        hover:from-${fromColor}-600 hover:to-${toColor}-600
-      `
+      return 'btn-grad'
     })
     const bgFlatClasses = computed(() => {
       return `
@@ -215,5 +212,26 @@ export default defineComponent({
 }
 .content {
   @apply flex justify-center items-center w-full h-full;
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #1fa2ff 0%,
+    #12d8fa 51%,
+    #1fa2ff 100%
+  );
+}
+.btn-grad {
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  display: block;
+}
+
+.btn-grad:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
 }
 </style>

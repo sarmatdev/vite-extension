@@ -1,24 +1,35 @@
 <template>
   <div class="p-2">
+    <h1 class="my-4">Create wallet</h1>
     <main v-if="scene == 1">
-      <section class="h-full">
+      <section class="h-full w-full flex flex-col space-y-4">
         <BaseWarning name="info">
           Write down or copy this phrase in the correct order and keep it in a
           safe place.
         </BaseWarning>
 
-        <BaseTextarea class="mt-4" v-model="mnemonic" readonly />
+        <BaseTextarea
+          label="Your recovery phrase"
+          class="mt-4"
+          v-model="mnemonic"
+          readonly
+        />
 
-        <BaseButton outline class="mt-4" size="xs">
-          <BaseIcon class="mr-0.5" size="xs" name="copy" />
+        <BaseButton color="gradient" rounded size="s" class="mx-auto">
+          <BaseIcon class="mr-0.5" size="s" name="copy" />
           Copy
         </BaseButton>
+        <BaseCheckbox v-model="agree">
+          I understand that if i lose my recovery phrase, i will not beable to
+          access my funds.
+        </BaseCheckbox>
       </section>
       <section
         class="
           text-sm
           w-full
-          p-2
+          px-4
+          py-8
           fixed
           bottom-0
           right-0
@@ -26,11 +37,6 @@
           rounded-t-md
         "
       >
-        <BaseCheckbox v-model="agree">
-          I understand that if you lose your recovery phrase, you will not
-          beable to access my funds
-        </BaseCheckbox>
-
         <BaseButton
           color="blue"
           size="lg"
@@ -53,7 +59,7 @@
             v-model="mnemonicForConfirmString"
             readonly
           ></BaseTextarea>
-          <ul class="grid grid-cols-3 gap-2 text-center">
+          <ul class="space-x-2 flex flex-wrap justify-center">
             <li
               v-for="(mnemonicItem, idx) in randomMnemonic"
               :key="idx"
@@ -62,9 +68,9 @@
               :class="
                 mnemonicForConfirm.includes(mnemonicItem)
                   ? 'bg-gray-300 cursor-default'
-                  : 'cursor-pointer hover:border-blue-300'
+                  : 'cursor-pointer btn-grad'
               "
-              class="border text-gray-600 rounded-xl"
+              class="border text-gray-600 rounded-2xl py-1 px-4 mb-2"
             >
               {{ mnemonicItem }}
             </li>
@@ -92,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import {
@@ -100,8 +106,6 @@ import {
   validatePrivateKey,
   createFromMnemonic
 } from '../../../services/AccountService'
-import useVuelidate from '@vuelidate/core'
-import { required, minLength, sameAs } from '@vuelidate/validators'
 
 export default defineComponent({
   name: 'CreateWallet',
@@ -119,23 +123,6 @@ export default defineComponent({
     })
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
     const agree = ref(false)
-
-    const state = reactive({
-      password: '',
-      repeatPassword: ''
-    })
-    const rules = computed(() => {
-      const localRules = {
-        password: { required, minLength: minLength(8) },
-        repeatPassword: {
-          required,
-          sameAs: sameAs(state.password)
-        }
-      }
-
-      return localRules
-    })
-    const v$ = useVuelidate(rules, state)
 
     function continueToConfirm() {
       scene.value = 2
@@ -165,6 +152,7 @@ export default defineComponent({
     const fromMnemonic = computed(() => {
       return createFromMnemonic(mnemonic)
     })
+    console.log(mnemonic)
 
     const name = ref(`Wallet ${accountsNum.value + 1}`)
 
@@ -178,17 +166,10 @@ export default defineComponent({
       router.push('/')
     }
 
-    const passwordVisible = ref(false)
-    const repeatPasswordVisible = ref(false)
-
     return {
       store,
       scene,
       router,
-      v$,
-      state,
-      passwordVisible,
-      repeatPasswordVisible,
       mnemonic,
       randomMnemonic,
       continueToConfirm,
@@ -225,5 +206,41 @@ export default defineComponent({
 .slide-leave-from {
   position: absolute;
   left: 0;
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #000046 0%,
+    #1cb5e0 51%,
+    #000046 100%
+  );
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #1fa2ff 0%,
+    #12d8fa 51%,
+    #1fa2ff 100%
+  );
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #1c92d2 0%,
+    #f2fcfe 51%,
+    #1c92d2 100%
+  );
+}
+.btn-grad {
+  transition: 0.5s;
+  background-size: 200% auto;
+  box-shadow: 0 0 20px #eee;
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
 }
 </style>

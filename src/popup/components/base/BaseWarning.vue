@@ -2,14 +2,14 @@
   <div class="rounded-md bg-yellow-100 p-4">
     <div class="flex">
       <div class="flex-shrink-0">
-        <BaseIcon :name="icon" />
+        <BaseIcon class="text-yellow-400" :name="icon" />
       </div>
       <div class="ml-3">
         <h3 class="text-sm font-medium text-yellow-400">Attention needed</h3>
         <div class="mt-1 text-sm text-yellow-700">
-          <p>
+          <span>
             <slot />
-          </p>
+          </span>
         </div>
       </div>
     </div>
@@ -24,14 +24,13 @@ export default defineComponent({
   props: {
     type: {
       type: String,
-      default: 'warn',
       validator: (value: string) => ['warn', 'error'].includes(value)
     }
   },
   setup(props) {
     const icon = computed(() => {
       switch (props.type) {
-        case 'warn':
+        case 'info':
           return 'alert-triangle'
         case 'error':
           return 'alert-circle'

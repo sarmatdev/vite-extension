@@ -1,17 +1,12 @@
 /* eslint-disable prettier/prettier */ /* eslint-disable prettier/prettier */
 <template>
   <div class="base-icon inline-block">
-    <img
-      :src="require(`@/assets/icons/${name}.svg`)"
-      :width="iconSize"
-      :height="iconSize"
-      :alt="`${name} icon`"
-    />
+    <i :data-feather="name" :width="iconSize" :height="iconSize" :fill="fill" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 export default defineComponent({
   name: 'BaseIcon',
   props: {
@@ -22,8 +17,10 @@ export default defineComponent({
       validator: (val: string): boolean => {
         return ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'].includes(val)
       }
-    }
+    },
+    filled: { type: Boolean, default: false }
   },
+  // #ffc700
   setup(props) {
     const iconSize = computed(() => {
       switch (props.size) {
@@ -41,8 +38,10 @@ export default defineComponent({
           return '20'
       }
     })
-
-    return { iconSize }
+    const feather = require('feather-icons')
+    const fill = computed(() => (props.filled ? 'currentColor' : 'none'))
+    onMounted(() => feather.replace())
+    return { iconSize, fill }
   }
 })
 </script>
