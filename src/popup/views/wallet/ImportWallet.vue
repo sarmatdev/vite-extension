@@ -1,20 +1,23 @@
 <template>
   <div class="p-2">
-    <h1 class="text-2xl text-gray-600 text-center font-bold">Import wallet</h1>
-    <section>
+    <h1 class="my-4">Import wallet</h1>
+    <section class="flex flex-col space-y-8">
       <BaseInput v-model="name" label="Wallet Name"></BaseInput>
-      <select v-model="importWay">
-        <option :value="0">Private key</option>
-        <option :value="1">Mnemonic</option>
-      </select>
-      <BaseTextarea
-        class="mt-2"
-        :label="sourceLabel"
-        v-model.trim="source"
-      ></BaseTextarea>
+      <BaseSelect
+        v-model="importWay"
+        label="Import with"
+        :options="['Private key', 'Mnemonic']"
+      />
+      <BaseTextarea :label="importWay" v-model.trim="source"></BaseTextarea>
+      <BaseButton color="gradient" rounded size="s" class="mx-auto">
+        <BaseIcon class="mr-0.5" size="s" name="copy" />
+        Paste
+      </BaseButton>
     </section>
 
-    <section class="w-full p-2 fixed bottom-0 right-0 rounded-md bg-blue-300">
+    <section
+      class="w-full px-4 py-8 fixed bottom-0 right-0 rounded-t-md bg-blue-300"
+    >
       <BaseButton @click="importWallet" color="blue" block>Import</BaseButton>
     </section>
   </div>
@@ -41,13 +44,9 @@ export default defineComponent({
     const router = useRouter()
     const { notify } = useNotifications()
 
-    const importWay = ref(0)
+    const importWay = ref('')
     const source = ref('')
     const isWalletGenerated = ref(false)
-
-    const sourceLabel = computed(() => {
-      return importWay.value === 0 ? 'Your private key' : 'Your mnemonic'
-    })
 
     const password = computed(() => store.getters['settings/password'])
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
@@ -55,7 +54,7 @@ export default defineComponent({
 
     function checkSource() {
       const res =
-        importWay.value === 0
+        importWay.value === 'Private key'
           ? createFromPrivateKey(source.value)
           : createFromMnemonic(source.value)
 
@@ -85,7 +84,6 @@ export default defineComponent({
     return {
       name,
       source,
-      sourceLabel,
       importWay,
       isWalletGenerated,
       accountsNum,
