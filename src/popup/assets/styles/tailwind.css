@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;500;600&display=swap');
+
+h1 {
+  @apply text-black text-2xl font-black text-center cursor-default;
+}
+p {
+  @apply text-gray-600 font-medium text-xl;
+}
