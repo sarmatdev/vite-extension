@@ -38,14 +38,14 @@ body {
   height: 600px;
 }
 .box-container {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Signika Negative', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #617ba3;
   padding: 0;
   margin: 0;
   overflow: hidden;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1rem;
   line-height: 1.5;
   width: 360px;
