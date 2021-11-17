@@ -14,21 +14,21 @@
       </BaseLink>
     </div>
     <template v-if="navRoute === 'Search'">
-      <div class="rounded-b-2xl bg-blue-200 p-3">
+      <div class="rounded-b-md bg-blue-200 p-3">
         <BaseInput
           v-model="filter"
           class="mx-3 my-8"
           placeholder="Asset filter..."
         />
       </div>
-      <p class="text-center my-4">
+      <p class="text-center py-2">
         {{
           filter
             ? `${filteredTokens.length} of ${tokens.length}`
             : 'All assets added'
         }}
       </p>
-      <div class="fixed inset-x-0 bottom-0 bg-blue-200">
+      <div class="fixed inset-x-0 bottom-0 rounded-t-md bg-blue-200">
         <TokenList :tokens="filteredTokens" selector />
         <p
           v-if="!filteredTokens.length"

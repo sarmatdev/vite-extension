@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
-    <AccountInfo />
-    <div class="flex mx-3 space-x-3 mb-3">
+  <div class="home flex flex-col h-full">
+    <AccountInfo class="mt-8" />
+    <div class="flex mx-3 space-x-3 mt-8">
       <BaseButton to="/send" color="blue" size="lg"> Send </BaseButton>
       <BaseButton to="/recieve" color="blue" size="lg"> Receive </BaseButton>
     </div>
