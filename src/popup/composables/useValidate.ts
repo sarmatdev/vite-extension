@@ -66,11 +66,80 @@ export default function useValidate(state: any) {
     return errors
   })
 
+  const confirmMnemonicRules = computed(() => {
+    const localRules = {
+      mnemonicForConfirm: {
+        required,
+        sameAs: sameAs(state.mnemonic)
+      }
+    }
+
+    return localRules
+  })
+  const CMV$: any = useVuelidate(confirmMnemonicRules, state)
+  const confrimMnemonicErrors = computed(() => {
+    const errors = []
+    if (CMV$.value.mnemonicForConfirm.$dirty) {
+      if (!CMV$.value.mnemonicForConfirm.required.$response) {
+        errors.push('This filed is required')
+      } else if (!CMV$.value.mnemonicForConfirm.sameAs.$response) {
+        errors.push('Incorrect words or words order')
+      }
+    }
+    return errors
+  })
+
+  const requiedRule = computed(() => {
+    const localRules = {
+      validator: {
+        required
+      }
+    }
+
+    return localRules
+  })
+  const requiedV$: any = useVuelidate(requiedRule, state)
+  const requiedError = computed(() => {
+    const errors = []
+    if (requiedV$.value.validator.$dirty) {
+      if (!requiedV$.value.validator.required.$response) {
+        errors.push('This filed is required')
+      }
+    }
+    return errors
+  })
+
+  const importTextareaRule = computed(() => {
+    const localRules = {
+      validator: {
+        required
+      }
+    }
+
+    return localRules
+  })
+  const importTextareaV$: any = useVuelidate(importTextareaRule, state)
+  const importTextareaError = computed(() => {
+    const errors = []
+    if (importTextareaV$.value.validator.$dirty) {
+      if (!importTextareaV$.value.validator.required.$response) {
+        errors.push('This filed is required')
+      }
+    }
+    return errors
+  })
+
   return {
     cpV$,
     passwordErrors,
     repeatPasswordErrors,
     lV$,
-    unLockErrors
+    unLockErrors,
+    CMV$,
+    confrimMnemonicErrors,
+    requiedV$,
+    requiedError,
+    importTextareaV$,
+    importTextareaError
   }
 }
