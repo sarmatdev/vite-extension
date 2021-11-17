@@ -1,4 +1,6 @@
 <template>
+  <Header />
+
   <div class="home flex flex-col h-full">
     <AccountInfo class="mt-8" />
     <div class="flex mx-3 space-x-3 mt-8">
@@ -47,13 +49,15 @@ import { useStore } from 'vuex'
 import AccountInfo from '@/components/AccountInfo.vue'
 import TokenList from '@/components/lists/TokenList.vue'
 import TransactionList from '@/components/lists/TransactionList.vue'
+import Header from '@/components/Header.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
     AccountInfo,
     TokenList,
-    TransactionList
+    TransactionList,
+    Header
   },
   setup() {
     const { loadNativeAssetBalance, getTokenInfoList } = useTokens()
