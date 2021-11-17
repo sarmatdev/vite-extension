@@ -12,10 +12,10 @@
 
     <div
       class="text-black py-2 border-2 rounded-md cursor-pointer"
-      :class="{ 'border-blue-300': open }"
+      :class="{ 'border-blue-500': open }"
       @click="open = !open"
     >
-      {{ !selected ? options[0] : selected }}
+      {{ !selected ? placeholder : selected }}
       <BaseIcon
         class="absolute right-3 top-3 z-20 transition-all"
         :class="{ 'transform rotate-180': open }"
@@ -29,9 +29,10 @@
         absolute
         left-0
         right-0
-        top-0
+        top-12
+        z-10
         bg-white
-        ring-2 ring-blue-300
+        shadow-select
         overflow-hidden
       "
       :class="{ hidden: !open }"
@@ -62,7 +63,8 @@ export default defineComponent({
     tabindex: {
       type: Number,
       default: 0
-    }
+    },
+    placeholder: String
   },
   setup(props, { emit }) {
     const selected = ref(null)
