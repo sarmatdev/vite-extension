@@ -1,5 +1,6 @@
 <template>
   <div class="box-container">
+    <Header />
     <Notifications />
     <router-view />
   </div>
@@ -8,11 +9,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Notifications from '@/components/Notifications.vue'
+import Header from '@/components/Header.vue'
 import { APP_CONNECT } from '../types'
 
 export default defineComponent({
   components: {
-    Notifications
+    Notifications,
+    Header
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
