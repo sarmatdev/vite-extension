@@ -1,24 +1,42 @@
 <template>
   <div class="p-2">
     <h1 class="my-4">Import wallet</h1>
-    <section class="flex flex-col space-y-8">
-      <BaseInput v-model="name" label="Wallet Name"></BaseInput>
+    <section class="flex flex-col">
+      <BaseInput
+        v-model="name"
+        @input="requiedV$.validator.$touch"
+        :errors="requiedError"
+        label="Wallet Name"
+        class="mb-8"
+      ></BaseInput>
       <BaseSelect
         v-model="importWay"
         label="Import with"
+        class="mb-20"
+        placeholder="Select way to import"
         :options="['Private key', 'Mnemonic']"
       />
-      <BaseTextarea :label="importWay" v-model.trim="source"></BaseTextarea>
-      <BaseButton color="gradient" rounded size="s" class="mx-auto">
-        <BaseIcon class="mr-0.5" size="s" name="copy" />
-        Paste
-      </BaseButton>
+      <BaseTextarea
+        :label="`Write or paste your ${importWay}`"
+        icon="clipboard"
+        @input="importTextareaV$.validator.$touch"
+        :errors="importTextareaError"
+        @iconEvent="pasteSource"
+        v-model.trim="source"
+      ></BaseTextarea>
     </section>
 
     <section
       class="w-full px-4 py-8 fixed bottom-0 right-0 rounded-t-md bg-blue-300"
     >
-      <BaseButton @click="importWallet" color="blue" block>Import</BaseButton>
+      <BaseButton
+        @click="importWallet"
+        :disabled="!name || !importWay || !source"
+        color="blue"
+        block
+      >
+        Import</BaseButton
+      >
     </section>
   </div>
 </template>
@@ -36,6 +54,8 @@ import {
   createAccount
 } from '../../../services/AccountService'
 import { decryptString } from '../../../services/CryptoService'
+import useClipboard from '@/composables/useClipboard'
+import useValidate from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'Import wallet',
@@ -46,6 +66,13 @@ export default defineComponent({
 
     const importWay = ref('')
     const source = ref('')
+
+    const { readClipboard } = useClipboard()
+
+    async function pasteSource() {
+      const clipboard = await readClipboard()
+      source.value = clipboard
+    }
     const isWalletGenerated = ref(false)
 
     const password = computed(() => store.getters['settings/password'])
@@ -81,13 +108,23 @@ export default defineComponent({
       }
     }
 
+    const { requiedV$, requiedError } = useValidate({ validator: name })
+    const { importTextareaV$, importTextareaError } = useValidate({
+      validator: source
+    })
+
     return {
       name,
       source,
+      pasteSource,
       importWay,
       isWalletGenerated,
       accountsNum,
-      importWallet
+      importWallet,
+      requiedV$,
+      requiedError,
+      importTextareaV$,
+      importTextareaError
     }
   }
 })
