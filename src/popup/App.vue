@@ -11,6 +11,7 @@ import { defineComponent } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import Header from '@/components/Header.vue'
 import { APP_CONNECT } from '../types'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   components: {
@@ -19,6 +20,8 @@ export default defineComponent({
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
+    const store = useStore()
+    store.dispatch('account/fetchVitexTokens')
   }
 })
 </script>
