@@ -10,7 +10,7 @@
 
         <BaseTextarea
           label="Your recovery phrase"
-          class="mt-8 mb-28"
+          class="mt-8 mb-16"
           icon="copy"
           @iconEvent="copyRecoveryPhrase"
           v-model="mnemonic"
@@ -46,38 +46,40 @@
     </main>
     <transition name="slide">
       <main v-if="scene == 2" class="confirm_mnemonic">
-        <section class="grid grid-cols-1 gap-y-8 p-3">
-          <BaseInput
-            @input="requiedV$.validator.$touch"
-            v-model="name"
-            placeholder="Name"
-            :errors="requiedError"
-            label="Set the wallet name"
-          ></BaseInput>
-          <BaseTextarea
-            @input="CMV$.$touch"
-            label="Write or paste the phrase in the correct order"
-            v-model="mnemonicForConfirm"
-            icon="clipboard"
-            :errors="confrimMnemonicErrors"
-            @iconEvent="pasteRecoveryPhrase"
-          ></BaseTextarea>
-          <ul class="space-x-2 flex flex-wrap justify-center">
-            <li
-              v-for="(mnemonicItem, idx) in randomMnemonic"
-              :key="idx"
-              @click="addMnemonic(mnemonicItem)"
-              :disabled="hasAdded(mnemonicItem)"
-              :class="
-                hasAdded(mnemonicItem)
-                  ? 'bg-gray-300 cursor-default'
-                  : 'cursor-pointer btn-grad'
-              "
-              class="border rounded-2xl py-1 px-4 mb-2"
-            >
-              {{ mnemonicItem }}
-            </li>
-          </ul>
+        <section class="flex flex-col justify-between h-full">
+          <div class="grid grid-cols-1 gap-y-6 p-3">
+            <BaseInput
+              @input="requiedV$.validator.$touch"
+              v-model="name"
+              placeholder="Name"
+              :errors="requiedError"
+              label="Set the wallet name"
+            ></BaseInput>
+            <BaseTextarea
+              @input="CMV$.$touch"
+              label="Write or paste the phrase in the correct order"
+              v-model="mnemonicForConfirm"
+              icon="clipboard"
+              :errors="confrimMnemonicErrors"
+              @iconEvent="pasteRecoveryPhrase"
+            ></BaseTextarea>
+            <ul class="space-x-2 flex flex-wrap justify-center">
+              <li
+                v-for="(mnemonicItem, idx) in randomMnemonic"
+                :key="idx"
+                @click="addMnemonic(mnemonicItem)"
+                :disabled="hasAdded(mnemonicItem)"
+                :class="
+                  hasAdded(mnemonicItem)
+                    ? 'bg-gray-300 cursor-default'
+                    : 'cursor-pointer btn-grad'
+                "
+                class="border rounded-2xl py-1 px-4 mb-2"
+              >
+                {{ mnemonicItem }}
+              </li>
+            </ul>
+          </div>
           <div class="flex space-x-3">
             <BaseButton
               @click="clearMnemonic"

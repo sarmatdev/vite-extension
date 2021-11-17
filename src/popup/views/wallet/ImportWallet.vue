@@ -1,23 +1,22 @@
 <template>
   <div class="p-2">
     <h1 class="my-4">Import wallet</h1>
-    <section class="flex flex-col">
+    <section class="flex flex-col space-y-6">
       <BaseInput
         v-model="name"
         @input="requiedV$.validator.$touch"
         :errors="requiedError"
         label="Wallet Name"
-        class="mb-8"
+        class="mb-5"
       ></BaseInput>
       <BaseSelect
         v-model="importWay"
         label="Import with"
-        class="mb-20"
         placeholder="Select way to import"
         :options="['Private key', 'Mnemonic']"
       />
       <BaseTextarea
-        :label="`Write or paste your ${importWay}`"
+        :label="`Write or paste your ${importWay ? importWay : 'data'}`"
         icon="clipboard"
         @input="importTextareaV$.validator.$touch"
         :errors="importTextareaError"
@@ -65,6 +64,7 @@ export default defineComponent({
     const { notify } = useNotifications()
 
     const importWay = ref('')
+    console.log(importWay)
     const source = ref('')
 
     const { readClipboard } = useClipboard()

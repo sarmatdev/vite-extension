@@ -33,7 +33,10 @@
         block
         color="blue"
         :disabled="
-          !state.password || cpV$.password.$error || cpV$.repeatPassword.$error
+          !state.password ||
+          cpV$.password.$error ||
+          cpV$.repeatPassword.$error ||
+          !state.repeatPassword
         "
       >
         Create

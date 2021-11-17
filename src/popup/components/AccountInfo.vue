@@ -1,12 +1,15 @@
 <template>
-  <div class="px-6 border text-center flex flex-col justify-center space-y-3">
-    <img class="h-8" src="@/assets/images/logo-blue1.svg" alt="" />
-    <div class="font-bold text-blue-900">
-      <span class="text-3xl">{{
-        Math.trunc(toNum(balance, 18)) + (frac(toNum(balance, 18)) ? '.' : '')
-      }}</span
-      ><span class="text-xl">{{ frac(toNum(balance, 18)) }} VITE</span>
+  <div class="px-6 border text-center flex flex-col space-y-3">
+    <div class="flex w-full justify-center items-center mr-2">
+      <img class="w-8" src="assets/images/logo-blue.svg" />
+      <div class="font-semibold text-blue-900">
+        <span class="text-3xl">{{
+          Math.trunc(toNum(balance, 18)) + (frac(toNum(balance, 18)) ? '.' : '')
+        }}</span
+        ><span class="text-xl">{{ frac(toNum(balance, 18)) }} VITE</span>
+      </div>
     </div>
+
     <BaseTooltip>
       <template v-slot:activator>
         <div
@@ -16,16 +19,17 @@
             rounded-xl
             cursor-pointer
             hover:shadow-xl
-            active:bg-blue-100
+            active:bg-blue-300
+            hover:bg-blue-100
             transition
             duration-100
             ease-in-out
           "
         >
-          <p class="font-black text-blue-900 text-xl">
+          <p class="font-semibold text-blue-900 text-2xl">
             {{ active.name }}
           </p>
-          <p class="font-bold">
+          <p class="font-semibold text-sm">
             {{ active.address ? compressAddress(active.address, 10, 5) : '' }}
           </p>
         </div>
@@ -43,6 +47,7 @@ import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import useNumbers from '@/composables/useNumbers'
 import { compressAddress } from '@/helpers/string'
+import useClipboard from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'AccountInfo',
@@ -55,12 +60,14 @@ export default defineComponent({
     const balance = computed(() => store.getters['account/balance'])
     const active = computed(() => store.getters['wallets/active'])
 
+    const { writeClipboard } = useClipboard()
+
     function copyAddress() {
-      navigator.clipboard.writeText(active.value.address)
+      writeClipboard(active.value.address)
       copiedAddress.value = true
       setTimeout(() => {
         copiedAddress.value = false
-      }, 2 * 1000)
+      }, 1000)
     }
 
     return {
