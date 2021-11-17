@@ -15,28 +15,49 @@
           block
           w-full
           pr-10
-          py-3
+          h-12
           border-gray-300
           font-medium
-          text-sm text-gray-900
+          text-base text-gray-900
           placeholder-gray-400
           transition-all
-          focus:border-blue-500
           caret-blue-600
           hover:ring-gray-900 hover:border-gray-900
           rounded-md
         "
-        :type="type"
+        :class="
+        errors.length
+          ? 'focus:border-transparent  focus:ring-red-600 border-red-600'
+          : 'focus:border-transparent focus:ring-blue-500'
+      "
+        :type="inputType"
         :placeholder="placeholder"
       />
-      <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+      <div
+        v-if="icon || passwordInput"
+        @click="iconClickHandler($event)"
+        class="absolute inset-y-0 right-0 pr-2 flex items-center justify-center"
+      >
         <BaseIcon
-          v-if="icon"
-          @click="$emit('iconEvent', $event.target)"
+          v-if="!passwordInput"
           :name="icon"
           class="h-5 w-5 cursor-pointer"
           aria-hidden="true"
         />
+        <div class="flex items-center justify-center" v-else>
+          <BaseIcon
+            v-if="!showPassword"
+            name="eye"
+            class="h-5 w-5 cursor-pointer"
+            aria-hidden="true"
+          />
+          <BaseIcon
+            v-else
+            name="eye-off"
+            class="h-5 w-5 cursor-pointer"
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </div>
     <ul
@@ -49,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'BaseInput',
   props: {
@@ -57,16 +78,41 @@ export default defineComponent({
     label: String,
     placeholder: String,
     icon: String,
-    type: {
-      type: String,
-      default: 'text'
-    },
+    type: String,
     disabled: String,
+    passwordInput: {
+      type: Boolean,
+      default: false
+    },
     errors: {
       type: Array,
       default: () => {
         return []
       }
+    }
+  },
+  setup(props, { emit }) {
+    const showPassword = ref(false)
+
+    const inputType = computed(() => {
+      if (!props.type && props.passwordInput) {
+        return showPassword.value ? 'text' : 'password'
+      } else if (props.type) {
+        return props.type
+      }
+      return 'text'
+    })
+
+    function iconClickHandler(event) {
+      props.passwordInput
+        ? (showPassword.value = !showPassword.value)
+        : emit('iconEvent', event.target)
+    }
+
+    return {
+      showPassword,
+      inputType,
+      iconClickHandler
     }
   }
 })
