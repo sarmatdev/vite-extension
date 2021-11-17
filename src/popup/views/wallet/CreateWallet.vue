@@ -182,7 +182,7 @@ export default defineComponent({
     const name = ref(`Wallet ${accountsNum.value + 1}`)
     const { requiedV$, requiedError } = useValidate({ validator: name })
     function saveWallet() {
-      store.dispatch('wallets/storeWallet', {
+      store.commit('wallets/setWallet', {
         name: name.value,
         address: fromMnemonic.value.address,
         privateKey: fromMnemonic.value.privateKey
