@@ -15,7 +15,7 @@
       :class="{ 'border-blue-500': open }"
       @click="open = !open"
     >
-      {{ !selected ? placeholder : selected }}
+      {{ !selected || open ? placeholder : selected }}
       <BaseIcon
         class="absolute right-3 top-3 z-20 transition-all"
         :class="{ 'transform rotate-180': open }"
