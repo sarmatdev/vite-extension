@@ -27,12 +27,13 @@
         flex flex-col
       "
     >
-      <PasswordInput
+      <BaseInput
         @input="lV$.password.$touch"
         v-model="state.password"
         label="Password"
         placeholder="Input the password"
         :errors="unLockErrors"
+        passwordInput
       />
       <BaseButton @click="unLock" color="blue" size="lg" block
         >Unlock</BaseButton
@@ -43,16 +44,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import PasswordInput from '@/components/PasswordInput.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import useValidate from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'Lock',
-  components: {
-    PasswordInput
-  },
   setup() {
     const router = useRouter()
 
