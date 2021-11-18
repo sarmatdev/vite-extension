@@ -1,40 +1,33 @@
 <template>
-  <transition
-    enter-active-class="transition duration-100 ease-out transform"
-    enter-class="-translate-y-3 scale-95 opacity-0"
-    enter-to-class="translate-y-0 scale-100 opacity-100"
-    leave-active-class="transition duration-100 ease-in transform"
-    leave-class="translate-y-0 opacity-100"
-    leave-to-class="translate-y-3 opacity-0"
-  >
+  <transition name="fade" mode="out-in">
     <div
-      role="dialog"
       v-if="showModal"
       class="
         w-full
-        absolute
+        fixed
         z-10
         inset-x-0
         bottom-0
         rounded-t-2xl
         bg-white
         h-3/4
+        flex flex-col
+        justify-between
+        px-2
+        py-4
+        duration-1000
       "
     >
-      <header class="border-b p-4 flex items-center justify-between">
-        <h2 class="text-lg font-bold m-auto">Confirm Transaction</h2>
-        <base-button @click="closeModal" size="xs" squared
-          ><base-icon name="x"
-        /></base-button>
+      <header class="border-b py-4 px-2 flex items-center justify-between">
+        <h1 class="m-auto">Confirm Transaction</h1>
+        <BaseToggle @click="closeModal" icon="x" />
       </header>
-      <section class="p-4 flex flex-col items-center">
-        <img
-          class="h-8"
-          src="@/assets/images/logo-blue1.svg"
-          alt="Token Logo"
-        />
-        <h3 class="text-2xl font-bold mt-2">{{ props.params?.amount }} VITE</h3>
-        <div class="mt-4 flex items-center">
+      <section class="px-2 flex flex-col items-center">
+        <img width="80" :src="token.urlIcon" alt="Token Logo" />
+        <h3 class="text-2xl font-bold mt-2">
+          {{ props.params?.amount + ' ' + token.originalSymbol }}
+        </h3>
+        <div class="mt-4 flex space-x-2 relative">
           <div class="p-2 text-left bg-blue-100 rounded-lg">
             <p>From</p>
             {{
@@ -43,8 +36,8 @@
           </div>
           <div
             class="
-              h-8
-              w-8
+              h-6
+              w-6
               flex
               items-center
               justify-center
@@ -52,9 +45,12 @@
               rounded-full
               leading-none
               text-white
+              absolute
+              left-24
+              top-4
             "
           >
-            <base-icon name="arrow-right" size="lg"></base-icon>
+            <base-icon name="arrow-right" size="sm"></base-icon>
           </div>
           <div class="p-2 text-right bg-blue-100 rounded-lg">
             <p>To</p>
@@ -62,16 +58,15 @@
           </div>
         </div>
       </section>
-      <footer class="grid grid-cols-2 gap-4 p-4">
-        <base-button @click="closeModal" outline>Cancel</base-button>
-        <base-button @click="send" :loading="loading">Send</base-button>
-      </footer>
+      <base-button @click="send" :loading="loading" color="gradient"
+        >Сonfirm</base-button
+      >
     </div>
   </transition>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, PropType } from 'vue'
+import { defineComponent, ref, watch, PropType, computed } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useWeb3, SendTokens } from '@/composables/useWeb3'
 import useNumbers from '@/composables/useNumbers'
@@ -97,14 +92,17 @@ export default defineComponent({
     function closeModal() {
       emit('close')
     }
-
+    //@ts-ignore
+    const token = computed(() => props.params.token)
+    //@ts-ignore
+    const toAddress = computed(() => props.params.toAddress)
+    //@ts-ignore
+    const amount = computed(() => props.params.amount)
     function send() {
       loading.value = true
       sendTokens({
-        //@ts-ignore
-        toAddress: props.params?.toAddress,
-        //@ts-ignore
-        amount: formatUnits(props.params?.amount, 18),
+        toAddress: toAddress.value,
+        amount: formatUnits(amount.value, 18),
         tokenId: config.nativeAsset.tokenId
       })
         .then((res) => {
@@ -122,7 +120,6 @@ export default defineComponent({
     watch(
       () => props.show,
       (show) => {
-        console.log(show)
         showModal.value = show
       }
     )
@@ -133,10 +130,35 @@ export default defineComponent({
       send,
       compressAddress,
       props,
-      loading
+      loading,
+      token
     }
   }
 })
 </script>
 
-<style></style>
+<style>
+.fade-enter-active {
+  animation: fade-in 1s;
+}
+.fade-leave-active {
+  animation: fade-out 1s;
+}
+@keyframes fade-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+</style>
