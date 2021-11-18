@@ -1,7 +1,9 @@
 <template>
-  <label class="font-semibold cursor-pointer text-black">Select token</label>
   <Listbox v-model="selectedToken" v-slot="{ open }">
-    <div class="relative mt-1">
+    <div class="relative">
+      <label class="font-semibold cursor-pointer text-black absolute -top-7"
+        >Select token</label
+      >
       <ListboxButton
         :class="open ? 'ring-blue-300' : 'ring-gray-300'"
         class="

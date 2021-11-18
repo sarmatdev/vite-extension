@@ -16,7 +16,7 @@
       <BaseButton size="lg" color="gradient" to="/create-wallet"
         >Create</BaseButton
       >
-      <BaseButton size="lg" color="gradient-reverse" to="/import-wallet"
+      <BaseButton size="lg" color="gradient" to="/import-wallet"
         >Import</BaseButton
       >
     </div>

@@ -1,18 +1,27 @@
 <template>
-  <div class="p-2">
-    <TokenSelect v-model="token" />
-    <base-input v-model="toAddress" class="mt-2" label="Address"></base-input>
-    <base-input v-model="amount" type="number" class="mt-2" label="Amount" />
-
-    <base-button @click="isOpen = true" class="mt-2" color="green" block
-      >Send</base-button
-    >
-    <TxConfirm
-      :show="isOpen"
-      @close="closeModal"
-      :params="{ amount, toAddress, urlIcon: token?.urlIcon }"
-    />
+  <div class="flex flex-col justify-between h-full">
+    <div class="flex flex-col space-y-8">
+      <div class="h-14 py-8 flex items-center px-2">
+        <BaseToggle icon="chevron-left" to="/" />
+        <h1 class="ml-24">Send</h1>
+      </div>
+      <div class="pt-4 space-y-4 px-2">
+        <TokenSelect v-model="token" />
+        <BaseInput v-model="toAddress" class="mt-2" label="Address" />
+        <BaseInput v-model="amount" type="number" class="mt-2" label="Amount" />
+      </div>
+    </div>
+    <div class="w-full py-8 px-2">
+      <BaseButton @click="isOpen = true" color="gradient" block>
+        Send
+      </BaseButton>
+    </div>
   </div>
+  <TxConfirm
+    :show="isOpen"
+    @close="closeModal"
+    :params="{ amount, toAddress, urlIcon: token?.urlIcon }"
+  />
 </template>
 
 <script lang="ts">
