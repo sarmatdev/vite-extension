@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-between h-full">
     <div class="flex flex-col space-y-8">
-      <div class="h-14 py-8 flex items-center px-2">
+      <div class="flex items-center p-2">
         <BaseToggle icon="chevron-left" to="/" />
         <h1 class="ml-24">Send</h1>
       </div>

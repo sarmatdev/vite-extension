@@ -39,12 +39,16 @@
         @click="iconClickHandler($event)"
         class="absolute inset-y-0 right-0 pr-2 flex items-center justify-center"
       >
-        <BaseIcon
-          v-if="!passwordInput"
-          :name="icon"
-          class="h-5 w-5 cursor-pointer"
-          aria-hidden="true"
-        />
+        <div v-if="!passwordInput">
+          <BaseIcon
+            v-if="!clickStatus"
+            :name="icon"
+            class="h-5 w-5 cursor-pointer"
+            aria-hidden="true"
+          />
+          <BaseIcon v-else class="h-5 w-5 text-green-500" name="check-square" />
+        </div>
+
         <div class="flex items-center justify-center" v-else>
           <BaseIcon
             v-if="!showPassword"
@@ -103,17 +107,25 @@ export default defineComponent({
       }
       return 'text'
     })
+    const clickStatus = ref(false)
 
     function iconClickHandler(event) {
-      props.passwordInput
-        ? (showPassword.value = !showPassword.value)
-        : emit('iconEvent', event.target)
+      if (props.passwordInput) {
+        showPassword.value = !showPassword.value
+      } else if (props.icon === 'copy' || props.icon === 'clipboard') {
+        clickStatus.value = true
+        setTimeout(() => {
+          clickStatus.value = false
+        }, 1000)
+      }
+      emit('iconEvent', event.target)
     }
 
     return {
       showPassword,
       inputType,
-      iconClickHandler
+      iconClickHandler,
+      clickStatus
     }
   }
 })

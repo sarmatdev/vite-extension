@@ -1,5 +1,9 @@
 <template>
   <div class="p-2">
+    <div class="mb-12 flex items-center px-2">
+      <BaseToggle icon="chevron-left" to="/" />
+      <h1 class="ml-24">Recieve</h1>
+    </div>
     <base-input
       v-model="active.address"
       label="Address"
@@ -17,6 +21,7 @@
 import { defineComponent, computed } from 'vue'
 import { QRCanvas } from 'qrcanvas-vue'
 import { useStore } from 'vuex'
+import useClipboard from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'Recieve',
@@ -32,8 +37,10 @@ export default defineComponent({
       data: 'hello, world'
     }
 
+    const { writeClipboard } = useClipboard()
+
     function copyAddress() {
-      navigator.clipboard.writeText(active.value.address)
+      writeClipboard(active.value.address)
     }
 
     return {
