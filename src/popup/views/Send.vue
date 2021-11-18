@@ -10,7 +10,7 @@
     <TxConfirm
       :show="isOpen"
       @close="closeModal"
-      :params="{ amount, toAddress, urlIcon: token.urlIcon }"
+      :params="{ amount, toAddress, urlIcon: token?.urlIcon }"
     />
   </div>
 </template>
@@ -31,7 +31,7 @@ export default defineComponent({
     const { formatUnits } = useNumbers()
     const isOpen = ref(false)
     const amount = ref('0')
-    const token = ref(undefined)
+    const token = ref(null)
     const rawAmount = ref('')
     const toAddress = ref('')
 

@@ -1,5 +1,5 @@
 <template>
-  <label>Select token</label>
+  <label class="font-semibold cursor-pointer text-black">Select token</label>
   <Listbox v-model="selectedToken" v-slot="{ open }">
     <div class="relative mt-1">
       <ListboxButton
@@ -22,13 +22,13 @@
           duration-150
         "
       >
-        <img class="h-8 mr-2" src="../assets/images/logo-blue1.svg" alt="" />
+        <img class="h-8 mr-2" :src="selectedValue.urlIcon" alt="" />
         <span class="block truncate flex-center">
           <span class="text-base mr-2 text-black font-medium">
-            {{ selectedValue.tokenSymbol }}
+            {{ selectedValue.originalSymbol }}
           </span>
           <span class="text-sm text-gray-400">
-            {{ selectedValue.tokenName }}
+            {{ selectedValue.name }}
           </span>
         </span>
         <span
@@ -85,15 +85,13 @@
           >
             <li
               :class="[
-                active ? 'text-amber-900 bg-blue-100' : 'text-gray-900',
-                'cursor-pointer select-none relative py-2 border-t px-4 flex items-center'
+                active
+                  ? 'text-amber-900 bg-blue-100'
+                  : 'text-gray-900 bg-white',
+                'cursor-pointer select-none relative py-2 border-t px-4 flex items-center z-10 shadow-select'
               ]"
             >
-              <img
-                class="h-8 mr-2"
-                src="../assets/images/logo-blue1.svg"
-                alt=""
-              />
+              <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
               <span
                 :class="[
                   selected ? 'font-medium ' : 'font-normal',
@@ -101,10 +99,10 @@
                 ]"
               >
                 <p class="text-base mr-2 text-black font-medium">
-                  {{ token.tokenSymbol }}
+                  {{ token.originalSymbol }}
                 </p>
                 <p class="text-sm text-gray-400">
-                  {{ token.tokenName }}
+                  {{ token.name }}
                 </p>
               </span>
               <span
@@ -129,9 +127,11 @@
   </Listbox>
 </template>
 
-<script>
-import { ref, computed, watchEffect } from 'vue'
+<script lang="ts">
+import { defineComponent, ref, computed, watchEffect, ComputedRef } from 'vue'
 import { useStore } from 'vuex'
+import { IVitexToken } from '@/types'
+
 import {
   Listbox,
   ListboxButton,
@@ -139,7 +139,7 @@ import {
   ListboxOption
 } from '@headlessui/vue'
 
-export default {
+export default defineComponent({
   name: 'TokenSelect',
   props: {
     modelValue: Object
@@ -154,8 +154,8 @@ export default {
   setup(_, { emit }) {
     const store = useStore()
 
-    const tokens = computed(() => {
-      return store.getters['account/tokens']
+    const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
+      return store.getters['account/vitexTokens']
     })
     console.log(tokens)
     const selectedToken = ref(null)
@@ -173,5 +173,5 @@ export default {
       selectedValue
     }
   }
-}
+})
 </script>

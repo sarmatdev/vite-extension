@@ -101,7 +101,9 @@ export default defineComponent({
     function send() {
       loading.value = true
       sendTokens({
+        //@ts-ignore
         toAddress: props.params?.toAddress,
+        //@ts-ignore
         amount: formatUnits(props.params?.amount, 18),
         tokenId: config.nativeAsset.tokenId
       })
