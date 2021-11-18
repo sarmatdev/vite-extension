@@ -7,12 +7,23 @@
       </div>
       <div class="pt-4 space-y-4 px-2">
         <TokenSelect v-model="token" />
-        <BaseInput v-model="toAddress" class="mt-2" label="Address" />
+        <BaseInput
+          v-model="toAddress"
+          @iconEvent="pasteAddress"
+          class="mt-2"
+          label="Address"
+          icon="clipboard"
+        />
         <BaseInput v-model="amount" type="number" class="mt-2" label="Amount" />
       </div>
     </div>
     <div class="w-full py-8 px-2">
-      <BaseButton @click="isOpen = true" color="gradient" block>
+      <BaseButton
+        @click="openModal"
+        color="blue"
+        block
+        :disabled="!toAddress || !amount || !token"
+      >
         Send
       </BaseButton>
     </div>
@@ -20,7 +31,7 @@
   <TxConfirm
     :show="isOpen"
     @close="closeModal"
-    :params="{ amount, toAddress, urlIcon: token?.urlIcon }"
+    :params="{ amount, toAddress, token }"
   />
 </template>
 
@@ -29,6 +40,7 @@ import { defineComponent, ref, watch } from 'vue'
 import TokenSelect from '@/components/TokenSelect.vue'
 import TxConfirm from '@/components/modals/TxConfirm.vue'
 import useNumbers from '@/composables/useNumbers'
+import useClipboard from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'Send',
@@ -39,8 +51,8 @@ export default defineComponent({
   setup() {
     const { formatUnits } = useNumbers()
     const isOpen = ref(false)
-    const amount = ref('0')
-    const token = ref(null)
+    const amount = ref(0)
+    const token = ref({})
     const rawAmount = ref('')
     const toAddress = ref('')
 
@@ -56,6 +68,14 @@ export default defineComponent({
       isOpen.value = false
     }
 
+    const { readClipboard } = useClipboard()
+    async function pasteAddress() {
+      const clipboard = await readClipboard()
+      toAddress.value = clipboard
+    }
+
+    console.log(token)
+
     return {
       token,
       amount,
@@ -63,7 +83,8 @@ export default defineComponent({
       isOpen,
       rawAmount,
       openModal,
-      closeModal
+      closeModal,
+      pasteAddress
     }
   }
 })

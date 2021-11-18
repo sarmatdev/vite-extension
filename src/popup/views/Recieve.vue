@@ -1,6 +1,6 @@
 <template>
   <div class="p-2">
-    <div class="mb-12 flex items-center px-2">
+    <div class="mb-12 flex items-center">
       <BaseToggle icon="chevron-left" to="/" />
       <h1 class="ml-24">Recieve</h1>
     </div>
