@@ -2,7 +2,7 @@
   <div>
     <div class="fixed inset-x-0 top-0 z-50 bg-blue-200 flex p-2 items-center">
       <BaseToggle icon="chevron-left" to="/" />
-      <span class="ml-20 text-blue-400"> Asset Management </span>
+      <h1 class="ml-12 text-blue-400">Asset Management</h1>
     </div>
     <div class="flex justify-between bg-blue-200">
       <BaseLink
@@ -21,7 +21,7 @@
           placeholder="Asset filter..."
         />
       </div>
-      <p class="text-center py-2">
+      <p class="text-center pt-8">
         {{
           filter
             ? `${filteredTokens.length} of ${tokens.length}`
@@ -32,7 +32,7 @@
         <TokenList :tokens="filteredTokens" selector />
         <p
           v-if="!filteredTokens.length"
-          class="text-2xl text-blue-900 text-center font-bold mt-36"
+          class="text-blue-900 absolute inset-0 top-2/4 text-center"
         >
           Not found
         </p>
