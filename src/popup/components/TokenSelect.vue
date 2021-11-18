@@ -5,7 +5,7 @@
         >Select token</label
       >
       <ListboxButton
-        :class="open ? 'ring-blue-300' : 'ring-gray-300'"
+        :class="open ? 'border-blue-500' : 'border-gray-300 hover:border-black'"
         class="
           relative
           w-full
@@ -17,11 +17,11 @@
           text-left
           rounded-lg
           shadow-md
-          ring-2
+          ring-0
+          border
           cursor-pointer
           focus:outline-none
-          transition
-          duration-150
+          transition-all
         "
       >
         <img class="h-8 mr-2" :src="selectedValue.urlIcon" alt="" />
@@ -56,81 +56,80 @@
         </span>
       </ListboxButton>
 
-      <transition
-        leave-active-class="transition duration-100 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+      <ListboxOptions
+        class="
+          absolute
+          w-full
+          py-1
+          mt-1
+          overflow-auto
+          text-base
+          bg-white
+          rounded-md
+          shadow-select
+          max-h-60
+          ring-1 ring-black ring-opacity-5
+          focus:outline-none
+          sm:text-sm
+        "
       >
-        <ListboxOptions
-          class="
-            absolute
-            w-full
-            py-1
-            mt-1
-            overflow-auto
-            text-base
-            bg-white
-            rounded-md
-            shadow-lg
-            max-h-60
-            ring-1 ring-black ring-opacity-5
-            focus:outline-none
-            sm:text-sm
-          "
+        <ListboxOption
+          v-slot="{ active, selected }"
+          v-for="token in tokens"
+          :key="token.tokenId"
+          :value="token"
+          as="template"
         >
-          <ListboxOption
-            v-slot="{ active, selected }"
-            v-for="token in tokens"
-            :key="token.tokenId"
-            :value="token"
-            as="template"
+          <li
+            :class="[
+              active ? 'text-amber-900 bg-blue-100' : 'text-gray-900 bg-white',
+              'cursor-pointer select-none relative py-2 border-t px-4 flex items-center z-10 '
+            ]"
           >
-            <li
+            <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
+            <span
               :class="[
-                active
-                  ? 'text-amber-900 bg-blue-100'
-                  : 'text-gray-900 bg-white',
-                'cursor-pointer select-none relative py-2 border-t px-4 flex items-center z-10 shadow-select'
+                selected ? 'font-medium ' : 'font-normal',
+                'block truncate'
               ]"
             >
-              <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
-              <span
-                :class="[
-                  selected ? 'font-medium ' : 'font-normal',
-                  'block truncate'
-                ]"
-              >
-                <p class="text-base mr-2 text-black font-medium">
-                  {{ token.originalSymbol }}
-                </p>
-                <p class="text-sm text-gray-400">
-                  {{ token.name }}
-                </p>
-              </span>
-              <span
-                v-if="selected"
-                class="
-                  absolute
-                  inset-y-0
-                  right-0
-                  flex
-                  items-center
-                  pr-3
-                  text-black
-                "
-              >
-                <BaseIcon name="check" />
-              </span>
-            </li>
-          </ListboxOption>
-        </ListboxOptions>
-      </transition>
+              <p class="text-base mr-2 text-black font-medium">
+                {{ token.originalSymbol }}
+              </p>
+              <p class="text-sm text-gray-400">
+                {{ token.name }}
+              </p>
+            </span>
+            <span
+              v-if="selected"
+              class="
+                absolute
+                inset-y-0
+                right-0
+                flex
+                items-center
+                pr-3
+                text-black
+              "
+            >
+              <BaseIcon name="check" />
+            </span>
+          </li>
+        </ListboxOption>
+      </ListboxOptions>
     </div>
   </Listbox>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watchEffect, ComputedRef } from 'vue'
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  ComputedRef,
+  onMounted
+} from 'vue'
 import { useStore } from 'vuex'
 import { IVitexToken } from '@/types'
 
@@ -159,13 +158,12 @@ export default defineComponent({
     const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
       return store.getters['account/vitexTokens']
     })
-    console.log(tokens)
     const selectedToken = ref(null)
     const selectedValue = computed(() => {
       return selectedToken.value ? selectedToken.value : tokens.value[0]
     })
-
-    watchEffect(() => {
+    onMounted(() => emit('update:modelValue', selectedValue.value))
+    watch(selectedValue, () => {
       emit('update:modelValue', selectedValue.value)
     })
 
