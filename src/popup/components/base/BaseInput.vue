@@ -9,6 +9,7 @@
       <input
         :id="label"
         :value="modelValue"
+        :disabled="disabled"
         @input="$emit('update:modelValue', $event.target.value)"
         ref="input"
         class="
@@ -26,10 +27,10 @@
           rounded-md
         "
         :class="
-        errors.length
-          ? 'focus:border-transparent  focus:ring-red-600 border-red-600'
-          : 'focus:border-transparent focus:ring-blue-500'
-      "
+          errors.length
+            ? 'focus:border-transparent  focus:ring-red-600 border-red-600'
+            : 'focus:border-transparent focus:ring-blue-500'
+        "
         :type="inputType"
         :placeholder="placeholder"
       />
@@ -79,7 +80,7 @@ export default defineComponent({
     placeholder: String,
     icon: String,
     type: String,
-    disabled: String,
+    disabled: Boolean,
     passwordInput: {
       type: Boolean,
       default: false

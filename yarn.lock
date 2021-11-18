@@ -903,6 +903,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.16.0":
+  version "7.16.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
+  integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.0.0", "@babel/template@^7.15.4", "@babel/template@^7.4.0":
   version "7.15.4"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.15.4.tgz"
@@ -11989,7 +11996,23 @@ qr-code-styling@^1.6.0-rc.1:
   dependencies:
     qrcode-generator "^1.4.3"
 
-qrcode-generator@^1.4.3:
+qrcanvas-vue@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/qrcanvas-vue/-/qrcanvas-vue-3.0.0.tgz#4bdba09b8050bcc0880d8859b5835cc4b2919248"
+  integrity sha512-B7LgAyOEJWf8Bz0y2J8M0OXE77uNWcH7PWr6q8ihyuQE5NP9zopY9wJGTZIT6Mu7oEOczPHMLDedZqFCT2Qxdw==
+  dependencies:
+    "@babel/runtime" "^7.16.0"
+    qrcanvas "^3.1.2"
+
+qrcanvas@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/qrcanvas/-/qrcanvas-3.1.2.tgz#81a25e91b2c27e9ace91da95591cbfb100d68702"
+  integrity sha512-lNcAyCHN0Eno/mJ5eBc7lHV/5ejAJxII0UELthG3bNnlLR+u8hCc7CR+hXBawbYUf96kNIosXfG2cJzx92ZWKg==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    qrcode-generator "^1.4.4"
+
+qrcode-generator@^1.4.3, qrcode-generator@^1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/qrcode-generator/-/qrcode-generator-1.4.4.tgz#63f771224854759329a99048806a53ed278740e7"
   integrity sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==
