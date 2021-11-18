@@ -7,24 +7,30 @@
       icon="copy"
       @iconEvent="copyAddress"
     />
-    <QrCode :value="active.address" />
+    <div class="flex justify-center mt-8">
+      <QRCanvas :options="{ cellSize: 8, data: active.address }"></QRCanvas>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import QrCode from '@/components/QrCode.vue'
+import { QRCanvas } from 'qrcanvas-vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Recieve',
   components: {
-    QrCode
+    QRCanvas
   },
   setup() {
     const store = useStore()
 
     const active = computed(() => store.getters['wallets/active'])
+    const options = {
+      cellSize: 8,
+      data: 'hello, world'
+    }
 
     function copyAddress() {
       navigator.clipboard.writeText(active.value.address)
@@ -32,6 +38,7 @@ export default defineComponent({
 
     return {
       active,
+      options,
       copyAddress
     }
   }

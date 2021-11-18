@@ -33,6 +33,7 @@
     "nanoid": "^3.1.28",
     "post-message-stream": "^3.0.0",
     "qr-code-styling": "^1.6.0-rc.1",
+    "qrcanvas-vue": "^3.0.0",
     "qrcode.vue": "^3.3.3",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
