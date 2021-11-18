@@ -1,6 +1,6 @@
 <template>
   <div
-    @click="this.$router.push(to)"
+    @click="clickHandler"
     class="
       bg-blue-300
       rounded-lg
@@ -22,17 +22,26 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'BaseToggle',
   props: {
     to: {
-      type: String,
-      required: true
+      type: String
     },
     icon: {
       type: String,
       required: true
+    }
+  },
+  setup(props, { emit }) {
+    const router = useRouter()
+    function clickHandler() {
+      props.to ? router.push(props.to) : emit('click')
+    }
+    return {
+      clickHandler
     }
   }
 })

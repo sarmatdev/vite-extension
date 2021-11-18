@@ -70,7 +70,7 @@ export default defineComponent({
       cpV$.value.$touch()
       store.dispatch('settings/storePassword', state.password).finally(() => {
         console.log('stored')
-        router.push(route.redirectedFrom)
+        router.push({ path: 'create-wallet' })
       })
     }
 

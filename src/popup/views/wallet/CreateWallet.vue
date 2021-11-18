@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2">
+  <div class="px-2">
     <h1 class="my-4">Create wallet</h1>
     <main v-if="scene == 1">
       <section class="h-full w-full flex flex-col">
@@ -44,63 +44,67 @@
         >
       </section>
     </main>
-    <transition name="slide">
-      <main v-if="scene == 2" class="confirm_mnemonic">
-        <section class="flex flex-col justify-between h-full">
-          <div class="grid grid-cols-1 gap-y-6 p-3">
-            <BaseInput
-              @input="requiedV$.validator.$touch"
-              v-model="name"
-              placeholder="Name"
-              :errors="requiedError"
-              label="Set the wallet name"
-            ></BaseInput>
-            <BaseTextarea
-              @input="CMV$.$touch"
-              label="Write or paste the phrase in the correct order"
-              v-model="mnemonicForConfirm"
-              icon="clipboard"
-              :errors="confrimMnemonicErrors"
-              @iconEvent="pasteRecoveryPhrase"
-            ></BaseTextarea>
-            <ul class="space-x-2 flex flex-wrap justify-center">
-              <li
-                v-for="(mnemonicItem, idx) in randomMnemonic"
-                :key="idx"
-                @click="addMnemonic(mnemonicItem)"
-                :disabled="hasAdded(mnemonicItem)"
-                :class="
-                  hasAdded(mnemonicItem)
-                    ? 'bg-gray-300 cursor-default'
-                    : 'cursor-pointer btn-grad'
-                "
-                class="border rounded-2xl py-1 px-4 mb-2"
-              >
-                {{ mnemonicItem }}
-              </li>
-            </ul>
-          </div>
-          <div class="flex space-x-3">
-            <BaseButton
-              @click="clearMnemonic"
-              color="blue"
-              size="lg"
-              :disabled="!mnemonicForConfirm.length"
-              >Clear</BaseButton
-            >
-            <BaseButton
-              @click="saveWallet"
-              color="blue"
-              size="lg"
-              :disabled="
-                !mnemonicConfirmed || confrimMnemonicErrors.length || !name
+    <main v-if="scene == 2">
+      <section class="flex flex-col h-full">
+        <div class="grid grid-cols-1 gap-y-6 px-3">
+          <BaseInput
+            @input="requiedV$.validator.$touch"
+            v-model="name"
+            placeholder="Name"
+            :errors="requiedError"
+            label="Set the wallet name"
+          ></BaseInput>
+          <BaseTextarea
+            @input="CMV$.$touch"
+            label="Write or paste the phrase in the correct order"
+            v-model="mnemonicForConfirm"
+            icon="clipboard"
+            :errors="confrimMnemonicErrors"
+            @iconEvent="pasteRecoveryPhrase"
+          ></BaseTextarea>
+          <ul class="space-x-2 flex flex-wrap justify-center">
+            <li
+              v-for="(mnemonicItem, idx) in randomMnemonic"
+              :key="idx"
+              @click="addMnemonic(mnemonicItem)"
+              :disabled="hasAdded(mnemonicItem)"
+              :class="
+                hasAdded(mnemonicItem)
+                  ? 'bg-gray-300 cursor-default'
+                  : 'cursor-pointer btn-grad'
               "
-              >Create Wallet</BaseButton
+              class="border rounded-2xl py-1 px-4 mb-2"
             >
-          </div>
-        </section>
-      </main>
-    </transition>
+              {{ mnemonicItem }}
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        class="
+          text-sm
+          w-full
+          px-4
+          py-8
+          fixed
+          bottom-0
+          right-0
+          bg-blue-300
+          rounded-t-md
+        "
+      >
+        <BaseButton
+          @click="saveWallet"
+          color="blue"
+          size="lg"
+          :disabled="
+            !mnemonicConfirmed || confrimMnemonicErrors.length || !name
+          "
+          >Create Wallet</BaseButton
+        >
+      </section>
+    </main>
   </div>
 </template>
 
@@ -158,11 +162,6 @@ export default defineComponent({
       return !!mnemonicForConfirm.value.split(' ').find((el) => el === word)
     }
 
-    function clearMnemonic() {
-      mnemonicForConfirm.value = ''
-      CMV$.value.$touch()
-    }
-
     function addMnemonic(item: string): void {
       CMV$.value.$touch()
       if (!mnemonicForConfirm.value.split(' ').includes(item)) {
@@ -205,7 +204,6 @@ export default defineComponent({
       wallet,
       name,
       mnemonicForConfirm,
-      clearMnemonic,
       addMnemonic,
       mnemonicConfirmed,
       saveWallet,

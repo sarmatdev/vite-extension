@@ -34,21 +34,36 @@
         :type="inputType"
         :placeholder="placeholder"
       />
+
       <div
         v-if="icon || passwordInput"
         @click="iconClickHandler($event)"
-        class="absolute inset-y-0 right-0 pr-2 flex items-center justify-center"
+        class="
+          absolute
+          inset-y-0
+          right-0
+          pr-2
+          pt-2
+          flex
+          items-center
+          justify-center
+        "
       >
         <div v-if="!passwordInput">
           <BaseIcon
-            v-if="!clickStatus"
+            v-if="modelValue && icon !== 'copy'"
+            name="x"
+            class="h-5 w-5 cursor-pointer"
+            aria-hidden="true"
+          />
+          <BaseIcon
+            v-else-if="!clickStatus"
             :name="icon"
             class="h-5 w-5 cursor-pointer"
             aria-hidden="true"
           />
           <BaseIcon v-else class="h-5 w-5 text-green-500" name="check-square" />
         </div>
-
         <div class="flex items-center justify-center" v-else>
           <BaseIcon
             v-if="!showPassword"
@@ -112,13 +127,18 @@ export default defineComponent({
     function iconClickHandler(event) {
       if (props.passwordInput) {
         showPassword.value = !showPassword.value
-      } else if (props.icon === 'copy' || props.icon === 'clipboard') {
+        emit('iconEvent', event.target)
+      } else if (!props.modelValue && props.icon === 'clipboard') {
+        emit('iconEvent', event.target)
+      } else if (props.icon === 'copy') {
         clickStatus.value = true
         setTimeout(() => {
           clickStatus.value = false
-        }, 1000)
+        }, 500)
+        emit('iconEvent', event.target)
+      } else if (props.modelValue) {
+        emit('update:modelValue', '')
       }
-      emit('iconEvent', event.target)
     }
 
     return {

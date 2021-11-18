@@ -30,10 +30,15 @@
       :placeholder="placeholder"
       :readonly="readonly"
     />
-    <div v-if="icon" class="absolute top-9 right-2">
+    <div v-if="icon" @click="clickHandler" class="absolute top-9 right-2">
       <BaseIcon
-        v-if="!clickStatus"
-        @click="clickHandler($event)"
+        v-if="modelValue && icon !== 'copy'"
+        name="x"
+        class="h-5 w-5 cursor-pointer"
+        aria-hidden="true"
+      />
+      <BaseIcon
+        v-else-if="!clickStatus"
         :name="icon"
         class="h-5 w-5 cursor-pointer"
         aria-hidden="true"
@@ -69,14 +74,20 @@ export default defineComponent({
       default: false
     }
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const clickStatus = ref(false)
     function clickHandler(event) {
-      clickStatus.value = true
-      emit('iconEvent', event.target)
-      setTimeout(() => {
-        clickStatus.value = false
-      }, 1000)
+      if (!props.modelValue && props.icon === 'clipboard') {
+        emit('iconEvent', event.target)
+      } else if (props.icon === 'copy') {
+        clickStatus.value = true
+        setTimeout(() => {
+          clickStatus.value = false
+        }, 500)
+        emit('iconEvent', event.target)
+      } else if (props.modelValue) {
+        emit('update:modelValue', '')
+      }
     }
     return { clickStatus, clickHandler }
   }
