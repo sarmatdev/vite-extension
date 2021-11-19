@@ -1,8 +1,4 @@
-function openNewTab() {
-  return chrome.tabs.create({
-    url: 'popup.html#/'
-  })
-}
+import { openNewTab } from '../utils'
 
 export function initContextMenuActions() {
   chrome.contextMenus.removeAll()

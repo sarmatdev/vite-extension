@@ -1,16 +1,8 @@
 <template>
   <section class="mt-2 h-full flex flex-col bg-blue-100 rounded-2xl">
-    <ul class="w-full my-2">
+    <ul class="w-full">
       <li
-        class="
-          p-2
-          rounded-xl
-          flex
-          items-center
-          justify-between
-          cursor-pointer
-          hover:bg-blue-300
-        "
+        class="list-item"
         v-for="item in items"
         :key="item"
         @click="this.$router.push(item.to)"
@@ -25,12 +17,22 @@
         </div>
         <base-icon name="chevron-right" size="xl" class="text-blue-600" />
       </li>
+      <li class="list-item" @click="openNewTab">
+        <div class="flex items-center text-gray-600">
+          <BaseIcon name="maximize" size="xl" />
+          <div class="ml-2">
+            <h3 class="leading-none text-xl font-medium">Open in a new tab</h3>
+          </div>
+        </div>
+        <base-icon name="chevron-right" size="xl" class="text-blue-600" />
+      </li>
     </ul>
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { openNewTab } from '../../../utils'
 
 export default defineComponent({
   name: 'AccountsList',
@@ -54,10 +56,15 @@ export default defineComponent({
 
     return {
       items,
-      accountNameSymbol
+      accountNameSymbol,
+      openNewTab
     }
   }
 })
 </script>
 
-<style></style>
+<style scoped>
+.list-item {
+  @apply px-2 py-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-blue-300;
+}
+</style>

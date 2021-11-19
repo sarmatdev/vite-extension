@@ -57,10 +57,9 @@
           v-if="account.address === active.address"
           name="check"
           size="xl"
-          class="text-blue-600"
         />
         <BaseButton @click.stop="deleteAccount(account)" size="xs" outline>
-          <BaseIcon name="trash-2" size="xs" class="text-blue-600" />
+          <BaseIcon name="trash-2" size="xs" />
         </BaseButton>
       </li>
     </ul>
