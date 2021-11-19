@@ -9,6 +9,7 @@
         inset-x-0
         bottom-0
         rounded-t-2xl
+        ring-1 ring-gray-300
         bg-white
         h-3/4
         flex flex-col

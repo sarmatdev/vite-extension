@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <BaseTooltip>
+    <BaseTooltip placement="bottom">
       <template v-slot:activator>
         <div
           @click="copyAddress"

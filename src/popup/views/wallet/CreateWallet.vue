@@ -1,6 +1,9 @@
 <template>
-  <div class="px-2">
-    <h1 class="my-4">Create wallet</h1>
+  <div class="fixed inset-x-0 top-0 z-50 flex p-2 items-center">
+    <BaseToggle icon="chevron-left" to="/" />
+    <h1 class="ml-14">Create wallet</h1>
+  </div>
+  <div class="px-2 pt-16">
     <main v-if="scene == 1">
       <section class="h-full w-full flex flex-col">
         <BaseWarning class="mt-4" name="info">
@@ -10,7 +13,7 @@
 
         <BaseTextarea
           label="Your recovery phrase"
-          class="mt-8 mb-16"
+          class="mt-8 mb-24"
           icon="copy"
           @iconEvent="copyRecoveryPhrase"
           v-model="mnemonic"

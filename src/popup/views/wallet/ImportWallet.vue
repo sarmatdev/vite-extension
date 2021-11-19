@@ -1,6 +1,9 @@
 <template>
-  <div class="p-2">
-    <h1 class="my-4">Import wallet</h1>
+  <div class="fixed inset-x-0 top-0 z-50 flex p-2 items-center">
+    <BaseToggle icon="chevron-left" to="/" />
+    <h1 class="ml-14">Import wallet</h1>
+  </div>
+  <div class="p-2 pt-24">
     <section class="flex flex-col space-y-6">
       <BaseInput
         v-model="name"
