@@ -19,7 +19,7 @@ export interface IVitexToken {
 }
 
 export interface tokenPrices {
-  tokenId: 'tti_564954455820434f494e69b5'
+  tokenId: string
   tokenSymbol: string
   usdRate: string | number
   cnyRate: string | number
