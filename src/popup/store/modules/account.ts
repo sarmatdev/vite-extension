@@ -12,6 +12,7 @@ export interface AccountState {
   vitexTokens: Array<IVitexToken>
   selectedTokens: Array<IVitexToken>
   fullTokenInfo: Array<IVitexToken>
+  txs: Array<any>
 }
 
 const state: AccountState = {
@@ -20,7 +21,8 @@ const state: AccountState = {
   accountBalance: [],
   vitexTokens: [],
   selectedTokens: [],
-  fullTokenInfo: []
+  fullTokenInfo: [],
+  txs: []
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
@@ -48,6 +50,9 @@ const mutations = {
   },
   setFullTokenInfo(state: AccountState, fullTokenInfo: Array<IVitexToken>) {
     state.fullTokenInfo = fullTokenInfo
+  },
+  setTxs(state: AccountState, txs: Array<any>) {
+    state.txs = txs
   }
 }
 const actions = {
@@ -62,7 +67,7 @@ const actions = {
     const priceList = getPrice.data.data
     commit('setPrices', priceList)
   },
-  fetchAccountBalance({ commit }: { commit: Commit }, address) {
+  getAccountBalance({ commit }: { commit: Commit }, address) {
     const { provider } = useWeb3()
     return provider
       .request('ledger_getAccountInfoByAddress', address)
@@ -84,7 +89,6 @@ const actions = {
           )
         }
         res.accountType = addrType(res.address)
-        console.log(Object.seal(res).balanceInfoMap)
         commit('setAccountBalance', Object.seal(res).balanceInfoMap)
       })
   },
@@ -92,7 +96,7 @@ const actions = {
     dispatch('fetchVitexTokens')
     dispatch('fetchPrices')
     if (getters.active.address) {
-      dispatch('fetchAccountBalance', getters.active.address)
+      dispatch('getAccountBalance', getters.active.address)
     }
     const fullTokenInfo = []
     for (const token of state.vitexTokens) {
@@ -105,6 +109,20 @@ const actions = {
       })
     }
     commit('setFullTokenInfo', fullTokenInfo)
+  },
+  getUtxs({ commit }, address, pageNum = 1) {
+    const { provider } = useWeb3()
+    return provider
+      .request('ledger_getUnreceivedBlocksByAddress', address, pageNum, 10)
+      .then((res) => {
+        commit(
+          'setTxs',
+          res.map((tx) => {
+            tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+            return Object.seal(tx)
+          })
+        )
+      })
   }
 }
 const getters = {

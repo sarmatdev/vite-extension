@@ -39,6 +39,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { compressAddress } from '@/helpers/string'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'TransactionList',
@@ -49,6 +50,8 @@ export default defineComponent({
     }
   },
   setup() {
+    const store = useStore()
+    store.dispatch('account/getUtxs', store.getters['wallets/active'].address)
     return { compressAddress }
   }
 })
