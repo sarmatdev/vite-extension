@@ -14,6 +14,8 @@ export interface IVitexToken {
   owner: string
   tokenDecimals: number
   urlIcon: string
+  price?: string | number
+  balance?: string | number
 }
 
 export interface tokenPrices {
@@ -28,4 +30,24 @@ export interface tokenPrices {
   eurRate: string | number
   gbpRate: string | number
   btcRate: string | number
+}
+
+export interface AccountBalance {
+  tokenId: {
+    balance: string
+    tokenInfo: {
+      decimals: number
+      index: number
+      isOwnerBurnOnly: boolean
+      isReIssuable: boolean
+      maxSupply: string
+      owner: string
+      ownerBurnOnly: boolean
+      tokenId: string
+      tokenName: string
+      tokenSymbol: string
+      tokenSymbolView: string
+      totalSupply: string
+    }
+  }
 }

@@ -63,7 +63,7 @@ export default defineComponent({
     const navRoute = ref('Search')
 
     const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
-      return store.getters['account/vitexTokens']
+      return store.getters['account/fullTokenInfo']
     })
 
     const filter = ref('')

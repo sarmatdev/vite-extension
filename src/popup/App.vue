@@ -13,12 +13,13 @@ import { useStore } from 'vuex'
 
 export default defineComponent({
   components: {
-    Notifications,
+    Notifications
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
     const store = useStore()
-    store.dispatch('account/fetchVitexTokens')
+
+    store.dispatch('account/fetchFullTokenInfo')
   }
 })
 </script>

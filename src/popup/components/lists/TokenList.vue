@@ -21,7 +21,9 @@
             <p>{{ selector ? compressAddress(token.tokenId) : token.name }}</p>
           </div>
         </div>
-        <!-- <p class="font-semibold text-black">{{ forPrice(token) }}</p> -->
+        <span class="font-medium text-sm text-black">{{
+          forPrice(token.price)
+        }}</span>
         <div v-if="selector">
           <BaseIcon
             v-if="hasCheck(token)"
@@ -37,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, computed, ComputedRef, onMounted } from 'vue'
+import { ref, defineComponent, computed, ComputedRef } from 'vue'
 import { useStore } from 'vuex'
 import { IVitexToken } from '@/types'
 import { compressAddress } from '@/helpers/string'
@@ -90,9 +92,7 @@ export default defineComponent({
       }
     }
 
-    const { loadPrices, forPrice } = usePrices()
-
-    // loadPrices()
+    const { forPrice } = usePrices()
 
     return {
       hasCheck,

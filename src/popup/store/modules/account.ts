@@ -1,25 +1,39 @@
 import { Commit } from 'vuex'
-import { IVitexToken } from '@/types'
+import { IVitexToken, AccountBalance, tokenPrices } from '@/types'
 import { getTokens } from '@/api/tokens.api'
 import { getExchangeRate } from '@/api/exchange-rate.api'
+import { atos, tokenView, addrType } from '@/helpers/balance'
+import { useWeb3 } from '@/composables/useWeb3'
 
 export interface AccountState {
   balance: string
+  prices: Array<tokenPrices>
+  accountBalance: Array<AccountBalance>
   vitexTokens: Array<IVitexToken>
   selectedTokens: Array<IVitexToken>
-  prices: Array<any>
+  fullTokenInfo: Array<IVitexToken>
 }
 
 const state: AccountState = {
   balance: '',
+  prices: [],
+  accountBalance: [],
   vitexTokens: [],
   selectedTokens: [],
-  prices: []
+  fullTokenInfo: []
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
-    console.log(balance)
     state.balance = balance
+  },
+  setPrices(state: AccountState, prices: Array<tokenPrices>) {
+    state.prices = prices
+  },
+  setAccountBalance(
+    state: AccountState,
+    accountBalance: Array<AccountBalance>
+  ) {
+    state.accountBalance = accountBalance
   },
   setVitexTokens(state: AccountState, vitexTokens: Array<IVitexToken>) {
     state.vitexTokens = vitexTokens
@@ -32,33 +46,79 @@ const mutations = {
       (el) => el.tokenId !== selectedToken.tokenId
     )
   },
-  setPrices(state: AccountState, prices) {
-    state.prices = prices
+  setFullTokenInfo(state: AccountState, fullTokenInfo: Array<IVitexToken>) {
+    state.fullTokenInfo = fullTokenInfo
   }
 }
 const actions = {
-  async fetchVitexTokens({ commit }: { commit: Commit }) {
+  async fetchVitexTokens({ commit }) {
     const vitexTokens = await getTokens()
     commit('setVitexTokens', vitexTokens)
   },
-  async fetchPrices(context) {
-    const prices = []
-    await context.getters.vitexTokens.forEach(async (el) => {
-      const res = await getExchangeRate(el.tokenId)
-      //@ts-ignore
-      if (res.data.data.length) {
-        //@ts-ignore
-        prices.push(res.data.data[0])
-      }
-    })
-    context.commit('setPrices', prices)
+  async fetchPrices({ commit, state }) {
+    const tokenIds = state.vitexTokens.map((el) => el.tokenId)
+    const getPrice = await getExchangeRate(tokenIds.join())
+    //@ts-ignore
+    const priceList = getPrice.data.data
+    commit('setPrices', priceList)
+  },
+  fetchAccountBalance({ commit }: { commit: Commit }, address) {
+    const { provider } = useWeb3()
+    return provider
+      .request('ledger_getAccountInfoByAddress', address)
+      .then((res) => {
+        if (res.balanceInfoMap) {
+          Object.entries(res.balanceInfoMap).forEach(
+            //@ts-ignore
+            ([tti, { tokenInfo, balance }]) => {
+              res.balanceInfoMap[tti].balance = atos(
+                balance,
+                tokenInfo.decimals
+              )
+              tokenInfo.tokenId = tti
+              tokenInfo.tokenSymbolView = tokenView(
+                tokenInfo.tokenSymbol,
+                tokenInfo.index
+              )
+            }
+          )
+        }
+        res.accountType = addrType(res.address)
+
+        commit('setAccountBalance', Object.seal(res).balanceInfoMap)
+      })
+  },
+  async fetchFullTokenInfo({ dispatch, state, commit, getters }) {
+    dispatch('fetchVitexTokens')
+    dispatch('fetchPrices')
+    if (getters.active.address) {
+      dispatch('fetchAccountBalance', getters.active.address)
+      console.log(state.accountBalance)
+    }
+    const fullTokenInfo = []
+    for (const token of state.vitexTokens) {
+      const price = state.prices.find((el) => el.tokenId === token.tokenId)
+      const balance = state.prices[token.tokenId]
+      console.log(balance)
+      fullTokenInfo.push({
+        ...token,
+        price: price ? price.usdRate : 0,
+        balance: balance ? balance.balance : 0
+      })
+    }
+    console.log(fullTokenInfo.sort((a, b) => b.balance - a.balance))
+    commit('setFullTokenInfo', fullTokenInfo)
   }
 }
 const getters = {
   balance: (s: AccountState) => s.balance,
+  accountBalance: (s: AccountState) => s.accountBalance,
   vitexTokens: (s: AccountState) => s.vitexTokens,
   selectedTokens: (s: AccountState) => s.selectedTokens,
-  prices: (s: AccountState) => s.prices
+  fullTokenInfo: (s: AccountState) => s.fullTokenInfo,
+  active: (state, getters, rootState, rootGetters) => {
+    return rootGetters['wallets/active']
+  }
 }
 
 export default {

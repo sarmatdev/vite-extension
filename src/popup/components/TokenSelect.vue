@@ -99,6 +99,7 @@
               <p class="text-sm text-gray-400">
                 {{ token.name }}
               </p>
+              <span>{{ forPrice(token.price) }}</span>
             </span>
             <span
               v-if="selected"
@@ -139,6 +140,7 @@ import {
   ListboxOptions,
   ListboxOption
 } from '@headlessui/vue'
+import usePrices from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TokenSelect',
@@ -156,7 +158,7 @@ export default defineComponent({
     const store = useStore()
 
     const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
-      return store.getters['account/vitexTokens']
+      return store.getters['account/fullTokenInfo']
     })
     const selectedToken = ref(null)
     const selectedValue = computed(() => {
@@ -167,10 +169,13 @@ export default defineComponent({
       emit('update:modelValue', selectedValue.value)
     })
 
+    const { forPrice } = usePrices()
+
     return {
       tokens,
       selectedToken,
-      selectedValue
+      selectedValue,
+      forPrice
     }
   }
 })
