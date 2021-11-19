@@ -79,7 +79,7 @@ export default defineComponent({
     const accounts = computed(() => {
       return store.getters['wallets/accounts']
     })
-    console.log(accounts)
+
     const active = computed(() => {
       return store.getters['wallets/active']
     })

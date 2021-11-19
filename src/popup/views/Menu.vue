@@ -1,5 +1,5 @@
 <template>
-  <div class="h-14 pb-2 flex items-center bg-blue-200 rounded-b-lg px-2">
+  <div class="h-14 p-2 flex items-center bg-blue-200 rounded-b-lg">
     <BaseToggle icon="chevron-left" to="/" />
     <h1 class="m-auto">Account</h1>
   </div>
