@@ -84,7 +84,7 @@ const actions = {
           )
         }
         res.accountType = addrType(res.address)
-
+        console.log(Object.seal(res).balanceInfoMap)
         commit('setAccountBalance', Object.seal(res).balanceInfoMap)
       })
   },
@@ -93,20 +93,17 @@ const actions = {
     dispatch('fetchPrices')
     if (getters.active.address) {
       dispatch('fetchAccountBalance', getters.active.address)
-      console.log(state.accountBalance)
     }
     const fullTokenInfo = []
     for (const token of state.vitexTokens) {
       const price = state.prices.find((el) => el.tokenId === token.tokenId)
-      const balance = state.prices[token.tokenId]
-      console.log(balance)
+      const balance = state.accountBalance[token.tokenId]
       fullTokenInfo.push({
         ...token,
         price: price ? price.usdRate : 0,
-        balance: balance ? balance.balance : 0
+        balance: balance ? balance.balance.replace(',', '') * 1 : 0
       })
     }
-    console.log(fullTokenInfo.sort((a, b) => b.balance - a.balance))
     commit('setFullTokenInfo', fullTokenInfo)
   }
 }

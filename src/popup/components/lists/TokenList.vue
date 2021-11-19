@@ -1,7 +1,9 @@
 <template>
   <div @scroll="scroll" class="h-80 overflow-y-auto">
     <div
-      v-for="token in tokens.slice(0, endToken)"
+      v-for="token in tokenList
+        .sort((a, b) => b.balance - a.balance)
+        .slice(0, endToken)"
       :key="token.tokenId"
       @click="selectToken(token)"
       class="w-full cursor-pointer transition-all"
@@ -16,7 +18,7 @@
           <img width="40" :src="token.urlIcon" :alt="token.originalSymbol" />
           <div class="text-left">
             <p class="text-black font-semibold">
-              {{ balance + ' ' + token.originalSymbol }}
+              {{ token.balance + ' ' + token.originalSymbol }}
             </p>
             <p>{{ selector ? compressAddress(token.tokenId) : token.name }}</p>
           </div>
@@ -92,6 +94,8 @@ export default defineComponent({
       }
     }
 
+    const tokenList = computed(() => props.tokens)
+
     const { forPrice } = usePrices()
 
     return {
@@ -100,7 +104,8 @@ export default defineComponent({
       compressAddress,
       forPrice,
       endToken,
-      scroll
+      scroll,
+      tokenList
     }
   }
 })
