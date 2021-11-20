@@ -1,35 +1,43 @@
 <template>
   <div v-for="(transaction, idx) in transactions" :key="idx">
-    <div class="p-3">
-      <span class="text-left">
-        {{ transaction.timestamp }}
-      </span>
-      <div class="flex justify-between items-center">
-        <BaseIcon
-          v-if="transaction.status === 'Completed'"
-          class="text-black"
-          name="send"
-        />
-        <BaseIcon
-          v-if="transaction.status === 'Pending'"
-          class="text-black"
-          name="clock"
-        />
-        <div class="text-left flex flex-col">
-          <span class="text-black font-semibold">
-            {{ transaction.blockType }}
-          </span>
-          <span>
-            {{ transaction.status }}
-          </span>
+    <div class="p-3 flex items-center justify-between">
+      <div>
+        <p class="text-left text-sm text-gray-600 mb-2">
+          {{ transaction.timestamp }}
+        </p>
+        <div class="flex space-x-6 items-center">
+          <BaseIcon
+            v-if="transaction.status === 'Completed'"
+            class="text-black"
+            name="send"
+          />
+          <BaseIcon
+            v-if="transaction.status === 'Pending'"
+            class="text-black"
+            name="clock"
+          />
+          <div class="text-left flex flex-col justify-between">
+            <span class="font-medium text-sm text-black block">
+              {{ transaction.blockType }}
+            </span>
+            <span class="font-medium text-sm text-gray-600 block">
+              {{ transaction.status }}
+            </span>
+          </div>
         </div>
-        <div class="text-right">
-          <p class="text-black font-semibold">
-            {{ transaction.amount + ' ' + transactions.token }}
-          </p>
-          <p>From: {{ compressAddress(transaction.address) }}</p>
-          <p>To: {{ compressAddress(transaction.toAddress) }}</p>
-        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-black">
+          {{ transaction.amount + ' ' + transaction.token }}
+        </p>
+        <span class="font-medium text-sm text-gray-600 block"
+          ><span class="text-black">From:</span>
+          {{ compressAddress(transaction.address) }}</span
+        >
+        <span class="font-medium text-sm text-gray-600"
+          ><span class="text-black">To:</span>
+          {{ compressAddress(transaction.toAddress) }}</span
+        >
       </div>
     </div>
     <hr class="bg-white border-none h-0.5" />
@@ -52,6 +60,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     store.dispatch('account/getUtxs', store.getters['wallets/active'].address)
+    console.log(store.getters['wallets/active'].address)
     return { compressAddress }
   }
 })
