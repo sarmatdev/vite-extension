@@ -89,7 +89,7 @@ const actions = {
           )
         }
         res.accountType = addrType(res.address)
-        commit('setAccountBalance', Object.seal(res).balanceInfoMap)
+        commit('setAccountBalance', Object.seal(res.balanceInfoMap))
       })
   },
   async fetchFullTokenInfo({ dispatch, state, commit, getters }) {
@@ -105,7 +105,7 @@ const actions = {
       fullTokenInfo.push({
         ...token,
         price: price ? price.usdRate : 0,
-        balance: balance ? balance.balance.replace(',', '') * 1 : 0
+        balance: balance ? balance.balance * 1 : 0
       })
     }
     commit('setFullTokenInfo', fullTokenInfo)

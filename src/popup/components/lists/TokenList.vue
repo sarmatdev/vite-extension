@@ -13,7 +13,7 @@
           : 'bg-blue-200 hover:bg-blue-300'
       "
     >
-      <div class="flex items-center p-3 justify-between">
+      <div class="flex p-3 justify-between">
         <div class="flex items-center space-x-5">
           <img width="40" :src="token.urlIcon" :alt="token.originalSymbol" />
           <div class="text-left">
@@ -23,8 +23,8 @@
             <p>{{ selector ? compressAddress(token.tokenId) : token.name }}</p>
           </div>
         </div>
-        <span class="font-medium text-sm text-black">{{
-          forPrice(token.price)
+        <span class="font-medium pt-1 text-sm text-black">{{
+          forPrice(token.price, token.balance)
         }}</span>
         <div v-if="selector">
           <BaseIcon
