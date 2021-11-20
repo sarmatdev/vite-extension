@@ -19,7 +19,10 @@ export default defineComponent({
     chrome.runtime.connect({ name: APP_CONNECT })
     const store = useStore()
 
-    store.dispatch('account/fetchFullTokenInfo')
+    store.dispatch(
+      'account/fetchFullTokenInfo',
+      store.getters['wallets/active'].address
+    )
   }
 })
 </script>

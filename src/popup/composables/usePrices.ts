@@ -7,12 +7,19 @@ export default function usePrices() {
   function forPrice(price, balance?) {
     if (balance) {
       const balanceUsd = price * balance
-      return `$${Math.trunc(balanceUsd)},${frac(balanceUsd)}`
+      return `$${Math.trunc(balanceUsd)}${
+        frac(balanceUsd) ? ',' + frac(balanceUsd) : ''
+      }`
     }
-    return price ? `1 ≈ $${Math.trunc(price)},${frac(price)}` : price
+    return price
+      ? `1 ≈ $${Math.trunc(price)}${frac(price) ? ',' + frac(price) : ''}`
+      : ''
   }
-
+  function forAmount(a) {
+    return a ? `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` : ''
+  }
   return {
-    forPrice
+    forPrice,
+    forAmount
   }
 }

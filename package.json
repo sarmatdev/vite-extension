@@ -27,6 +27,7 @@
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
     "crypto-js": "^4.1.1",
+    "dayjs": "^1.10.7",
     "feather-icons": "^4.28.0",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",

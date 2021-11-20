@@ -1,42 +1,39 @@
 <template>
-  <div v-for="(transaction, idx) in transactions" :key="idx">
+  <div v-for="(tx, idx) in txsList" :key="idx">
     <div class="p-3 flex items-center justify-between">
       <div>
         <p class="text-left text-sm text-gray-600 mb-2">
-          {{ transaction.timestamp }}
+          {{ timestampToDate(tx.timestamp) }}
         </p>
         <div class="flex space-x-6 items-center">
           <BaseIcon
-            v-if="transaction.status === 'Completed'"
+            v-if="true"
+            :class="{ 'transform -rotate-180': tx.blockType !== 2 }"
             class="text-black"
             name="send"
           />
-          <BaseIcon
-            v-if="transaction.status === 'Pending'"
-            class="text-black"
-            name="clock"
-          />
+          <BaseIcon v-if="false" class="text-black" name="clock" />
           <div class="text-left flex flex-col justify-between">
             <span class="font-medium text-sm text-black block">
-              {{ transaction.blockType }}
+              {{ tx.blockType == 2 ? 'Send' : 'Receive' }}
             </span>
             <span class="font-medium text-sm text-gray-600 block">
-              {{ transaction.status }}
+              {{ tx.unreceived ? 'Pending' : 'Completed' }}
             </span>
           </div>
         </div>
       </div>
       <div class="text-right">
         <p class="text-black">
-          {{ transaction.amount + ' ' + transaction.token }}
+          {{ forAmount(tx.amount) + ' ' + tx.tokenInfo.tokenSymbol }}
         </p>
         <span class="font-medium text-sm text-gray-600 block"
           ><span class="text-black">From:</span>
-          {{ compressAddress(transaction.address) }}</span
+          {{ compressAddress(tx.address) }}</span
         >
         <span class="font-medium text-sm text-gray-600"
           ><span class="text-black">To:</span>
-          {{ compressAddress(transaction.toAddress) }}</span
+          {{ compressAddress(tx.toAddress) }}</span
         >
       </div>
     </div>
@@ -45,23 +42,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useStore } from 'vuex'
+import { timestampToDate } from '@/helpers/date'
+import usePrices from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TransactionList',
   props: {
-    transactions: {
-      type: Array,
-      default: () => []
+    txs: {
+      type: Array
     }
   },
-  setup() {
+  setup(props) {
     const store = useStore()
-    store.dispatch('account/getUtxs', store.getters['wallets/active'].address)
-    console.log(store.getters['wallets/active'].address)
-    return { compressAddress }
+    store.dispatch(
+      'account/getTxsList',
+      store.getters['wallets/active'].address
+    )
+    const txsList = computed(() =>
+      props.txs ? props.txs : store.getters['account/txsList']
+    )
+    const { forAmount } = usePrices()
+    return {
+      compressAddress,
+      txsList,
+      timestampToDate,
+      forAmount
+    }
   }
 })
 </script>
