@@ -81,6 +81,9 @@
         </ListboxOption>
         <ListboxOption v-if="!filteredTokens.length" disabled class="p-2">
           <p class="text-sm text-center">There are no assets available.</p>
+          <p class="text-sm text-center">
+            Only assets with a positive balance are shown.
+          </p>
         </ListboxOption>
         <ListboxOption
           v-slot="{ active, selected }"
