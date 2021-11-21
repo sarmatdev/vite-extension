@@ -170,17 +170,6 @@ export default defineComponent({
     const tokens: ComputedRef<Array<IVitexToken>> = computed(() => {
       return store.getters['account/fullTokenInfo']
     })
-    const selectedToken = ref(null)
-    const selectedValue = computed(() => {
-      return selectedToken.value ? selectedToken.value : tokens.value[0]
-    })
-    onMounted(() => emit('update:modelValue', selectedValue.value))
-    watch(selectedValue, () => {
-      emit('update:modelValue', selectedValue.value)
-    })
-
-    const { forPrice } = usePrices()
-
     const filter = ref('')
     const filteredTokens = computed(() => {
       return tokens.value
@@ -191,6 +180,22 @@ export default defineComponent({
             el.originalSymbol.toLowerCase().includes(filter.value.toLowerCase())
         )
     })
+    const selectedToken = ref(null)
+
+    const selectedValue = computed(() => {
+      if (selectedToken.value) {
+        return selectedToken.value
+      } else if (filteredTokens.value.length) {
+        return filteredTokens.value[0]
+      }
+      return tokens.value[0]
+    })
+    onMounted(() => emit('update:modelValue', selectedValue.value))
+    watch(selectedValue, () => {
+      emit('update:modelValue', selectedValue.value)
+    })
+
+    const { forPrice } = usePrices()
 
     return {
       tokens,
