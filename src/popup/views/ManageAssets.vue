@@ -18,7 +18,7 @@
         <BaseInput
           v-model="filter"
           class="mx-3 my-8"
-          placeholder="Asset filter..."
+          placeholder="Search by name or symbol"
         />
       </div>
       <p class="text-center pt-8">

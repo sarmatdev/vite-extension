@@ -60,7 +60,6 @@
         class="
           absolute
           w-full
-          py-1
           mt-1
           overflow-auto
           text-base
@@ -71,36 +70,47 @@
           ring-1 ring-black ring-opacity-5
           focus:outline-none
           sm:text-sm
+          z-10
         "
-      >
+        ><ListboxOption disabled class="p-2">
+          <BaseInput
+            v-model="filter"
+            placeholder="Search by name or symbol"
+            icon="search"
+          />
+        </ListboxOption>
+        <ListboxOption v-if="!filteredTokens.length" disabled class="p-2">
+          <p class="text-sm text-center">There are no assets available.</p>
+        </ListboxOption>
         <ListboxOption
           v-slot="{ active, selected }"
-          v-for="token in tokens"
+          v-for="token in filteredTokens.sort((a, b) => b.balance - a.balance)"
           :key="token.tokenId"
           :value="token"
           as="template"
         >
           <li
             :class="[
-              active ? 'text-amber-900 bg-blue-100' : 'text-gray-900 bg-white',
-              'cursor-pointer select-none relative py-2 border-t px-4 flex items-center z-10 '
+              active ? ' bg-blue-100' : ' bg-white',
+              selected ? 'bg-blue-100' : 'bg-white',
+              'cursor-pointer select-none relative py-2 border-t px-4 flex justify-between  '
             ]"
           >
-            <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
-            <span
-              :class="[
-                selected ? 'font-medium ' : 'font-normal',
-                'block truncate'
-              ]"
-            >
-              <p class="text-base mr-2 text-black font-medium">
-                {{ token.originalSymbol }}
-              </p>
-              <p class="text-sm text-gray-400">
-                {{ token.name }}
-              </p>
-              <span>{{ forPrice(token.price) }}</span>
-            </span>
+            <div class="flex items-center">
+              <img class="h-8 mr-2" :src="token.urlIcon" alt="" />
+              <span class="block truncate">
+                <p class="text-base mr-2 text-black font-medium">
+                  {{ token.balance + ' ' + token.originalSymbol }}
+                </p>
+                <p class="text-sm text-gray-400">
+                  {{ token.name }}
+                </p>
+              </span>
+            </div>
+            <span class="text-black mr-6">{{
+              forPrice(token.price, token.balance)
+            }}</span>
+
             <span
               v-if="selected"
               class="
@@ -171,11 +181,24 @@ export default defineComponent({
 
     const { forPrice } = usePrices()
 
+    const filter = ref('')
+    const filteredTokens = computed(() => {
+      return tokens.value
+        .filter((e) => e.balance > 0)
+        .filter(
+          (el: IVitexToken) =>
+            el.name.toLowerCase().includes(filter.value.toLowerCase()) ||
+            el.originalSymbol.toLowerCase().includes(filter.value.toLowerCase())
+        )
+    })
+
     return {
       tokens,
       selectedToken,
       selectedValue,
-      forPrice
+      forPrice,
+      filteredTokens,
+      filter
     }
   }
 })
