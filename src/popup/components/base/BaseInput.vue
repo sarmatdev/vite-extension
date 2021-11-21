@@ -42,13 +42,13 @@
           inset-y-0
           right-0
           pr-2
-          pt-2
+          py-auto
           flex
           items-center
           justify-center
         "
       >
-        <div v-if="!passwordInput">
+        <div class="flex items-center justify-center" v-if="!passwordInput">
           <BaseIcon
             v-if="modelValue && icon !== 'copy'"
             name="x"
