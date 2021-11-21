@@ -13,7 +13,7 @@ export interface SendTokens {
 }
 
 const state = reactive({
-  network: { ...config.networks[1], isConnected: false }
+  network: { ...config.networks[0], isConnected: false }
 })
 
 const { createAccountBlock } = accountBlock

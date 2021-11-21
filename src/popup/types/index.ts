@@ -51,3 +51,56 @@ export interface AccountBalance {
     }
   }
 }
+
+export interface ITxs {
+  accountAddress: string
+  address: string
+  amount: string
+  blockType: number
+  confirmations: string
+  confirmedHash: string
+  confirmedTimes: string
+  data: string
+  difficulty: string
+  fee: string
+  firstSnapshotHash: string
+  firstSnapshotHeight: string
+  fromAddress: string
+  fromBlockHash: string
+  hash: string
+  height: string
+  logHash: null | any
+  nonce: string
+  prevHash: string
+  previousHash: string
+  producer: string
+  publicKey: string
+  quota: string
+  quotaByStake: string
+  quotaUsed: string
+  receiveBlockHash: string
+  receiveBlockHeight: string
+  sendBlockHash: string
+  sendBlockList: null | any
+  signature: string
+  timestamp: number
+  toAddress: string
+  tokenId: string
+  tokenInfo: {
+    decimals: number
+    index: number
+    isOwnerBurnOnly: false
+    isReIssuable: boolean
+    maxSupply: string
+    owner: string
+    ownerBurnOnly: boolean
+    tokenId: string
+    tokenName: string
+    tokenSymbol: string
+    totalSupply: string
+  }
+  totalQuota: string
+  triggeredSendBlockList: null | any
+  utUsed: string
+  vmLogHash: null | any
+}

@@ -36,7 +36,7 @@
         v-if="navRoute === 'Activity'"
         class="overflow-y-scroll h-60 text-sm"
       >
-        <TransactionList :transactions="activityMock" />
+        <TransactionList />
       </div>
     </div>
   </div>
@@ -72,55 +72,10 @@ export default defineComponent({
 
     const navRoute = ref('Assets')
 
-    const activityMock = [
-      {
-        blockType: 'Send',
-        address: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        toAddress: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        token: 'BNB',
-        amount: '10',
-        hash: '66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d',
-        timestamp: '9/21/2021, 12:41:12',
-        status: 'Pending'
-      },
-      {
-        blockType: 'Send',
-        address: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        toAddress: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        token: 'BNB',
-        amount: '10',
-        hash: '66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d',
-        timestamp: '9/21/2021, 12:41:12',
-        status: 'Completed'
-      },
-      {
-        blockType: 'Send',
-        address: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        toAddress: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        token: 'BNB',
-        amount: '10',
-        hash: '66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d',
-        timestamp: '9/21/2021, 12:41:12',
-        status: 'Completed'
-      },
-
-      {
-        blockType: 'Send',
-        address: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        toAddress: '0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d',
-        token: 'BNB',
-        amount: '10',
-        hash: '66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d66e585711ec4cefd6e8c8346d',
-        timestamp: '9/21/2021, 12:41:12',
-        status: 'Completed'
-      }
-    ]
-
     return {
       name,
       selectedTokens,
-      navRoute,
-      activityMock
+      navRoute
     }
   }
 })

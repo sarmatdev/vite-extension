@@ -31,9 +31,7 @@
         <div class="mt-4 flex space-x-2 relative">
           <div class="p-2 text-left bg-blue-100 rounded-lg">
             <p>From</p>
-            {{
-              compressAddress('0xd69401e5b2f93eb66e585711ec4cefd6e8c8346d', 5)
-            }}
+            {{ compressAddress(currentAddress) }}
           </div>
           <div
             class="
@@ -47,7 +45,7 @@
               leading-none
               text-white
               absolute
-              left-24
+              left-32
               top-4
             "
           >
@@ -55,7 +53,7 @@
           </div>
           <div class="p-2 text-right bg-blue-100 rounded-lg">
             <p>To</p>
-            {{ compressAddress(props.params?.toAddress, 5) }}
+            {{ compressAddress(props.params?.toAddress) }}
           </div>
         </div>
       </section>
@@ -72,6 +70,7 @@ import { compressAddress } from '@/helpers/string'
 import { useWeb3, SendTokens } from '@/composables/useWeb3'
 import useNumbers from '@/composables/useNumbers'
 import config from '@/config'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'TxConfirm',
@@ -87,9 +86,12 @@ export default defineComponent({
   setup(props, { emit }) {
     const { sendTokens } = useWeb3()
     const { formatUnits } = useNumbers()
+    const store = useStore()
     const showModal = ref(false)
     const loading = ref(false)
-
+    const currentAddress = computed(
+      () => store.getters['wallets/active'].address
+    )
     function closeModal() {
       emit('close')
     }
@@ -132,7 +134,8 @@ export default defineComponent({
       compressAddress,
       props,
       loading,
-      token
+      token,
+      currentAddress
     }
   }
 })

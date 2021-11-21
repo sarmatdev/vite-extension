@@ -1,9 +1,11 @@
 import { Commit } from 'vuex'
-import { IVitexToken, AccountBalance, tokenPrices } from '@/types'
+import { IVitexToken, AccountBalance, tokenPrices, ITxs } from '@/types'
 import { getTokens } from '@/api/tokens.api'
 import { getExchangeRate } from '@/api/exchange-rate.api'
 import { atos, tokenView, addrType } from '@/helpers/balance'
 import { useWeb3 } from '@/composables/useWeb3'
+
+const { provider } = useWeb3()
 
 export interface AccountState {
   balance: string
@@ -12,7 +14,9 @@ export interface AccountState {
   vitexTokens: Array<IVitexToken>
   selectedTokens: Array<IVitexToken>
   fullTokenInfo: Array<IVitexToken>
-  txs: Array<any>
+  txs: Array<ITxs>
+  uTxs: Array<ITxs>
+  txsList: Array<ITxs>
 }
 
 const state: AccountState = {
@@ -22,7 +26,9 @@ const state: AccountState = {
   vitexTokens: [],
   selectedTokens: [],
   fullTokenInfo: [],
-  txs: []
+  txs: [],
+  uTxs: [],
+  txsList: []
 }
 const mutations = {
   setBalance(state: AccountState, balance: string) {
@@ -51,8 +57,14 @@ const mutations = {
   setFullTokenInfo(state: AccountState, fullTokenInfo: Array<IVitexToken>) {
     state.fullTokenInfo = fullTokenInfo
   },
-  setTxs(state: AccountState, txs: Array<any>) {
+  setTxs(state: AccountState, txs: Array<ITxs>) {
     state.txs = txs
+  },
+  setUtxs(state: AccountState, uTxs: Array<ITxs>) {
+    state.uTxs = uTxs
+  },
+  setTxsList(state: AccountState, txsList: Array<ITxs>) {
+    state.txsList = txsList
   }
 }
 const actions = {
@@ -60,15 +72,15 @@ const actions = {
     const vitexTokens = await getTokens()
     commit('setVitexTokens', vitexTokens)
   },
-  async fetchPrices({ commit, state }) {
-    const tokenIds = state.vitexTokens.map((el) => el.tokenId)
-    const getPrice = await getExchangeRate(tokenIds.join())
+  async fetchPrices({ commit, getters }) {
+    const tokens = getters.vitexTokens
+    const tokenIds = tokens.map((el) => el.tokenId)
+    const pricesData = await getExchangeRate(tokenIds.join())
     //@ts-ignore
-    const priceList = getPrice.data.data
+    const priceList = pricesData.data.data
     commit('setPrices', priceList)
   },
   getAccountBalance({ commit }: { commit: Commit }, address) {
-    const { provider } = useWeb3()
     return provider
       .request('ledger_getAccountInfoByAddress', address)
       .then((res) => {
@@ -89,31 +101,34 @@ const actions = {
           )
         }
         res.accountType = addrType(res.address)
-        commit('setAccountBalance', Object.seal(res).balanceInfoMap)
+        commit('setAccountBalance', Object.seal(res.balanceInfoMap))
       })
   },
-  async fetchFullTokenInfo({ dispatch, state, commit, getters }) {
+  async fetchFullTokenInfo({ dispatch, getters, commit }, address) {
     dispatch('fetchVitexTokens')
     dispatch('fetchPrices')
-    if (getters.active.address) {
-      dispatch('getAccountBalance', getters.active.address)
+    if (address) {
+      dispatch('getAccountBalance', address)
     }
+    const tokens = getters.vitexTokens
+    const prices = getters.prices
+    const balances = getters.accountBalance
+
     const fullTokenInfo = []
-    for (const token of state.vitexTokens) {
-      const price = state.prices.find((el) => el.tokenId === token.tokenId)
-      const balance = state.accountBalance[token.tokenId]
+    for (const token of tokens) {
+      const price = getters.prices.find((el) => el.tokenId === token.tokenId)
+      const balance = balances[token.tokenId]
       fullTokenInfo.push({
         ...token,
         price: price ? price.usdRate : 0,
-        balance: balance ? balance.balance.replace(',', '') * 1 : 0
+        balance: balance ? balance.balance * 1 : 0
       })
     }
     commit('setFullTokenInfo', fullTokenInfo)
   },
-  getUtxs({ commit }, address, pageNum = 1) {
-    const { provider } = useWeb3()
+  getTxs({ commit }, address) {
     return provider
-      .request('ledger_getUnreceivedBlocksByAddress', address, pageNum, 10)
+      .request('ledger_getAccountBlocksByAddress', address, 0, 30)
       .then((res) => {
         commit(
           'setTxs',
@@ -123,14 +138,39 @@ const actions = {
           })
         )
       })
+  },
+  getUtxs({ commit }, address) {
+    return provider
+      .request('ledger_getUnreceivedBlocksByAddress', address, 0, 30)
+      .then((res) => {
+        commit(
+          'setUtxs',
+          res.map((tx) => {
+            tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+            tx.unreceived = true
+            return Object.seal(tx)
+          })
+        )
+      })
+  },
+  getTxsList({ commit, dispatch, getters }, address) {
+    dispatch('getTxs', address)
+    dispatch('getUtxs', address)
+    const txs = getters.txs
+    const uTxs = getters.uTxs
+    commit('setTxsList', [...uTxs, ...txs])
   }
 }
 const getters = {
   balance: (s: AccountState) => s.balance,
+  prices: (s: AccountState) => s.prices,
   accountBalance: (s: AccountState) => s.accountBalance,
   vitexTokens: (s: AccountState) => s.vitexTokens,
   selectedTokens: (s: AccountState) => s.selectedTokens,
   fullTokenInfo: (s: AccountState) => s.fullTokenInfo,
+  txs: (s: AccountState) => s.txs,
+  uTxs: (s: AccountState) => s.uTxs,
+  txsList: (s: AccountState) => s.txsList,
   active: (state, getters, rootState, rootGetters) => {
     return rootGetters['wallets/active']
   }

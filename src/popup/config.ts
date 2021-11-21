@@ -3,7 +3,7 @@ export default {
     {
       id: 1,
       name: 'Mainnet',
-      httpUrl: 'https://node-tokyo.vite.net/http',
+      httpUrl: 'https://node.vite.net/gvite',
       wsUrl: 'wss://node-tokyo.vite.net/ws',
       httpVitex: 'https://vitex.vite.net/api/v1'
     },

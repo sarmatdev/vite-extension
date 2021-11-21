@@ -11,8 +11,10 @@
     >
 
     <div
-      class="text-black py-2 border-2 rounded-md cursor-pointer"
-      :class="{ 'border-blue-500': open }"
+      class="text-black py-2 border rounded-md cursor-pointer"
+      :class="
+        open ? 'border-blue-500' : 'hover:ring-gray-900 hover:border-gray-900'
+      "
       @click="open = !open"
     >
       {{ !selected || open ? placeholder : selected }}

@@ -23,13 +23,12 @@
           placeholder-gray-400
           transition-all
           caret-blue-600
-          hover:ring-gray-900 hover:border-gray-900
           rounded-md
         "
         :class="
           errors.length
             ? 'focus:border-transparent  focus:ring-red-600 border-red-600'
-            : 'focus:border-transparent focus:ring-blue-500'
+            : 'focus:border-transparent focus:ring-blue-500 hover:ring-gray-900 hover:border-gray-900'
         "
         :type="inputType"
         :placeholder="placeholder"
@@ -43,13 +42,13 @@
           inset-y-0
           right-0
           pr-2
-          pt-2
+          py-auto
           flex
           items-center
           justify-center
         "
       >
-        <div v-if="!passwordInput">
+        <div class="flex items-center justify-center" v-if="!passwordInput">
           <BaseIcon
             v-if="modelValue && icon !== 'copy'"
             name="x"

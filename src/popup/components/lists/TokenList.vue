@@ -9,22 +9,24 @@
       class="w-full cursor-pointer transition-all"
       :class="
         hasCheck(token) && selector
-          ? 'bg-blue-400 '
+          ? 'bg-blue-300'
           : 'bg-blue-200 hover:bg-blue-300'
       "
     >
-      <div class="flex items-center p-3 justify-between">
+      <div class="flex p-3 justify-between">
         <div class="flex items-center space-x-5">
           <img width="40" :src="token.urlIcon" :alt="token.originalSymbol" />
           <div class="text-left">
-            <p class="text-black font-semibold">
+            <p class="text-black">
               {{ token.balance + ' ' + token.originalSymbol }}
             </p>
-            <p>{{ selector ? compressAddress(token.tokenId) : token.name }}</p>
+            <span class="font-medium pt-1 text-sm text-gray-600">{{
+              selector ? compressAddress(token.tokenId) : token.name
+            }}</span>
           </div>
         </div>
-        <span class="font-medium text-sm text-black">{{
-          forPrice(token.price)
+        <span class="font-medium pt-1 text-sm text-black">{{
+          forPrice(token.price, token.balance)
         }}</span>
         <div v-if="selector">
           <BaseIcon
