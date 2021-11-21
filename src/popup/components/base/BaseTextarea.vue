@@ -22,7 +22,7 @@
       :class="
         errors.length
           ? 'focus:border-transparent  focus:ring-red-600 border-red-600'
-          : 'focus:border-transparent focus:ring-blue-500'
+          : 'focus:border-transparent focus:ring-blue-500 hover:ring-gray-900 hover:border-gray-900'
       "
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
