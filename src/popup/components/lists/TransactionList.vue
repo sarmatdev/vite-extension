@@ -39,6 +39,11 @@
     </div>
     <hr class="bg-white border-none h-0.5" />
   </div>
+  <div v-if="!txsList.length" class="relative w-full h-full">
+    <p class="text-blue-900 absolute inset-0 top-2/4 text-center">
+      You have no transactions
+    </p>
+  </div>
 </template>
 
 <script lang="ts">
