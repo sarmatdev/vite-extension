@@ -104,7 +104,7 @@ const actions = {
         commit('setAccountBalance', Object.seal(res.balanceInfoMap))
       })
   },
-  async fetchFullTokenInfo({ dispatch, state, getters, commit }, address) {
+  async fetchFullTokenInfo({ dispatch, getters, commit }, address) {
     dispatch('fetchVitexTokens')
     dispatch('fetchPrices')
     if (address) {
