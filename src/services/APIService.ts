@@ -110,7 +110,7 @@ class APIService {
           return
         }
         this.activeSession = session
-        this.openPopup('personal_sign', 400, 570)
+        this.openPopup('personal-sign', 360, 630)
       } else {
         this.sendMessageToInjectScript(
           THIRDPARTY_PERSONAL_SIGN_REQUEST_RESPONSE,
