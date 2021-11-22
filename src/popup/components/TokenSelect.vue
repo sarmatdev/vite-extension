@@ -184,6 +184,9 @@ export default defineComponent({
         )
     })
     const selectedToken = ref(null)
+    watch(selectedToken, () => {
+      emit('update:modelValue', (filter.value = ''))
+    })
 
     const selectedValue = computed(() => {
       if (selectedToken.value) {
