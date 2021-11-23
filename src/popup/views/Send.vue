@@ -39,8 +39,8 @@
 import { defineComponent, ref, watch } from 'vue'
 import TokenSelect from '@/components/TokenSelect.vue'
 import TxConfirm from '@/components/modals/TxConfirm.vue'
-import useNumbers from '@/composables/useNumbers'
-import useClipboard from '@/composables/useClipboard'
+import {useNumbers} from '@/composables/useNumbers'
+import {useClipboard} from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'Send',

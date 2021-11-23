@@ -49,7 +49,7 @@
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import useValidate from '@/composables/useValidate'
+import {useValidate} from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'CreatePassword',
