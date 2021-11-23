@@ -14,6 +14,7 @@ export interface AccountState {
   accountBalance: Array<AccountBalance>
   vitexTokens: Array<IVitexToken>
   selectedTokens: Array<IVitexToken>
+  selectedAsset: IVitexToken
   fullTokenInfo: Array<IVitexToken>
   txs: Array<ITxs>
   uTxs: Array<ITxs>
@@ -26,6 +27,7 @@ const state: AccountState = {
   accountBalance: [],
   vitexTokens: [],
   selectedTokens: [],
+  selectedAsset: null,
   fullTokenInfo: [],
   txs: [],
   uTxs: [],
@@ -49,6 +51,9 @@ const mutations = {
   },
   setSelectedTokens(state: AccountState, selectedTokens: Array<IVitexToken>) {
     state.selectedTokens = selectedTokens
+  },
+  setSelectedAsset(state: AccountState, selectedAsset: IVitexToken) {
+    state.selectedAsset = selectedAsset
   },
   addSelectedTokens(state: AccountState, selectedToken: IVitexToken) {
     state.selectedTokens.push(selectedToken)
@@ -210,6 +215,7 @@ const getters = {
   accountBalance: (s: AccountState) => s.accountBalance,
   vitexTokens: (s: AccountState) => s.vitexTokens,
   selectedTokens: (s: AccountState) => s.selectedTokens,
+  selectedAsset: (s: AccountState) => s.selectedAsset,
   fullTokenInfo: (s: AccountState) => s.fullTokenInfo,
   txs: (s: AccountState) => s.txs,
   uTxs: (s: AccountState) => s.uTxs,

@@ -18,7 +18,7 @@
         </BaseLink>
       </div>
       <div v-if="navRoute === 'Assets'" class="overflow-y-scroll h-60">
-        <TokenList :tokens="selectedTokens" />
+        <TokenList :tokens="selectedTokens" @select="selectAsset" />
         <BaseToggle
           class="
             fixed
@@ -32,10 +32,7 @@
           to="/manage-assets"
         />
       </div>
-      <div
-        v-if="navRoute === 'Activity'"
-        class="overflow-y-scroll h-60 text-sm"
-      >
+      <div v-if="navRoute === 'Activity'" class="overflow-y-scroll h-60">
         <TransactionList />
       </div>
     </div>
@@ -49,6 +46,7 @@ import AccountInfo from '@/components/AccountInfo.vue'
 import TokenList from '@/components/lists/TokenList.vue'
 import TransactionList from '@/components/lists/TransactionList.vue'
 import Header from '@/components/Header.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Home',
@@ -60,6 +58,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
+    const router = useRouter()
 
     const selectedTokens = computed(() => {
       return store.getters['account/selectedTokens']
@@ -67,10 +66,16 @@ export default defineComponent({
 
     const navRoute = ref('Assets')
 
+    function selectAsset(token) {
+      store.commit('account/setSelectedAsset', token)
+      router.push('/selected-asset')
+    }
+
     return {
       name,
       selectedTokens,
-      navRoute
+      navRoute,
+      selectAsset
     }
   }
 })

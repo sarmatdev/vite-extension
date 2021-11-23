@@ -80,6 +80,15 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/selected-asset',
+    name: 'SelectedAsset',
+    component: () => import('../views/SelectedAsset.vue'),
+    meta: {
+      requiredAccount: true,
+      authenticate: true
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/API/Login.vue')

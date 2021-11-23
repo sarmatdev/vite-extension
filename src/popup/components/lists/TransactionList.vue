@@ -62,12 +62,6 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
-    if (store.getters['wallets/active'].address) {
-      store.dispatch(
-        'account/getTxsList',
-        store.getters['wallets/active'].address
-      )
-    }
     const txsList = computed(() =>
       props.txs ? props.txs : store.getters['account/txsList']
     )
