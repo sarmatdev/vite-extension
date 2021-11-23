@@ -117,7 +117,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import {
   createRandom,
-  validatePrivateKey,
+  validateMnemonic,
   createFromMnemonic
 } from '../../../services/AccountService'
 import useClipboard from '@/composables/useClipboard'
@@ -176,7 +176,7 @@ export default defineComponent({
     }
 
     const mnemonicConfirmed = computed(() => {
-      return validatePrivateKey(mnemonicForConfirm.value)
+      return validateMnemonic(mnemonicForConfirm.value)
     })
 
     const fromMnemonic = computed(() => {

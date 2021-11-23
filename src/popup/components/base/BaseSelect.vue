@@ -78,6 +78,13 @@ export default defineComponent({
       emit('update:modelValue', option)
     }
 
+    onMounted(() =>
+      emit(
+        'update:modelValue',
+        selected.value ? selected.value : (selected.value = props.options[0])
+      )
+    )
+
     return {
       selected,
       open,

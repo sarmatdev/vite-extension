@@ -16,7 +16,7 @@
         v-model="importWay"
         label="Import with"
         placeholder="Select way to import"
-        :options="['Private key', 'Mnemonic']"
+        :options="['Mnemonic', 'Private key']"
       />
       <BaseTextarea
         :label="`Write or paste your ${importWay ? importWay : 'data'}`"
@@ -33,7 +33,7 @@
     >
       <BaseButton
         @click="importWallet"
-        :disabled="!name || !importWay || !source"
+        :disabled="!name || !importWay || !source || !validateSucces"
         color="blue"
         block
       >
@@ -53,7 +53,9 @@ import { nanoid } from 'nanoid'
 import {
   createFromMnemonic,
   createFromPrivateKey,
-  createAccount
+  createAccount,
+  validatePrivateKey,
+  validateMnemonic
 } from '../../../services/AccountService'
 import { decryptString } from '../../../services/CryptoService'
 import useClipboard from '@/composables/useClipboard'
@@ -94,6 +96,11 @@ export default defineComponent({
 
       return res
     }
+    const validateSucces = computed(() => {
+      return importWay.value === 'Private key'
+        ? validatePrivateKey(source.value)
+        : validateMnemonic(source.value)
+    })
 
     function decryptPassword(): string {
       return decryptString(password.value.payload, password.value.salt)
@@ -127,7 +134,8 @@ export default defineComponent({
       requiedV$,
       requiedError,
       importTextareaV$,
-      importTextareaError
+      importTextareaError,
+      validateSucces
     }
   }
 })

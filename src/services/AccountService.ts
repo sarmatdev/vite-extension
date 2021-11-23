@@ -34,8 +34,14 @@ export function createRandom() {
   return wallet.createSeed(128)
 }
 
-export function validatePrivateKey(mnemonic) {
-  return wallet.validateMnemonics(mnemonic)
+export function validatePrivateKey(privateKey) {
+  try {
+    const account = createFromPrivateKey(privateKey)
+    const address = account.address
+    return isValidAddress(address)
+  } catch (e) {
+    return false
+  }
 }
 
 export async function createAccountFromMnemonic(
