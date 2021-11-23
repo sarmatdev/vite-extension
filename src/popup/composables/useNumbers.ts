@@ -6,7 +6,7 @@ BigNumber.config({
   DECIMAL_PLACES: 18
 })
 
-export default function useNumbers() {
+export function useNumbers() {
   function toNum(value: string | number, decimals: number): string {
     return new BigNumber(value).div(`1e${decimals}`).toString()
   }

@@ -153,7 +153,7 @@ import {
   ListboxOptions,
   ListboxOption
 } from '@headlessui/vue'
-import usePrices from '@/composables/usePrices'
+import {usePrices} from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TokenSelect',

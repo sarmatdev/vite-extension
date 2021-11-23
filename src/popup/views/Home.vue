@@ -44,7 +44,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
-import useTokens from '@/composables/useTokens'
 import { useStore } from 'vuex'
 import AccountInfo from '@/components/AccountInfo.vue'
 import TokenList from '@/components/lists/TokenList.vue'
@@ -60,15 +59,11 @@ export default defineComponent({
     Header
   },
   setup() {
-    const { loadNativeAssetBalance, getTokenInfoList } = useTokens()
-    const name = ref('test')
     const store = useStore()
 
     const selectedTokens = computed(() => {
       return store.getters['account/selectedTokens']
     })
-    loadNativeAssetBalance()
-    getTokenInfoList()
 
     const navRoute = ref('Assets')
 

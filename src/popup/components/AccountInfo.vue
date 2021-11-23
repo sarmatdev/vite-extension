@@ -3,10 +3,13 @@
     <div class="flex w-full justify-center items-center mr-2">
       <img class="w-8" src="assets/images/logo-blue.svg" />
       <div class="font-semibold text-blue-900">
-        <span class="text-3xl">{{
-          Math.trunc(toNum(balance, 18)) + (frac(toNum(balance, 18)) ? '.' : '')
-        }}</span
-        ><span class="text-xl">{{ frac(toNum(balance, 18)) }} VITE</span>
+        <span class="text-3xl"
+          >{{ forAmount(balance) ? forAmount(balance).split(',')[0] : 0
+          }}<span class="text-xl">{{
+            forAmount(balance) ? ',' + forAmount(balance).split(',')[1] : ''
+          }}</span>
+          VITE</span
+        >
       </div>
     </div>
 
@@ -45,9 +48,10 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import useNumbers from '@/composables/useNumbers'
+import { useNumbers } from '@/composables/useNumbers'
 import { compressAddress } from '@/helpers/string'
-import useClipboard from '@/composables/useClipboard'
+import { useClipboard } from '@/composables/useClipboard'
+import { usePrices } from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'AccountInfo',
@@ -70,6 +74,8 @@ export default defineComponent({
       }, 1000)
     }
 
+    const { forAmount } = usePrices()
+
     return {
       copiedAddress,
       balance,
@@ -77,7 +83,8 @@ export default defineComponent({
       toNum,
       frac,
       compressAddress,
-      copyAddress
+      copyAddress,
+      forAmount
     }
   }
 })

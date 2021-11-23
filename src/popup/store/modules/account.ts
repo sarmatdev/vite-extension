@@ -4,11 +4,12 @@ import { getTokens } from '@/api/tokens.api'
 import { getExchangeRate } from '@/api/exchange-rate.api'
 import { atos, tokenView, addrType } from '@/helpers/balance'
 import { useWeb3 } from '@/composables/useWeb3'
+import config from '@/config'
 
 const { provider } = useWeb3()
 
 export interface AccountState {
-  balance: string
+  balance: number
   prices: Array<tokenPrices>
   accountBalance: Array<AccountBalance>
   vitexTokens: Array<IVitexToken>
@@ -20,7 +21,7 @@ export interface AccountState {
 }
 
 const state: AccountState = {
-  balance: '',
+  balance: 0,
   prices: [],
   accountBalance: [],
   vitexTokens: [],
@@ -31,7 +32,7 @@ const state: AccountState = {
   txsList: []
 }
 const mutations = {
-  setBalance(state: AccountState, balance: string) {
+  setBalance(state: AccountState, balance: number) {
     state.balance = balance
   },
   setPrices(state: AccountState, prices: Array<tokenPrices>) {
@@ -45,6 +46,9 @@ const mutations = {
   },
   setVitexTokens(state: AccountState, vitexTokens: Array<IVitexToken>) {
     state.vitexTokens = vitexTokens
+  },
+  setSelectedTokens(state: AccountState, selectedTokens: Array<IVitexToken>) {
+    state.selectedTokens = selectedTokens
   },
   addSelectedTokens(state: AccountState, selectedToken: IVitexToken) {
     state.selectedTokens.push(selectedToken)
@@ -69,96 +73,135 @@ const mutations = {
 }
 const actions = {
   async fetchVitexTokens({ commit }) {
-    const vitexTokens = await getTokens()
-    commit('setVitexTokens', vitexTokens)
+    try {
+      const vitexTokens = await getTokens()
+      commit('setVitexTokens', vitexTokens)
+    } catch (e) {
+      console.log(e)
+    }
   },
-  async fetchPrices({ commit, getters }) {
-    const tokens = getters.vitexTokens
-    const tokenIds = tokens.map((el) => el.tokenId)
-    const pricesData = await getExchangeRate(tokenIds.join())
-    //@ts-ignore
-    const priceList = pricesData.data.data
-    commit('setPrices', priceList)
+  async fetchPrices({ commit, state }) {
+    try {
+      const tokenIds = state.vitexTokens.map((el) => el.tokenId)
+      const pricesData = await getExchangeRate(tokenIds.join())
+      //@ts-ignore
+      const priceList = pricesData.data.data
+      commit('setPrices', priceList)
+    } catch (e) {
+      console.log(e)
+    }
   },
   getAccountBalance({ commit }: { commit: Commit }, address) {
-    return provider
-      .request('ledger_getAccountInfoByAddress', address)
-      .then((res) => {
-        if (res.balanceInfoMap) {
-          Object.entries(res.balanceInfoMap).forEach(
-            //@ts-ignore
-            ([tti, { tokenInfo, balance }]) => {
-              res.balanceInfoMap[tti].balance = atos(
-                balance,
-                tokenInfo.decimals
-              )
-              tokenInfo.tokenId = tti
-              tokenInfo.tokenSymbolView = tokenView(
-                tokenInfo.tokenSymbol,
-                tokenInfo.index
-              )
-            }
-          )
-        }
-        res.accountType = addrType(res.address)
-        commit('setAccountBalance', Object.seal(res.balanceInfoMap))
-      })
+    try {
+      return provider
+        .request('ledger_getAccountInfoByAddress', address)
+        .then((res) => {
+          if (res.balanceInfoMap) {
+            Object.entries(res.balanceInfoMap).forEach(
+              //@ts-ignore
+              ([tti, { tokenInfo, balance }]) => {
+                res.balanceInfoMap[tti].balance = atos(
+                  balance,
+                  tokenInfo.decimals
+                )
+                tokenInfo.tokenId = tti
+                tokenInfo.tokenSymbolView = tokenView(
+                  tokenInfo.tokenSymbol,
+                  tokenInfo.index
+                )
+              }
+            )
+            res.accountType = addrType(res.address)
+            commit('setAccountBalance', Object.seal(res.balanceInfoMap))
+            commit(
+              'setBalance',
+              res.balanceInfoMap[config.nativeAsset.tokenId].balance
+            )
+            console.log(res.balanceInfoMap[config.nativeAsset.tokenId].balance)
+          } else {
+            commit('setAccountBalance', [])
+            commit('setBalance', 0)
+          }
+        })
+    } catch (e) {
+      console.log(e)
+    }
   },
-  async fetchFullTokenInfo({ dispatch, getters, commit }, address) {
-    dispatch('fetchVitexTokens')
-    dispatch('fetchPrices')
-    if (address) {
-      dispatch('getAccountBalance', address)
-    }
-    const tokens = getters.vitexTokens
-    const prices = getters.prices
-    const balances = getters.accountBalance
+  async fetchFullTokenInfo({ dispatch, state, commit }, address) {
+    try {
+      await dispatch('fetchVitexTokens')
+      await dispatch('fetchPrices')
+      await dispatch('getAccountBalance', address)
 
-    const fullTokenInfo = []
-    for (const token of tokens) {
-      const price = getters.prices.find((el) => el.tokenId === token.tokenId)
-      const balance = balances[token.tokenId]
-      fullTokenInfo.push({
-        ...token,
-        price: price ? price.usdRate : 0,
-        balance: balance ? balance.balance * 1 : 0
-      })
+      const fullTokenInfo = []
+      for (const token of state.vitexTokens) {
+        const price = state.prices.find((el) => el.tokenId === token.tokenId)
+        const balance = state.accountBalance[token.tokenId]
+        fullTokenInfo.push({
+          ...token,
+          price: price ? price.usdRate : 0,
+          balance: balance ? balance.balance * 1 : 0
+        })
+      }
+      commit('setFullTokenInfo', fullTokenInfo)
+      if (state.selectedTokens.length) {
+        const selectedTokens = state.selectedTokens.map((el) => el.tokenId)
+        const refreshSelectedTokens = state.fullTokenInfo.filter((el) =>
+          selectedTokens.find((e) => e === el.tokenId)
+        )
+        commit('setSelectedTokens', refreshSelectedTokens)
+      }
+    } catch (e) {
+      console.log(e)
     }
-    commit('setFullTokenInfo', fullTokenInfo)
   },
   getTxs({ commit }, address) {
-    return provider
-      .request('ledger_getAccountBlocksByAddress', address, 0, 30)
-      .then((res) => {
-        commit(
-          'setTxs',
-          res.map((tx) => {
-            tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
-            return Object.seal(tx)
-          })
-        )
-      })
+    try {
+      return provider
+        .request('ledger_getAccountBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res
+            ? commit(
+                'setTxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  return Object.seal(tx)
+                })
+              )
+            : commit('setTxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
   },
   getUtxs({ commit }, address) {
-    return provider
-      .request('ledger_getUnreceivedBlocksByAddress', address, 0, 30)
-      .then((res) => {
-        commit(
-          'setUtxs',
-          res.map((tx) => {
-            tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
-            tx.unreceived = true
-            return Object.seal(tx)
-          })
-        )
-      })
+    try {
+      return provider
+        .request('ledger_getUnreceivedBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res.length
+            ? commit(
+                'setUtxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  tx.unreceived = true
+                  return Object.seal(tx)
+                })
+              )
+            : commit('setUtxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
   },
-  getTxsList({ commit, dispatch, getters }, address) {
-    dispatch('getTxs', address)
-    dispatch('getUtxs', address)
-    const txs = getters.txs
-    const uTxs = getters.uTxs
-    commit('setTxsList', [...uTxs, ...txs])
+  async getTxsList({ commit, dispatch, state }, address) {
+    try {
+      await dispatch('getTxs', address)
+      await dispatch('getUtxs', address)
+      commit('setTxsList', [...state.txs, ...state.uTxs])
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 const getters = {
@@ -170,10 +213,7 @@ const getters = {
   fullTokenInfo: (s: AccountState) => s.fullTokenInfo,
   txs: (s: AccountState) => s.txs,
   uTxs: (s: AccountState) => s.uTxs,
-  txsList: (s: AccountState) => s.txsList,
-  active: (state, getters, rootState, rootGetters) => {
-    return rootGetters['wallets/active']
-  }
+  txsList: (s: AccountState) => s.txsList
 }
 
 export default {

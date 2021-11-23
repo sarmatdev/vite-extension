@@ -47,7 +47,7 @@ import { ref, defineComponent, computed, ComputedRef } from 'vue'
 import { useStore } from 'vuex'
 import { IVitexToken } from '@/types'
 import { compressAddress } from '@/helpers/string'
-import usePrices from '@/composables/usePrices'
+import {usePrices} from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TokenList',

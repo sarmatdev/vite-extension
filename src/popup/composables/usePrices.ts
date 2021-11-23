@@ -1,7 +1,7 @@
-import useNumbers from '@/composables/useNumbers'
+import {useNumbers} from '@/composables/useNumbers'
 import store from '@/store'
 
-export default function usePrices() {
+export function usePrices() {
   const { frac } = useNumbers()
 
   function forPrice(price, balance?) {

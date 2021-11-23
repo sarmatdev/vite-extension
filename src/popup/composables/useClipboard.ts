@@ -1,4 +1,4 @@
-export default function useClipboard() {
+export function useClipboard() {
   function writeClipboard(text) {
     const type = 'text/plain'
     const blob = new Blob([text], { type })

@@ -3,7 +3,7 @@ import useVuelidate from '@vuelidate/core'
 import { useStore } from 'vuex'
 import { required, minLength, sameAs } from '@vuelidate/validators'
 
-export default function useValidate(state: any) {
+export function useValidate(state: any) {
   const createPasswordRules = computed(() => {
     const localRules = {
       password: { required, minLength: minLength(8) },

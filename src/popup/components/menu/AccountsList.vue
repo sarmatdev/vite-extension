@@ -58,7 +58,11 @@
           name="check"
           size="xl"
         />
-        <BaseButton @click.stop="deleteAccount(account)" size="xs" outline>
+        <BaseButton
+          @click.stop="deleteAccount(account.address)"
+          size="xs"
+          outline
+        >
           <BaseIcon name="trash-2" size="xs" />
         </BaseButton>
       </li>
@@ -88,8 +92,8 @@ export default defineComponent({
       store.commit('wallets/setActive', address)
     }
 
-    function deleteAccount(name: string): void {
-      store.commit('wallets/deleteWallet', name)
+    function deleteAccount(address: string): void {
+      store.commit('wallets/deleteWallet', address)
     }
 
     return {

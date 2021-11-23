@@ -58,8 +58,8 @@ import {
   validateMnemonic
 } from '../../../services/AccountService'
 import { decryptString } from '../../../services/CryptoService'
-import useClipboard from '@/composables/useClipboard'
-import useValidate from '@/composables/useValidate'
+import {useClipboard} from '@/composables/useClipboard'
+import {useValidate} from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'Import wallet',
@@ -111,7 +111,6 @@ export default defineComponent({
       const decrypt = decryptPassword()
 
       const wallet = createAccount(name.value, account.privateKey, decrypt)
-      console.log('wallet', wallet)
       if (wallet) {
         store.commit('wallets/setWallet', wallet)
         router.push('/')

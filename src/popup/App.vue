@@ -9,7 +9,7 @@
 import { defineComponent } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import { APP_CONNECT } from '../types'
-import { useStore } from 'vuex'
+import { useRefreshData } from '@/composables/useRefreshData'
 
 export default defineComponent({
   components: {
@@ -17,12 +17,9 @@ export default defineComponent({
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
-    const store = useStore()
-
-    store.dispatch(
-      'account/fetchFullTokenInfo',
-      store.getters['wallets/active'].address
-    )
+    const { changeActive, changeNetwork } = useRefreshData()
+    changeActive()
+    changeNetwork()
   }
 })
 </script>

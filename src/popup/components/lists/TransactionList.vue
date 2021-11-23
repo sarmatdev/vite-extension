@@ -51,7 +51,7 @@ import { computed, defineComponent } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useStore } from 'vuex'
 import { timestampToDate } from '@/helpers/date'
-import usePrices from '@/composables/usePrices'
+import { usePrices } from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TransactionList',
@@ -62,12 +62,12 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
-    if(store.getters['wallets/active'].address) {
+    if (store.getters['wallets/active'].address) {
       store.dispatch(
         'account/getTxsList',
-      store.getters['wallets/active'].address
-    )
-      }
+        store.getters['wallets/active'].address
+      )
+    }
     const txsList = computed(() =>
       props.txs ? props.txs : store.getters['account/txsList']
     )

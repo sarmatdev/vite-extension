@@ -1,4 +1,4 @@
-import { find, pull, last } from 'lodash-es'
+import { last } from 'lodash-es'
 
 export interface Account {
   name: string
@@ -18,16 +18,15 @@ const state = {
 }
 const mutations = {
   setWallet(state: WalletsState, account: Account): void {
+    state.accounts = [...state.accounts, account]
     state.active = account
-    state.accounts.push(account)
   },
-  deleteWallet(state: WalletsState, account: Account): void {
-    state.accounts = pull(state.accounts, account)
+  deleteWallet(state: WalletsState, address: string): void {
+    state.accounts = state.accounts.filter((el) => el.address !== address)
     state.active = last(state.accounts)
   },
   setActive(state: WalletsState, address: string): void {
-    const active = find(state.accounts, { address: address })
-    state.active = active
+    state.active = state.accounts.find((el) => el.address === address)
   }
 }
 
