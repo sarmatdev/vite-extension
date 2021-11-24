@@ -97,7 +97,6 @@ export function useWeb3() {
               'account/setBalance',
               res.balanceInfoMap[config.nativeAsset.tokenId].balance
             )
-            console.log(res.balanceInfoMap[config.nativeAsset.tokenId].balance)
           } else {
             store.commit('account/setAccountBalance', [])
             store.commit('account/setBalance', 0)
@@ -123,7 +122,7 @@ export function useWeb3() {
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance * 1 : 0
+          balance: balance ? balance.balance.replace(',', '') : 0
         })
       }
       store.commit('account/setFullTokenInfo', fullTokenInfo)

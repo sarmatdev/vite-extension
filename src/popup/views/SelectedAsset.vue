@@ -24,7 +24,7 @@
         h-fu80
         flex flex-col
         justify-between
-        bg-blue-300
+        bg-blue-200
         rounded-t-xl
         w-full
       "

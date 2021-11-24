@@ -6,7 +6,9 @@
         <span class="text-3xl"
           >{{ forAmount(balance) ? forAmount(balance).split(',')[0] : 0
           }}<span class="text-xl">{{
-            forAmount(balance) ? ',' + forAmount(balance).split(',')[1] : ''
+            forAmount(balance).split(',')[1]
+              ? ',' + forAmount(balance).split(',')[1]
+              : ''
           }}</span>
           VITE</span
         >
