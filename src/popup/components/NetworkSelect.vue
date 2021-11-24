@@ -111,9 +111,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import { useWeb3 } from '@/composables/useWeb3'
 import config from '@/config'
+import { useStore } from 'vuex'
 import {
   Listbox,
   ListboxButton,
@@ -130,6 +131,8 @@ export default defineComponent({
   },
   setup() {
     const web3 = useWeb3()
+    const store = useStore()
+    const active = computed(() => store.getters['wallets/active'])
 
     const selected = ref(config.networks[0])
 
@@ -137,6 +140,7 @@ export default defineComponent({
       selected,
       () => {
         web3.handleNetworkChanged(selected)
+        web3.getAccountBalance(active.value.address)
       },
       { immediate: true }
     )

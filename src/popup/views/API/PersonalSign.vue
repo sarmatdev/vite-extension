@@ -4,9 +4,6 @@
     <p>Data: {{ signData }}</p>
     <p>{{ host }}</p>
     <footer class="fixed inset-x-0 bottom-0 p-2">
-      <div class="mb-2">
-        <BaseInput label="Password" placeholder="Input your password" />
-      </div>
       <div class="flex gap-4 justify-between">
         <BaseButton block @click="deny" outline> Deny </BaseButton>
         <BaseButton block @click="accept"> Accept </BaseButton>
@@ -17,9 +14,11 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
+import * as crypto from 'crypto-js'
 import { useStore } from 'vuex'
-import { compressAddress } from '@/helpers/string'
 import { utils } from '@vite/vitejs'
+import { compressAddress } from '@/helpers/string'
+import { decryptKeyStore, decryptString } from 'src/services/CryptoService'
 import {
   THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
   GET_WALLET_SERVICE_STATE,
@@ -33,27 +32,30 @@ export default defineComponent({
     const signData = ref('')
 
     const account = computed(() => store.getters['wallets/active'])
+    const password = computed(() => store.getters['settings/password'])
 
     function sign() {
       return
     }
 
     function accept() {
-      chrome.runtime.sendMessage({
-        action: THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
-        payload: {
-          name: account.value.name,
-          address: account.value.address
-        }
-      })
-      window.close()
+      console.log(account.value)
+      const decryptedPassword = decryptString(
+        password.value.payload,
+        password.value.salt
+      )
+      console.log(decryptedPassword)
+      const decrypted = decryptKeyStore(
+        decryptedPassword,
+        account.value.keystore
+      )
+      const plain = decrypted.toString(crypto.enc.Utf8)
+      console.log(plain)
     }
 
     function deny() {
       window.close()
     }
-
-    console.log(utils.ed25519)
 
     onMounted(() => {
       chrome.runtime.sendMessage(

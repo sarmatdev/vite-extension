@@ -131,7 +131,7 @@ const actions = {
     try {
       await dispatch('fetchVitexTokens')
       await dispatch('fetchPrices')
-      await dispatch('getAccountBalance', address)
+      // await dispatch('getAccountBalance', address)
 
       const fullTokenInfo = []
       for (const token of state.vitexTokens) {
