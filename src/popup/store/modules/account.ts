@@ -120,9 +120,11 @@ const actions = {
             commit('setAccountBalance', Object.seal(res.balanceInfoMap))
             commit(
               'setBalance',
-              res.balanceInfoMap[config.nativeAsset.tokenId].balance
+              res.balanceInfoMap[config.nativeAsset.tokenId].balance.replace(
+                ',',
+                '.'
+              )
             )
-            console.log(res.balanceInfoMap[config.nativeAsset.tokenId].balance)
           } else {
             commit('setAccountBalance', [])
             commit('setBalance', 0)
@@ -142,10 +144,12 @@ const actions = {
       for (const token of state.vitexTokens) {
         const price = state.prices.find((el) => el.tokenId === token.tokenId)
         const balance = state.accountBalance[token.tokenId]
+          ? state.accountBalance[token.tokenId]
+          : false
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance * 1 : 0
+          balance: balance ? balance.balance.replace(',', '.') : 0
         })
       }
       commit('setFullTokenInfo', fullTokenInfo)
