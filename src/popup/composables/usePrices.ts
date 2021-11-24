@@ -1,4 +1,4 @@
-import {useNumbers} from '@/composables/useNumbers'
+import { useNumbers } from '@/composables/useNumbers'
 import store from '@/store'
 
 export function usePrices() {
@@ -16,7 +16,7 @@ export function usePrices() {
       : ''
   }
   function forAmount(a) {
-    return a ? `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` : ''
+    return a ? `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` : 0
   }
   return {
     forPrice,

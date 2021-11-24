@@ -18,7 +18,7 @@
           <img width="40" :src="token.urlIcon" :alt="token.originalSymbol" />
           <div class="text-left">
             <p class="text-black">
-              {{ token.balance + ' ' + token.originalSymbol }}
+              {{ forAmount(token.balance) + ' ' + token.originalSymbol }}
             </p>
             <span class="font-medium pt-1 text-sm text-gray-600">{{
               selector ? compressAddress(token.tokenId) : token.name
@@ -47,7 +47,7 @@ import { ref, defineComponent, computed, ComputedRef } from 'vue'
 import { useStore } from 'vuex'
 import { IVitexToken } from '@/types'
 import { compressAddress } from '@/helpers/string'
-import {usePrices} from '@/composables/usePrices'
+import { usePrices } from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TokenList',
@@ -98,7 +98,7 @@ export default defineComponent({
 
     const tokenList = computed(() => props.tokens)
 
-    const { forPrice } = usePrices()
+    const { forPrice, forAmount } = usePrices()
 
     return {
       hasCheck,
@@ -107,7 +107,8 @@ export default defineComponent({
       forPrice,
       endToken,
       scroll,
-      tokenList
+      tokenList,
+      forAmount
     }
   }
 })
