@@ -69,6 +69,7 @@ export function useWeb3() {
 
   function getAccountBalance(address) {
     try {
+      console.log('store', store.commit)
       return state.provider
         .request('ledger_getAccountInfoByAddress', address)
         .then((res) => {
@@ -106,6 +107,90 @@ export function useWeb3() {
       console.log(e)
     }
   }
+  async function fetchFullTokenInfo(address) {
+    try {
+      await store.dispatch('account/fetchVitexTokens')
+      await store.dispatch('account/fetchPrices')
+      await getAccountBalance(address)
+      // await dispatch('getAccountBalance', address)
+
+      const fullTokenInfo = []
+      for (const token of store.getters['account/vitexTokens']) {
+        const price = store.getters['account/prices'].find(
+          (el) => el.tokenId === token.tokenId
+        )
+        const balance = store.getters['account/accountBalance'][token.tokenId]
+        fullTokenInfo.push({
+          ...token,
+          price: price ? price.usdRate : 0,
+          balance: balance ? balance.balance * 1 : 0
+        })
+      }
+      store.commit('account/setFullTokenInfo', fullTokenInfo)
+      if (store.getters['account/selectedTokens'].length) {
+        const selectedTokens = store.getters['account/selectedTokens'].map(
+          (el) => el.tokenId
+        )
+        const refreshSelectedTokens = store.getters[
+          'account/fullTokenInfo'
+        ].filter((el) => selectedTokens.find((e) => e === el.tokenId))
+        store.commit('account/setSelectedTokens', refreshSelectedTokens)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  function getTxs(address) {
+    try {
+      return state.provider
+        .request('ledger_getAccountBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res
+            ? store.commit(
+                'account/setTxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  return Object.seal(tx)
+                })
+              )
+            : store.commit('account/setTxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  function getUtxs(address) {
+    try {
+      return state.provider
+        .request('ledger_getUnreceivedBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res.length
+            ? store.commit(
+                'account/setUtxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  tx.unreceived = true
+                  return Object.seal(tx)
+                })
+              )
+            : store.commit('account/setUtxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  async function getTxsList(address) {
+    try {
+      await getTxs(address)
+      await getUtxs(address)
+      store.commit('account/setTxsList', [
+        ...store.getters['account/txs'],
+        ...store.getters['account/uTxs']
+      ])
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return {
     state,
@@ -113,6 +198,10 @@ export function useWeb3() {
     network: state.network,
     sendTokens,
     handleNetworkChanged,
-    getAccountBalance
+    getAccountBalance,
+    fetchFullTokenInfo,
+    getTxs,
+    getUtxs,
+    getTxsList
   }
 }

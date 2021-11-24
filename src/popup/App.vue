@@ -17,9 +17,8 @@ export default defineComponent({
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
-    const { changeActive, changeNetwork } = useRefreshData()
+    const { changeActive } = useRefreshData()
     changeActive()
-    changeNetwork()
   }
 })
 </script>

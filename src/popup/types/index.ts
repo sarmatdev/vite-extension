@@ -104,3 +104,11 @@ export interface ITxs {
   utUsed: string
   vmLogHash: null | any
 }
+
+export interface network {
+  id: number
+  name: string
+  httpUrl: string
+  wsUrl: string
+  httpVitex: string
+}

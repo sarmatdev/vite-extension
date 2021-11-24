@@ -3,12 +3,12 @@ import store from '@/store'
 import { useWeb3 } from '@/composables/useWeb3'
 
 const active = computed(() => store.getters['wallets/active'].address)
-const { state } = useWeb3()
+const web3 = useWeb3()
 
 export function useRefreshData() {
   function loadData(address: string) {
-    store.dispatch('account/fetchFullTokenInfo', address)
-    store.dispatch('account/getTxsList', address)
+    web3.fetchFullTokenInfo(active.value)
+    web3.getTxsList(active.value)
   }
 
   function changeActive() {
@@ -21,17 +21,7 @@ export function useRefreshData() {
     )
   }
 
-  function changeNetwork() {
-    return watch(
-      () => state.network,
-      () => {
-        loadData(active.value)
-      }
-    )
-  }
-
   return {
-    changeActive,
-    changeNetwork
+    changeActive
   }
 }

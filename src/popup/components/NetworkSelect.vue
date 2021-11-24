@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from 'vue'
+import { defineComponent, ref, watch, computed, watchEffect } from 'vue'
 import { useWeb3 } from '@/composables/useWeb3'
 import config from '@/config'
 import { useStore } from 'vuex'
@@ -134,13 +134,19 @@ export default defineComponent({
     const store = useStore()
     const active = computed(() => store.getters['wallets/active'])
 
-    const selected = ref(config.networks[0])
-
+    const selected = ref(null)
+    watchEffect(() =>
+      store.getters['network/network']
+        ? (selected.value = store.getters['network/network'])
+        : (selected.value = config.networks[0])
+    )
     watch(
       selected,
       () => {
-        web3.handleNetworkChanged(selected)
-        web3.getAccountBalance(active.value.address)
+        store.commit('network/setNetwork', selected.value)
+        web3.handleNetworkChanged(selected.value)
+        web3.fetchFullTokenInfo(active.value.address)
+        web3.getTxsList(active.value.address)
       },
       { immediate: true }
     )

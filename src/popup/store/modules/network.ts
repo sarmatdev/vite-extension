@@ -1,21 +1,34 @@
+import { network } from '@/types'
+
+export interface NetworkState {
+  network: network
+}
+
+const state = {
+  network: {
+    id: 0,
+    name: '',
+    httpUrl: '',
+    wsUrl: '',
+    httpVitex: ''
+  }
+}
+
+const mutations = {
+  setNetwork(state: NetworkState, network: network) {
+    state.network = network
+  }
+}
+
+const actions = {}
+const getters = {
+  network: (s: NetworkState) => s.network
+}
+
 export default {
   namespaced: true,
-
-  state: {
-    id: 0,
-    chainId: 0,
-    name: '',
-    apiUrl: '',
-    type: ''
-  },
-
-  mutations: {
-    change(state, network) {
-      state.id = network.id
-      state.chainId = network.chainId
-      state.name = network.name
-      state.apiUrl = network.apiUrl
-      state.type = network.type
-    }
-  }
+  state,
+  mutations,
+  actions,
+  getters
 }
