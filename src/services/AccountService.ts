@@ -69,6 +69,7 @@ export function createAccount(
 ) {
   const account = createFromPrivateKey(privateKey)
   const keystore = encryptKeyStore(account.privateKey, password)
+  console.log('keystore', keystore)
 
   return {
     name,

@@ -4,6 +4,7 @@ import { ViteAPI, accountBlock } from '@vite/vitejs'
 import HTTP_RPC from '@vite/vitejs-http'
 import config from '@/config'
 import { decryptString } from '../../services/CryptoService'
+import { atos, tokenView, addrType } from '@/helpers/balance'
 
 export interface SendTokens {
   toAddress?: string
@@ -13,7 +14,8 @@ export interface SendTokens {
 }
 
 const state = reactive({
-  network: { ...config.networks[0], isConnected: false }
+  network: { ...config.networks[0], isConnected: false },
+  provider: null
 })
 
 const { createAccountBlock } = accountBlock
@@ -22,9 +24,11 @@ export function useWeb3() {
   const store = useStore()
 
   const httpRPC = new HTTP_RPC(state.network.httpUrl)
-  const provider = new ViteAPI(httpRPC, () => {
+  state.provider = new ViteAPI(httpRPC, () => {
     return
   })
+
+  console.log('provider', state.provider)
 
   const active = computed(() => store.getters['wallets/active'])
 
@@ -37,7 +41,7 @@ export function useWeb3() {
       tokenId,
       amount
     })
-      .setProvider(provider)
+      .setProvider(state.provider)
       .setPrivateKey(privateKey)
 
     await newAccountBlock.autoSetPreviousAccountBlock()
@@ -51,21 +55,153 @@ export function useWeb3() {
     state.network = selected
     const newProvider = new HTTP_RPC(state.network.httpUrl)
 
-    provider.setProvider(
+    state.provider.setProvider(
       newProvider,
       () => {
+        console.log('Success✅')
         state.network.isConnected = true
         return
       },
       true
     )
+    console.log('state.provider', state.provider)
+  }
+
+  function getAccountBalance(address) {
+    try {
+      console.log('store', store.commit)
+      return state.provider
+        .request('ledger_getAccountInfoByAddress', address)
+        .then((res) => {
+          if (res.balanceInfoMap) {
+            Object.entries(res.balanceInfoMap).forEach(
+              //@ts-ignore
+              ([tti, { tokenInfo, balance }]) => {
+                res.balanceInfoMap[tti].balance = atos(
+                  balance,
+                  tokenInfo.decimals
+                )
+                tokenInfo.tokenId = tti
+                tokenInfo.tokenSymbolView = tokenView(
+                  tokenInfo.tokenSymbol,
+                  tokenInfo.index
+                )
+              }
+            )
+            res.accountType = addrType(res.address)
+            store.commit(
+              'account/setAccountBalance',
+              Object.seal(res.balanceInfoMap)
+            )
+            store.commit(
+              'account/setBalance',
+              res.balanceInfoMap[config.nativeAsset.tokenId].balance
+            )
+            console.log(res.balanceInfoMap[config.nativeAsset.tokenId].balance)
+          } else {
+            store.commit('account/setAccountBalance', [])
+            store.commit('account/setBalance', 0)
+          }
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  async function fetchFullTokenInfo(address) {
+    try {
+      await store.dispatch('account/fetchVitexTokens')
+      await store.dispatch('account/fetchPrices')
+      await getAccountBalance(address)
+      // await dispatch('getAccountBalance', address)
+
+      const fullTokenInfo = []
+      for (const token of store.getters['account/vitexTokens']) {
+        const price = store.getters['account/prices'].find(
+          (el) => el.tokenId === token.tokenId
+        )
+        const balance = store.getters['account/accountBalance'][token.tokenId]
+        fullTokenInfo.push({
+          ...token,
+          price: price ? price.usdRate : 0,
+          balance: balance ? balance.balance * 1 : 0
+        })
+      }
+      store.commit('account/setFullTokenInfo', fullTokenInfo)
+      if (store.getters['account/selectedTokens'].length) {
+        const selectedTokens = store.getters['account/selectedTokens'].map(
+          (el) => el.tokenId
+        )
+        const refreshSelectedTokens = store.getters[
+          'account/fullTokenInfo'
+        ].filter((el) => selectedTokens.find((e) => e === el.tokenId))
+        store.commit('account/setSelectedTokens', refreshSelectedTokens)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  function getTxs(address) {
+    try {
+      return state.provider
+        .request('ledger_getAccountBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res
+            ? store.commit(
+                'account/setTxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  return Object.seal(tx)
+                })
+              )
+            : store.commit('account/setTxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  function getUtxs(address) {
+    try {
+      return state.provider
+        .request('ledger_getUnreceivedBlocksByAddress', address, 0, 30)
+        .then((res) => {
+          res.length
+            ? store.commit(
+                'account/setUtxs',
+                res.map((tx) => {
+                  tx.amount = atos(tx.amount, tx.tokenInfo.decimals)
+                  tx.unreceived = true
+                  return Object.seal(tx)
+                })
+              )
+            : store.commit('account/setUtxs', [])
+        })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  async function getTxsList(address) {
+    try {
+      await getTxs(address)
+      await getUtxs(address)
+      store.commit('account/setTxsList', [
+        ...store.getters['account/txs'],
+        ...store.getters['account/uTxs']
+      ])
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return {
     state,
-    provider,
+    provider: state.provider,
     network: state.network,
     sendTokens,
-    handleNetworkChanged
+    handleNetworkChanged,
+    getAccountBalance,
+    fetchFullTokenInfo,
+    getTxs,
+    getUtxs,
+    getTxsList
   }
 }

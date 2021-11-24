@@ -68,7 +68,7 @@
 import { defineComponent, ref, watch, PropType, computed } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useWeb3, SendTokens } from '@/composables/useWeb3'
-import {useNumbers} from '@/composables/useNumbers'
+import { useNumbers } from '@/composables/useNumbers'
 import config from '@/config'
 import { useStore } from 'vuex'
 

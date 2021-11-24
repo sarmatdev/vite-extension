@@ -52,6 +52,7 @@ import { compressAddress } from '@/helpers/string'
 import { useStore } from 'vuex'
 import { timestampToDate } from '@/helpers/date'
 import { usePrices } from '@/composables/usePrices'
+import { useWeb3 } from '@/composables/useWeb3'
 
 export default defineComponent({
   name: 'TransactionList',
@@ -62,6 +63,10 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
+    const web3 = useWeb3()
+    if (store.getters['wallets/active'].address) {
+      web3.getTxsList(store.getters['wallets/active'].address)
+    }
     const txsList = computed(() =>
       props.txs ? props.txs : store.getters['account/txsList']
     )
