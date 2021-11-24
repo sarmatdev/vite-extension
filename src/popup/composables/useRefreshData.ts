@@ -6,17 +6,17 @@ const active = computed(() => store.getters['wallets/active'].address)
 const web3 = useWeb3()
 
 export function useRefreshData() {
-  function loadData(address: string) {
-    web3.fetchFullTokenInfo(active.value)
-    web3.getTxsList(active.value)
-  }
-
   function changeActive() {
     return watch(
       () => active.value,
       (newAccount, oldAccount) => {
         if (oldAccount === newAccount) return
-        loadData(newAccount)
+        store.commit('settings/setLoaded', false)
+        web3.fetchFullTokenInfo(active.value.address)
+        web3.getTxsList(active.value.address)
+        setTimeout(() => {
+          store.commit('settings/setLoaded', true)
+        }, 1000)
       }
     )
   }

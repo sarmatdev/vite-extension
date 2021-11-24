@@ -1,6 +1,6 @@
 <template>
   <div v-for="(tx, idx) in txsList" :key="idx">
-    <div class="p-3 flex items-center justify-between">
+    <div v-if="loaded" class="p-3 flex items-center justify-between">
       <div>
         <p class="text-left text-sm text-gray-600 mb-2">
           {{ timestampToDate(tx.timestamp) }}
@@ -37,6 +37,25 @@
         >
       </div>
     </div>
+    <div v-else class="p-3 w-full space-y-2 animate-pulse">
+      <div class="flex justify-between">
+        <div class="h-3 bg-blue-400 rounded w-1/4"></div>
+        <div class="h-4 bg-blue-400 rounded w-1/4"></div>
+      </div>
+      <div class="flex justify-between">
+        <div class="w-full flex justify-between">
+          <div class="rounded-full bg-blue-400 w-24 h-10 mr-2"></div>
+          <div class="w-full space-y-2">
+            <div class="h-4 bg-blue-400 rounded w-1/4"></div>
+            <div class="h-3 bg-blue-400 rounded w-2/4"></div>
+          </div>
+          <div class="w-full space-y-2 flex flex-col items-end">
+            <div class="h-4 bg-blue-400 rounded w-3/4"></div>
+            <div class="h-3 bg-blue-400 rounded w-2/4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <hr class="bg-white border-none h-0.5" />
   </div>
   <div v-if="!txsList.length" class="relative w-full h-full">
@@ -63,8 +82,10 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
+    const loaded = computed(() => store.getters['settings/loaded'])
+
     const web3 = useWeb3()
-    if (store.getters['wallets/active'].address) {
+    if (store.getters['wallets/active'].address && !props.txs) {
       web3.getTxsList(store.getters['wallets/active'].address)
     }
     const txsList = computed(() =>
@@ -75,7 +96,8 @@ export default defineComponent({
       compressAddress,
       txsList,
       timestampToDate,
-      forAmount
+      forAmount,
+      loaded
     }
   }
 })

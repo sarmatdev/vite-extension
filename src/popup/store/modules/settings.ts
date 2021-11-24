@@ -19,7 +19,8 @@ export default {
     },
     hideLowBalance: false,
     displayMode: 0,
-    contacts: []
+    contacts: [],
+    loaded: true,
   },
   mutations: {
     setHideLowBalance(state, payload) {
@@ -55,6 +56,9 @@ export default {
     },
     setContacts(state, payload) {
       state.contacts = [...payload]
+    },
+    setLoaded(state, payload) {
+      state.loaded = payload
     }
   },
   actions: {
@@ -122,6 +126,7 @@ export default {
     }
   },
   getters: {
-    password: (s) => s.auth.password
+    password: (s) => s.auth.password,
+    loaded: (s) => s.loaded
   }
 }

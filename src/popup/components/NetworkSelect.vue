@@ -143,10 +143,14 @@ export default defineComponent({
     watch(
       selected,
       () => {
+        store.commit('settings/setLoaded', false)
         store.commit('network/setNetwork', selected.value)
         web3.handleNetworkChanged(selected.value)
         web3.fetchFullTokenInfo(active.value.address)
         web3.getTxsList(active.value.address)
+        setTimeout(() => {
+          store.commit('settings/setLoaded', true)
+        }, 1000)
       },
       { immediate: true }
     )
