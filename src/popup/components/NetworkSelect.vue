@@ -142,7 +142,7 @@ export default defineComponent({
 
     const selected = ref(null)
     watchEffect(() =>
-      store.getters['network/network']
+      store.getters['network/network'].httpUrl
         ? (selected.value = store.getters['network/network'])
         : (selected.value = config.networks[0])
     )
