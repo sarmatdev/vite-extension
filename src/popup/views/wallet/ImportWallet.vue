@@ -118,9 +118,12 @@ export default defineComponent({
       }
     }
 
-    const { requiedV$, requiedError } = useValidate({ validator: name })
+    const { requiedV$, requiedError } = useValidate({
+      validator: name
+    })
     const { importTextareaV$, importTextareaError } = useValidate({
-      validator: source
+      validator: source,
+      type: importWay
     })
 
     return {

@@ -1,7 +1,12 @@
 import { computed } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { useStore } from 'vuex'
-import { required, minLength, sameAs } from '@vuelidate/validators'
+import { required, minLength, sameAs, between } from '@vuelidate/validators'
+import {
+  validatePrivateKey,
+  validateMnemonic,
+  isValidAddress
+} from '../../services/AccountService'
 
 export function useValidate(state: any) {
   const createPasswordRules = computed(() => {
@@ -109,21 +114,94 @@ export function useValidate(state: any) {
     return errors
   })
 
-  const importTextareaRule = computed(() => {
+  const validPrivateKey = (address) => !!validatePrivateKey(address)
+  const validMnemonic = (value) => !!validateMnemonic(value)
+  const inputType = (value) => value.includes('Mnemonic')
+  const importTextareaRules = computed(() => {
     const localRules = {
       validator: {
+        required,
+        validPrivateKey,
+        validMnemonic
+      },
+      type: {
+        inputType
+      }
+    }
+
+    return localRules
+  })
+  const importTextareaV$: any = useVuelidate(importTextareaRules, state)
+  const importTextareaError = computed(() => {
+    const errors = []
+    if (importTextareaV$.value.validator.$dirty) {
+      if (!importTextareaV$.value.validator.required.$response) {
+        errors.push('This filed is required')
+      } else if (
+        !importTextareaV$.value.validator.validPrivateKey.$response &&
+        !importTextareaV$.value.type.inputType.$response
+      ) {
+        errors.push('Invalid private key')
+      } else if (
+        !importTextareaV$.value.validator.validMnemonic.$response &&
+        importTextareaV$.value.type.inputType.$response
+      ) {
+        errors.push('Invalid mnemonic')
+      }
+    }
+    return errors
+  })
+  const validAddress = (address: string) => !!isValidAddress(address)
+  const zero = (value: number) => value > 0
+
+  const sendInputRules = computed(() => {
+    const localRules = {
+      addressInput: {
+        required,
+        validAddress
+      },
+      amountInput: {
+        required,
+        betweenRef: between(0, state.balance),
+        zero
+      },
+      tokenSelect: {
         required
       }
     }
 
     return localRules
   })
-  const importTextareaV$: any = useVuelidate(importTextareaRule, state)
-  const importTextareaError = computed(() => {
+  const sendInputV$: any = useVuelidate(sendInputRules, state)
+  const addressInputError = computed(() => {
     const errors = []
-    if (importTextareaV$.value.validator.$dirty) {
-      if (!importTextareaV$.value.validator.required.$response) {
+    if (sendInputV$.value.addressInput.$dirty) {
+      if (!sendInputV$.value.addressInput.required.$response) {
         errors.push('This filed is required')
+      } else if (!sendInputV$.value.addressInput.validAddress.$response) {
+        errors.push('Invalid address')
+      }
+    }
+    return errors
+  })
+  const tokenSelectError = computed(() => {
+    const errors = []
+    if (sendInputV$.value.tokenSelect.$dirty) {
+      if (!sendInputV$.value.tokenSelect.required.$response) {
+        errors.push('This filed is required')
+      }
+    }
+    return errors
+  })
+  const amountInputError = computed(() => {
+    const errors = []
+    if (sendInputV$.value.amountInput.$dirty) {
+      if (!sendInputV$.value.amountInput.required.$response) {
+        errors.push('This filed is required')
+      } else if (!sendInputV$.value.amountInput.betweenRef.$response) {
+        errors.push('Insufficient balance')
+      } else if (!sendInputV$.value.amountInput.zero.$response) {
+        errors.push('The amount must be greater than zero.')
       }
     }
     return errors
@@ -140,6 +218,10 @@ export function useValidate(state: any) {
     requiedV$,
     requiedError,
     importTextareaV$,
-    importTextareaError
+    importTextareaError,
+    sendInputV$,
+    addressInputError,
+    amountInputError,
+    tokenSelectError
   }
 }

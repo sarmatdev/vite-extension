@@ -39,7 +39,7 @@
     </div>
     <div v-else class="p-3 w-full space-y-2 animate-pulse">
       <div class="flex justify-between">
-        <div class="h-3 bg-blue-400 rounded w-1/4"></div>
+        <div class="h-3 bg-blue-400 rounded w-2/4"></div>
         <div class="h-4 bg-blue-400 rounded w-1/4"></div>
       </div>
       <div class="flex justify-between">

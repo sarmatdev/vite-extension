@@ -6,7 +6,7 @@ import {
   decryptKeyStore
 } from './CryptoService'
 
-function isValidAddress(address: string) {
+export function isValidAddress(address: string) {
   return wallet.isValidAddress(address)
 }
 

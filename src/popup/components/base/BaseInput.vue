@@ -35,7 +35,7 @@
       />
 
       <div
-        v-if="icon || passwordInput"
+        v-if="icon || passwordInput || amountInput"
         @click="iconClickHandler($event)"
         class="
           absolute
@@ -48,7 +48,10 @@
           justify-center
         "
       >
-        <div class="flex items-center justify-center" v-if="!passwordInput">
+        <div
+          class="flex items-center justify-center"
+          v-if="!passwordInput && !amountInput"
+        >
           <BaseIcon
             v-if="modelValue && icon !== 'copy'"
             name="x"
@@ -63,7 +66,7 @@
           />
           <BaseIcon v-else class="h-5 w-5 text-green-500" name="check-square" />
         </div>
-        <div class="flex items-center justify-center" v-else>
+        <div class="flex items-center justify-center" v-else-if="passwordInput">
           <BaseIcon
             v-if="!showPassword"
             name="eye"
@@ -76,6 +79,22 @@
             class="h-5 w-5 cursor-pointer"
             aria-hidden="true"
           />
+        </div>
+        <div
+          v-else-if="amountInput"
+          class="
+            flex
+            items-center
+            justify-center
+            rounded-lg
+            bg-blue-600
+            hover:bg-blue-500
+            transition-all
+          "
+        >
+          <div class="text-white text-xs py-1 px-2 cursor-pointer text-center">
+            Max
+          </div>
         </div>
       </div>
     </div>
@@ -100,6 +119,10 @@ export default defineComponent({
     type: String,
     disabled: Boolean,
     passwordInput: {
+      type: Boolean,
+      default: false
+    },
+    amountInput: {
       type: Boolean,
       default: false
     },
@@ -137,6 +160,8 @@ export default defineComponent({
         emit('iconEvent', event.target)
       } else if (props.modelValue) {
         emit('update:modelValue', '')
+      } else if (props.amountInput || props.icon) {
+        emit('iconEvent', event.target)
       }
     }
 
