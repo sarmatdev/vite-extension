@@ -33,9 +33,7 @@
     >
       <BaseButton
         @click="importWallet"
-        :disabled="
-          !name || !importWay || !source || importTextareaV$.validator.$error
-        "
+        :disabled="!name || !importWay || !source || importTextareaError.length"
         color="blue"
         block
       >
@@ -54,9 +52,7 @@ import { useNotifications } from '@/composables/useNotifications'
 import {
   createFromMnemonic,
   createFromPrivateKey,
-  createAccount,
-  validatePrivateKey,
-  validateMnemonic
+  createAccount
 } from '../../../services/AccountService'
 import { decryptString } from '../../../services/CryptoService'
 import { useClipboard } from '@/composables/useClipboard'
