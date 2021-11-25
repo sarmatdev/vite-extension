@@ -7,7 +7,7 @@ export function usePrices() {
   function forPrice(price, balance?) {
     if (balance) {
       const b = balance.replace(',', '')
-      const balanceUsd = price * balance
+      const balanceUsd = price * b
       return `$${Math.trunc(balanceUsd)}${
         frac(balanceUsd) ? ',' + frac(balanceUsd) : ''
       }`
@@ -19,9 +19,9 @@ export function usePrices() {
   function forAmount(amount) {
     if (amount) {
       const a = amount.replace(',', '')
-      return `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}`
+      return `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` + ' '
     } else {
-      return 0
+      return 0 + ' '
     }
   }
   return {

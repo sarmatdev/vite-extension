@@ -28,8 +28,6 @@ export function useWeb3() {
     return
   })
 
-  console.log('provider', state.provider)
-
   const active = computed(() => store.getters['wallets/active'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
@@ -69,7 +67,6 @@ export function useWeb3() {
 
   function getAccountBalance(address) {
     try {
-      console.log('store', store.commit)
       return state.provider
         .request('ledger_getAccountInfoByAddress', address)
         .then((res) => {
@@ -111,7 +108,6 @@ export function useWeb3() {
       await store.dispatch('account/fetchVitexTokens')
       await store.dispatch('account/fetchPrices')
       await getAccountBalance(address)
-      // await dispatch('getAccountBalance', address)
 
       const fullTokenInfo = []
       for (const token of store.getters['account/vitexTokens']) {
@@ -122,7 +118,7 @@ export function useWeb3() {
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance.replace(',', '') : 0
+          balance: balance ? balance.balance : 0
         })
       }
       store.commit('account/setFullTokenInfo', fullTokenInfo)

@@ -3,15 +3,8 @@
     <div v-if="loaded" class="flex w-full justify-center items-center mr-2">
       <img class="w-8" src="assets/images/logo-blue.svg" />
       <div class="font-semibold text-blue-900">
-        <span class="text-3xl"
-          >{{ forAmount(balance) ? forAmount(balance).split(',')[0] : 0
-          }}<span class="text-xl">{{
-            forAmount(balance).split(',')[1]
-              ? ',' + forAmount(balance).split(',')[1]
-              : ''
-          }}</span>
-          VITE</span
-        >
+        <span class="text-3xl">{{ forAmount(balance) }}</span>
+        <span>VITE</span>
       </div>
     </div>
     <div

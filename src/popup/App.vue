@@ -9,7 +9,6 @@
 import { defineComponent } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import { APP_CONNECT } from '../types'
-import { useRefreshData } from '@/composables/useRefreshData'
 
 export default defineComponent({
   components: {
@@ -17,8 +16,6 @@ export default defineComponent({
   },
   setup() {
     chrome.runtime.connect({ name: APP_CONNECT })
-    const { changeActive } = useRefreshData()
-    changeActive()
   }
 })
 </script>
