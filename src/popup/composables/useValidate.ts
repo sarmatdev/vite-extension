@@ -198,7 +198,10 @@ export function useValidate(state: any) {
     if (sendInputV$.value.amountInput.$dirty) {
       if (!sendInputV$.value.amountInput.required.$response) {
         errors.push('This filed is required')
-      } else if (!sendInputV$.value.amountInput.betweenRef.$response) {
+      } else if (
+        !sendInputV$.value.amountInput.betweenRef.$response &&
+        sendInputV$.value.amountInput.zero.$response
+      ) {
         errors.push('Insufficient balance')
       } else if (!sendInputV$.value.amountInput.zero.$response) {
         errors.push('The amount must be greater than zero.')
