@@ -1,7 +1,8 @@
 <template>
-  <Listbox class="w-32" as="div" v-model="selected">
+  <Listbox class="w-32" as="div" v-model="selected" v-slot="{ open }">
     <div class="mt-1 relative">
       <ListboxButton
+        :class="open ? 'border-blue-500' : 'border-gray-300 hover:border-black'"
         class="
           relative
           w-full
@@ -15,9 +16,6 @@
           text-left
           cursor-pointer
           focus:outline-none
-          focus:ring-1
-          focus:ring-blue-500
-          focus:border-blue-500
           text-sm
         "
       >
@@ -42,7 +40,15 @@
             pointer-events-none
           "
         >
-          <BaseIcon name="chevron-down" />
+          <BaseIcon
+            :class="[
+              {
+                'transform rotate-180': open
+              },
+              'transition duration-300'
+            ]"
+            name="chevron-down"
+          />
         </span>
       </ListboxButton>
 

@@ -52,7 +52,7 @@
                 {
                   'transform rotate-180': open
                 },
-                'transition duration-150'
+                'transition duration-300'
               ]"
               name="chevron-down"
             />
