@@ -33,7 +33,9 @@
     >
       <BaseButton
         @click="importWallet"
-        :disabled="!name || !importWay || !source || !validateSucces"
+        :disabled="
+          !name || !importWay || !source || importTextareaV$.validator.$error
+        "
         color="blue"
         block
       >
@@ -74,6 +76,7 @@ export default defineComponent({
     const { readClipboard } = useClipboard()
 
     async function pasteSource() {
+      importTextareaV$.value.$touch()
       const clipboard = await readClipboard()
       source.value = clipboard
     }
@@ -95,11 +98,6 @@ export default defineComponent({
 
       return res
     }
-    const validateSucces = computed(() => {
-      return importWay.value === 'Private key'
-        ? validatePrivateKey(source.value)
-        : validateMnemonic(source.value)
-    })
 
     function decryptPassword(): string {
       return decryptString(password.value.payload, password.value.salt)
@@ -137,8 +135,7 @@ export default defineComponent({
       requiedV$,
       requiedError,
       importTextareaV$,
-      importTextareaError,
-      validateSucces
+      importTextareaError
     }
   }
 })
