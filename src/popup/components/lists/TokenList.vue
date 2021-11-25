@@ -43,7 +43,7 @@
           <div class="h-4 bg-blue-400 rounded w-2/4"></div>
           <div class="h-3 bg-blue-400 rounded w-1/4"></div>
         </div>
-        <div class="h-2 bg-blue-400 rounded w-1/4"></div>
+        <div class="h-3 bg-blue-400 rounded w-1/4"></div>
       </div>
       <hr v-if="selector" class="bg-white text-white border-none h-0.5" />
     </div>
@@ -117,7 +117,8 @@ export default defineComponent({
       endToken,
       scroll,
       tokenList,
-      forAmount,loaded
+      forAmount,
+      loaded
     }
   }
 })

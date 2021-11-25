@@ -28,7 +28,7 @@
           class="mt-2"
           amountInput
           label="Amount"
-          :placeholder="`Available ${token?.balance}`"
+          :placeholder="`Available ${token?.balance} ${token?.originalSymbol}`"
           :errors="amountInputError"
         />
       </div>
