@@ -48,7 +48,6 @@ import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useNotifications } from '@/composables/useNotifications'
-import { nanoid } from 'nanoid'
 
 import {
   createFromMnemonic,
@@ -57,9 +56,9 @@ import {
   validatePrivateKey,
   validateMnemonic
 } from '../../../services/AccountService'
-import { decryptString } from '../../../services/CryptoService'
-import {useClipboard} from '@/composables/useClipboard'
-import {useValidate} from '@/composables/useValidate'
+import { decryptString, decryptKeyStore } from '../../../services/CryptoService'
+import { useClipboard } from '@/composables/useClipboard'
+import { useValidate } from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'Import wallet',
@@ -109,11 +108,15 @@ export default defineComponent({
     function importWallet() {
       const account = checkSource()
       const decrypt = decryptPassword()
+      console.log('decr✅', decrypt)
 
       const wallet = createAccount(name.value, account.privateKey, decrypt)
+      const decryptedWallet = decryptKeyStore(wallet.keystore, decrypt)
+      console.log('wallet', wallet)
+      console.log('decryptedWallet', decryptedWallet)
       if (wallet) {
         store.commit('wallets/setWallet', wallet)
-        router.push('/')
+        // router.push('/')
       }
     }
 
