@@ -16,7 +16,7 @@ export default {
         digits: 4
       },
       pindigits: 4,
-      timeout: 1 * 60 * 1000, //milisec, default 30min
+      timeout: 30 * 60 * 1000, //milisec, default 30min
       attempts: 5,
       countdown: 60 //sec, delay 1min when auth fails
     },
