@@ -13,3 +13,10 @@ export function compressAddress(
     address.substr(address.length - rightOffet, address.length)
   )
 }
+
+export function toHex(string: string) {
+  let hex = ''
+  for (let i = string.length - 1; i >= 0; i--)
+    hex = '%' + string.charCodeAt(i).toString(16) + hex
+  return hex
+}

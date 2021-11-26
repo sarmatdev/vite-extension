@@ -1,15 +1,14 @@
 <template>
   <div class="mt-2 p-2">
-    <h1 class="text-2xl text-center">Personal Sign</h1>
+    <div class="text-center">
+      <h1 class="text-2xl">Personal Sign</h1>
+      <p class="text-blue-400">{{ host }}</p>
+    </div>
     <p>Data: {{ signData }}</p>
-    <p>{{ host }}</p>
-    <footer class="fixed inset-x-0 bottom-0 p-2">
-      <div class="mb-2">
-        <BaseInput label="Password" placeholder="Input your password" />
-      </div>
+    <footer class="fixed inset-x-0 bottom-0 p-2 bg-blue-100">
       <div class="flex gap-4 justify-between">
         <BaseButton block @click="deny" outline> Deny </BaseButton>
-        <BaseButton block @click="accept"> Accept </BaseButton>
+        <BaseButton block @click="sign"> Accept </BaseButton>
       </div>
     </footer>
   </div>
@@ -23,8 +22,10 @@ import { utils } from '@vite/vitejs'
 import {
   THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
   GET_WALLET_SERVICE_STATE,
-  THIRDPARTY_PERSONAL_SIGN_CONNECT
+  THIRDPARTY_PERSONAL_SIGN_CONNECT,
+  THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE
 } from '../../../types'
+import { decryptKeyStore, decryptString } from 'src/services/CryptoService'
 
 export default defineComponent({
   setup() {
@@ -33,9 +34,28 @@ export default defineComponent({
     const signData = ref('')
 
     const account = computed(() => store.getters['wallets/active'])
+    const password = computed(() => store.getters['settings/password'])
 
     function sign() {
-      return
+      const decryptedPassword = decryptString(
+        password.value.payload,
+        password.value.salt
+      )
+      const privateKey = decryptKeyStore(
+        account.value.keystore,
+        decryptedPassword
+      )
+      const hexPaylod = utils._Buffer.from('value').toString('hex')
+      const sign = utils.ed25519.sign(hexPaylod, privateKey)
+
+      console.log(utils.ed25519.sign(hexPaylod, privateKey))
+
+      chrome.runtime.sendMessage({
+        action: THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE,
+        payload: {
+          data: sign
+        }
+      })
     }
 
     function accept() {
@@ -52,8 +72,6 @@ export default defineComponent({
     function deny() {
       window.close()
     }
-
-    console.log(utils.ed25519)
 
     onMounted(() => {
       chrome.runtime.sendMessage(
@@ -82,6 +100,7 @@ export default defineComponent({
       deny,
       account,
       host,
+      sign,
       signData,
       compressAddress
     }
