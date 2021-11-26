@@ -7,7 +7,10 @@ export default {
   state: {
     auth: {
       lockState: null,
-      password: '',
+      password: {
+        payload: '',
+        salt: ''
+      },
       pincode: {
         data: null,
         digits: 4
@@ -19,7 +22,8 @@ export default {
     },
     hideLowBalance: false,
     displayMode: 0,
-    contacts: []
+    contacts: [],
+    loaded: true
   },
   mutations: {
     setHideLowBalance(state, payload) {
@@ -38,7 +42,7 @@ export default {
       state.displayMode = payload
     },
     setLockState(state, payload) {
-      state.auth.lockState = { ...payload }
+      state.auth.lockState = payload
     },
     setTimeout(state, payload) {
       state.auth.timeout = payload
@@ -55,6 +59,9 @@ export default {
     },
     setContacts(state, payload) {
       state.contacts = [...payload]
+    },
+    setLoaded(state, payload) {
+      state.loaded = payload
     }
   },
   actions: {
@@ -109,19 +116,18 @@ export default {
     },
     setLockState({ commit }, payload) {
       try {
-        const salt = nanoid(24)
-
-        const data = {
-          payload: encryptString(payload.toString(), salt),
-          salt
-        }
-        commit('setLockState', data)
+        commit('setLockState', payload)
       } catch (err) {
         console.error(err)
       }
     }
   },
   getters: {
-    password: (s) => s.auth.password
+    password: (s) =>
+      s.auth.password.payload
+        ? decryptString(s.auth.password.payload, s.auth.password.salt)
+        : '',
+    loaded: (s) => s.loaded,
+    timeout: (s) => s.auth.timeout
   }
 }

@@ -33,7 +33,7 @@
     >
       <BaseButton
         @click="importWallet"
-        :disabled="!name || !importWay || !source || !validateSucces"
+        :disabled="!name || !importWay || !source || importTextareaError.length"
         color="blue"
         block
       >
@@ -52,11 +52,13 @@ import { useNotifications } from '@/composables/useNotifications'
 import {
   createFromMnemonic,
   createFromPrivateKey,
-  createAccount,
-  validatePrivateKey,
-  validateMnemonic
+  createAccount
 } from '../../../services/AccountService'
+<<<<<<< HEAD
 import { decryptString, decryptKeyStore } from '../../../services/CryptoService'
+=======
+import { decryptString } from '../../../services/CryptoService'
+>>>>>>> 7140f3867bfc3498e461fcdbe4aefb7894897423
 import { useClipboard } from '@/composables/useClipboard'
 import { useValidate } from '@/composables/useValidate'
 
@@ -74,6 +76,7 @@ export default defineComponent({
     const { readClipboard } = useClipboard()
 
     async function pasteSource() {
+      importTextareaV$.value.$touch()
       const clipboard = await readClipboard()
       source.value = clipboard
     }
@@ -95,34 +98,29 @@ export default defineComponent({
 
       return res
     }
-    const validateSucces = computed(() => {
-      return importWay.value === 'Private key'
-        ? validatePrivateKey(source.value)
-        : validateMnemonic(source.value)
-    })
-
-    function decryptPassword(): string {
-      return decryptString(password.value.payload, password.value.salt)
-    }
 
     function importWallet() {
       const account = checkSource()
-      const decrypt = decryptPassword()
-      console.log('decr✅', decrypt)
 
-      const wallet = createAccount(name.value, account.privateKey, decrypt)
-      const decryptedWallet = decryptKeyStore(wallet.keystore, decrypt)
+      const wallet = createAccount(
+        name.value,
+        account.privateKey,
+        password.value
+      )
+      console.log('account', account)
       console.log('wallet', wallet)
-      console.log('decryptedWallet', decryptedWallet)
       if (wallet) {
         store.commit('wallets/setWallet', wallet)
         // router.push('/')
       }
     }
 
-    const { requiedV$, requiedError } = useValidate({ validator: name })
+    const { requiedV$, requiedError } = useValidate({
+      validator: name
+    })
     const { importTextareaV$, importTextareaError } = useValidate({
-      validator: source
+      validator: source,
+      type: importWay
     })
 
     return {
@@ -136,8 +134,7 @@ export default defineComponent({
       requiedV$,
       requiedError,
       importTextareaV$,
-      importTextareaError,
-      validateSucces
+      importTextareaError
     }
   }
 })

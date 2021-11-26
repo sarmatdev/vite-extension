@@ -20,7 +20,7 @@
       {{ !selected || open ? placeholder : selected }}
       <BaseIcon
         class="absolute right-3 top-3 z-20 transition-all"
-        :class="{ 'transform rotate-180': open }"
+        :class="{ 'transform rotate-180 duration-300': open }"
         name="chevron-down"
       />
     </div>

@@ -13,12 +13,12 @@
           : 'bg-blue-200 hover:bg-blue-300'
       "
     >
-      <div class="flex p-3 justify-between">
+      <div v-if="loaded" class="flex p-3 justify-between">
         <div class="flex items-center space-x-5">
           <img width="40" :src="token.urlIcon" :alt="token.originalSymbol" />
           <div class="text-left">
             <p class="text-black">
-              {{ token.balance + ' ' + token.originalSymbol }}
+              {{ forAmount(token.balance) + ' ' + token.originalSymbol }}
             </p>
             <span class="font-medium pt-1 text-sm text-gray-600">{{
               selector ? compressAddress(token.tokenId) : token.name
@@ -37,6 +37,14 @@
           <BaseIcon v-else class="text-black" name="circle" />
         </div>
       </div>
+      <div v-else class="flex p-3 w-full justify-between animate-pulse">
+        <div class="rounded-full bg-blue-400 w-16 h-10 mr-2"></div>
+        <div class="w-full space-y-2">
+          <div class="h-4 bg-blue-400 rounded w-2/4"></div>
+          <div class="h-3 bg-blue-400 rounded w-1/4"></div>
+        </div>
+        <div class="h-3 bg-blue-400 rounded w-1/4"></div>
+      </div>
       <hr v-if="selector" class="bg-white text-white border-none h-0.5" />
     </div>
   </div>
@@ -47,7 +55,7 @@ import { ref, defineComponent, computed, ComputedRef } from 'vue'
 import { useStore } from 'vuex'
 import { IVitexToken } from '@/types'
 import { compressAddress } from '@/helpers/string'
-import {usePrices} from '@/composables/usePrices'
+import { usePrices } from '@/composables/usePrices'
 
 export default defineComponent({
   name: 'TokenList',
@@ -67,6 +75,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const store = useStore()
+    const loaded = computed(() => store.getters['settings/loaded'])
 
     const endToken = ref(5)
 
@@ -98,7 +107,7 @@ export default defineComponent({
 
     const tokenList = computed(() => props.tokens)
 
-    const { forPrice } = usePrices()
+    const { forPrice, forAmount } = usePrices()
 
     return {
       hasCheck,
@@ -107,7 +116,9 @@ export default defineComponent({
       forPrice,
       endToken,
       scroll,
-      tokenList
+      tokenList,
+      forAmount,
+      loaded
     }
   }
 })

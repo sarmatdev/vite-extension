@@ -71,9 +71,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { accountNameSymbol, compressAddress } from '@/helpers/string'
+import { useWeb3 } from '@/composables/useWeb3'
 
 export default defineComponent({
   name: 'AccountsList',
@@ -95,6 +96,21 @@ export default defineComponent({
     function deleteAccount(address: string): void {
       store.commit('wallets/deleteWallet', address)
     }
+
+    const web3 = useWeb3()
+
+    watch(
+      () => active.value,
+      (newAccount, oldAccount) => {
+        if (oldAccount === newAccount) return
+        store.commit('settings/setLoaded', false)
+        web3.fetchFullTokenInfo(active.value.address)
+        web3.getTxsList(active.value.address)
+        setTimeout(() => {
+          store.commit('settings/setLoaded', true)
+        }, 1000)
+      }
+    )
 
     return {
       accounts,

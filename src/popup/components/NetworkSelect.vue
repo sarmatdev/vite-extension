@@ -1,7 +1,8 @@
 <template>
-  <Listbox class="w-32" as="div" v-model="selected">
+  <Listbox class="w-32" as="div" v-model="selected" v-slot="{ open }">
     <div class="mt-1 relative">
       <ListboxButton
+        :class="open ? 'border-blue-500' : 'border-gray-300 hover:border-black'"
         class="
           relative
           w-full
@@ -15,9 +16,6 @@
           text-left
           cursor-pointer
           focus:outline-none
-          focus:ring-1
-          focus:ring-blue-500
-          focus:border-blue-500
           text-sm
         "
       >
@@ -42,7 +40,15 @@
             pointer-events-none
           "
         >
-          <BaseIcon name="chevron-down" />
+          <BaseIcon
+            :class="[
+              {
+                'transform rotate-180': open
+              },
+              'transition duration-300'
+            ]"
+            name="chevron-down"
+          />
         </span>
       </ListboxButton>
 
@@ -111,9 +117,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, computed, watchEffect } from 'vue'
 import { useWeb3 } from '@/composables/useWeb3'
 import config from '@/config'
+import { useStore } from 'vuex'
 import {
   Listbox,
   ListboxButton,
@@ -130,13 +137,26 @@ export default defineComponent({
   },
   setup() {
     const web3 = useWeb3()
+    const store = useStore()
+    const active = computed(() => store.getters['wallets/active'])
 
-    const selected = ref(config.networks[0])
-
+    const selected = ref(null)
+    watchEffect(() =>
+      store.getters['network/network'].httpUrl
+        ? (selected.value = store.getters['network/network'])
+        : (selected.value = config.networks[0])
+    )
     watch(
       selected,
       () => {
-        web3.handleNetworkChanged(selected)
+        store.commit('settings/setLoaded', false)
+        store.commit('network/setNetwork', selected.value)
+        web3.handleNetworkChanged(selected.value)
+        web3.fetchFullTokenInfo(active.value.address)
+        web3.getTxsList(active.value.address)
+        setTimeout(() => {
+          store.commit('settings/setLoaded', true)
+        }, 1000)
       },
       { immediate: true }
     )

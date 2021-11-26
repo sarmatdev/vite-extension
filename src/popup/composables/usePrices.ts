@@ -1,4 +1,4 @@
-import {useNumbers} from '@/composables/useNumbers'
+import { useNumbers } from '@/composables/useNumbers'
 import store from '@/store'
 
 export function usePrices() {
@@ -6,7 +6,8 @@ export function usePrices() {
 
   function forPrice(price, balance?) {
     if (balance) {
-      const balanceUsd = price * balance
+      const b = balance.replace(',', '')
+      const balanceUsd = price * b
       return `$${Math.trunc(balanceUsd)}${
         frac(balanceUsd) ? ',' + frac(balanceUsd) : ''
       }`
@@ -15,8 +16,13 @@ export function usePrices() {
       ? `1 ≈ $${Math.trunc(price)}${frac(price) ? ',' + frac(price) : ''}`
       : ''
   }
-  function forAmount(a) {
-    return a ? `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` : ''
+  function forAmount(amount) {
+    if (amount) {
+      const a = amount.replace(',', '')
+      return `${Math.trunc(a)}${frac(a) ? ',' + frac(a) : ''}` + ' '
+    } else {
+      return 0 + ' '
+    }
   }
   return {
     forPrice,

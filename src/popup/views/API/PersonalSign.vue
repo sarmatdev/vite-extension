@@ -16,16 +16,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
+import * as crypto from 'crypto-js'
 import { useStore } from 'vuex'
-import { compressAddress } from '@/helpers/string'
 import { utils } from '@vite/vitejs'
+import { compressAddress } from '@/helpers/string'
+import { decryptKeyStore, decryptString } from 'src/services/CryptoService'
 import {
   THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
   GET_WALLET_SERVICE_STATE,
   THIRDPARTY_PERSONAL_SIGN_CONNECT,
   THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE
 } from '../../../types'
-import { decryptKeyStore, decryptString } from 'src/services/CryptoService'
 
 export default defineComponent({
   setup() {
@@ -59,14 +60,18 @@ export default defineComponent({
     }
 
     function accept() {
-      chrome.runtime.sendMessage({
-        action: THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
-        payload: {
-          name: account.value.name,
-          address: account.value.address
-        }
-      })
-      window.close()
+      console.log(account.value)
+      const decryptedPassword = decryptString(
+        password.value.payload,
+        password.value.salt
+      )
+      console.log(decryptedPassword)
+      const decrypted = decryptKeyStore(
+        decryptedPassword,
+        account.value.keystore
+      )
+      const plain = decrypted.toString(crypto.enc.Utf8)
+      console.log(plain)
     }
 
     function deny() {

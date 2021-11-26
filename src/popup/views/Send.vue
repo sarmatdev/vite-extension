@@ -6,15 +6,31 @@
         <h1 class="ml-24">Send</h1>
       </div>
       <div class="pt-4 space-y-4 px-2">
-        <TokenSelect v-model="token" />
+        <TokenSelect
+          @input="sendInputV$.tokenSelect.$touch"
+          v-model="token"
+          :errors="tokenSelectError"
+        />
         <BaseInput
-          v-model="toAddress"
+          @input="sendInputV$.addressInput.$touch"
           @iconEvent="pasteAddress"
+          v-model="toAddress"
           class="mt-2"
           label="Address"
           icon="clipboard"
+          :errors="addressInputError"
         />
-        <BaseInput v-model="amount" type="number" class="mt-2" label="Amount" />
+        <BaseInput
+          @input="sendInputV$.amountInput.$touch"
+          @iconEvent="pasteMaxValue"
+          v-model="amount"
+          type="number"
+          class="mt-2"
+          amountInput
+          label="Amount"
+          :placeholder="`Available ${token?.balance} ${token?.originalSymbol}`"
+          :errors="amountInputError"
+        />
       </div>
     </div>
     <div class="w-full py-8 px-2">
@@ -22,7 +38,14 @@
         @click="openModal"
         color="blue"
         block
-        :disabled="!toAddress || !amount || !token"
+        :disabled="
+          sendInputV$.addressInput.$error ||
+          sendInputV$.amountInput.$error ||
+          sendInputV$.tokenSelect.$error ||
+          !amount ||
+          !toAddress ||
+          !token
+        "
       >
         Send
       </BaseButton>
@@ -36,11 +59,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import TokenSelect from '@/components/TokenSelect.vue'
 import TxConfirm from '@/components/modals/TxConfirm.vue'
 import { useNumbers } from '@/composables/useNumbers'
 import { useClipboard } from '@/composables/useClipboard'
+import { useValidate } from '@/composables/useValidate'
+import { IVitexToken } from '@/types'
 
 export default defineComponent({
   name: 'Send',
@@ -51,13 +76,16 @@ export default defineComponent({
   setup() {
     const { formatUnits } = useNumbers()
     const isOpen = ref(false)
-    const amount = ref(0)
-    const token = ref({})
+    const amount: Ref<string | number> = ref()
+    const token: Ref<IVitexToken> = ref()
     const rawAmount = ref('')
     const toAddress = ref('')
 
     watch(amount, () => {
       rawAmount.value = formatUnits(amount.value, 18)
+    })
+    watch(token, () => {
+      amount.value = null
     })
 
     function openModal() {
@@ -70,11 +98,29 @@ export default defineComponent({
 
     const { readClipboard } = useClipboard()
     async function pasteAddress() {
+      sendInputV$.value.$touch()
+
       const clipboard = await readClipboard()
       toAddress.value = clipboard
     }
 
-    console.log(token)
+    function pasteMaxValue() {
+      amount.value = token.value ? token.value.balance : 0
+      sendInputV$.value.$touch()
+    }
+
+    const toSendBalance = computed(() => token.value.balance)
+    const {
+      sendInputV$,
+      addressInputError,
+      amountInputError,
+      tokenSelectError
+    } = useValidate({
+      amountInput: amount,
+      addressInput: toAddress,
+      tokenSelect: token,
+      balance: toSendBalance
+    })
 
     return {
       token,
@@ -84,7 +130,13 @@ export default defineComponent({
       rawAmount,
       openModal,
       closeModal,
-      pasteAddress
+      pasteAddress,
+      sendInputV$,
+      addressInputError,
+      amountInputError,
+      tokenSelectError,
+      pasteMaxValue,
+      toSendBalance
     }
   }
 })
