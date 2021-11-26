@@ -19,7 +19,7 @@
         fixed
         px-2
         py-10
-        space-y-5
+        space-y-8
         inset-x-0
         bottom-0
         rounded-t-2xl

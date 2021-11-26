@@ -50,6 +50,7 @@ import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useValidate } from '@/composables/useValidate'
+import * as storage from '../../services/StorageService'
 
 export default defineComponent({
   name: 'CreatePassword',
@@ -66,12 +67,14 @@ export default defineComponent({
 
     const { cpV$, passwordErrors, repeatPasswordErrors } = useValidate(state)
 
-    function savePassword() {
+    async function savePassword() {
       cpV$.value.$touch()
-      store.dispatch('settings/storePassword', state.password).finally(() => {
-        console.log('stored')
+      store.dispatch('settings/storePassword', state.password)
+        const { AppState } = await storage.getValue('AppState')
+        storage.saveValue({
+          AppState: { ...AppState, lastClosed: Date.now() }
+        })
         router.push({ path: 'create-wallet' })
-      })
     }
 
     return {

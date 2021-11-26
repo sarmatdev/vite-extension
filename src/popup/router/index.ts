@@ -113,14 +113,14 @@ const lockState = computed(() => store.getters['settings/lockState'])
 
 router.beforeEach(async (to, from, next) => {
   const { AppState } = await storage.getValue('AppState')
-  const { lastClosed } = AppState
   if (AppState) {
+    const { lastClosed } = AppState
     if (
       lastClosed &&
       accounts.value.length &&
       to.path !== '/lock' &&
       from.path !== '/lock'
-      ) {
+    ) {
       const now = Date.now()
       const offset = now - lastClosed
       console.log(now)
