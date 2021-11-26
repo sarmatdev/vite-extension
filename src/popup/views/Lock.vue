@@ -47,6 +47,7 @@ import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useValidate } from '@/composables/useValidate'
+import * as storage from '../../services/StorageService'
 
 export default defineComponent({
   name: 'Lock',
@@ -61,11 +62,15 @@ export default defineComponent({
 
     const { lV$, unLockErrors } = useValidate(state)
 
-    function unLock(): void {
+    async function unLock() {
       lV$.value.$touch()
       if (!lV$.value.password.$error) {
         store.dispatch('settings/setLockState', false)
         console.log('stored')
+        const { AppState } = await storage.getValue('AppState')
+        storage.saveValue({
+          AppState: { ...AppState, lastClosed: Date.now() }
+        })
         router.push('/')
       }
     }
