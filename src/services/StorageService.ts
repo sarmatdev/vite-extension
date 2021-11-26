@@ -1,4 +1,5 @@
 export function saveValue(value): Promise<void> {
+  console.log('save value', value)
   return new Promise((resolve, reject) => {
     chrome.storage.local.set(value, () => {
       if (chrome.runtime.lastError) {
@@ -9,7 +10,7 @@ export function saveValue(value): Promise<void> {
   })
 }
 
-export function getValue(value): Promise<void> {
+export function getValue(value): Promise<any> {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(value, (items) => {
       if (chrome.runtime.lastError) {

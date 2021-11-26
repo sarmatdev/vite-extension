@@ -46,7 +46,7 @@
 import { defineComponent, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import {useValidate} from '@/composables/useValidate'
+import { useValidate } from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'Lock',
@@ -64,9 +64,8 @@ export default defineComponent({
     function unLock(): void {
       lV$.value.$touch()
       if (!lV$.value.password.$error) {
-        store.dispatch('settings/storeIsLocked', false).finally(() => {
-          console.log('stored')
-        })
+        store.dispatch('settings/setLockState', false)
+        console.log('stored')
         router.push('/')
       }
     }

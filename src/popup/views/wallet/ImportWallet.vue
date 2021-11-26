@@ -95,15 +95,14 @@ export default defineComponent({
       return res
     }
 
-    function decryptPassword(): string {
-      return decryptString(password.value.payload, password.value.salt)
-    }
-
     function importWallet() {
       const account = checkSource()
-      const decrypt = decryptPassword()
 
-      const wallet = createAccount(name.value, account.privateKey, decrypt)
+      const wallet = createAccount(
+        name.value,
+        account.privateKey,
+        password.value
+      )
       console.log('account', account)
       console.log('wallet', wallet)
       if (wallet) {
