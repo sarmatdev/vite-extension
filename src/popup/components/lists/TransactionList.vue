@@ -18,7 +18,9 @@
               {{ tx.blockType == 2 ? 'Send' : 'Receive' }}
             </span>
             <span class="font-medium text-sm text-gray-600 block">
-              {{ tx.unreceived ? 'Pending' : 'Completed' }}
+              <BaseBadge :color="txBadge(tx).color">
+                {{ txBadge(tx).status }}
+              </BaseBadge>
             </span>
           </div>
         </div>
@@ -91,13 +93,27 @@ export default defineComponent({
     const txsList = computed(() =>
       props.txs ? props.txs : store.getters['account/txsList']
     )
+    function txBadge(tx) {
+      if (tx.unreceived) {
+        return {
+          status: 'Pending',
+          color: 'yellow'
+        }
+      }
+      return {
+        status: 'Completed',
+        color: 'green'
+      }
+    }
+
     const { forAmount } = usePrices()
     return {
       compressAddress,
       txsList,
       timestampToDate,
       forAmount,
-      loaded
+      loaded,
+      txBadge
     }
   }
 })

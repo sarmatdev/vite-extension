@@ -54,7 +54,6 @@ import {
   createFromPrivateKey,
   createAccount
 } from '../../../services/AccountService'
-import { decryptString } from '../../../services/CryptoService'
 import { useClipboard } from '@/composables/useClipboard'
 import { useValidate } from '@/composables/useValidate'
 
@@ -66,7 +65,6 @@ export default defineComponent({
     const { notify } = useNotifications()
 
     const importWay = ref('')
-    console.log(importWay)
     const source = ref('')
 
     const { readClipboard } = useClipboard()
@@ -103,8 +101,7 @@ export default defineComponent({
         account.privateKey,
         password.value
       )
-      console.log('account', account)
-      console.log('wallet', wallet)
+
       if (wallet) {
         store.commit('wallets/setWallet', wallet)
         router.push('/')

@@ -10,7 +10,7 @@
       text-sm
       font-medium
     "
-    :class="`bg-${color}-100 text-${color}-800`"
+    :class="`bg-${color}-100 text-${color}-600`"
   >
     <base-icon v-if="icon" :name="icon" class="mr-1 h-4 w-4"></base-icon>
     <slot />

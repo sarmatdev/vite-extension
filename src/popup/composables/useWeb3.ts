@@ -28,6 +28,10 @@ export function useWeb3() {
     return
   })
 
+  function newBlockHandler() {
+    return state.provider.subscribe('newAccountBlocks')
+  }
+
   const active = computed(() => store.getters['wallets/active'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
@@ -197,6 +201,7 @@ export function useWeb3() {
     fetchFullTokenInfo,
     getTxs,
     getUtxs,
-    getTxsList
+    getTxsList,
+    newBlockHandler
   }
 }

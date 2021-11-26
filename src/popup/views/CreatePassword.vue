@@ -74,7 +74,7 @@ export default defineComponent({
         storage.saveValue({
           AppState: { ...AppState, lastClosed: Date.now() }
         })
-        router.push({ path: 'create-wallet' })
+        router.push(route.redirectedFrom)
     }
 
     return {

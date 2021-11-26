@@ -6,15 +6,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import { APP_CONNECT } from '../types'
+import { useWeb3 } from './composables/useWeb3'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   components: {
     Notifications
   },
   setup() {
+    const store = useStore()
+    const { newBlockHandler, fetchFullTokenInfo } = useWeb3()
+
+    const active = computed(() => store.getters['wallets/active'])
+
+    newBlockHandler()
+      .then((event) => {
+        event.on((result) => {
+          fetchFullTokenInfo(active.value.address)
+        })
+        // event.off();
+      })
+      .catch((err) => {
+        console.warn(err)
+      })
     chrome.runtime.connect({ name: APP_CONNECT })
   }
 })
