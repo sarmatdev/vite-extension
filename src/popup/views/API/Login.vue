@@ -1,17 +1,45 @@
 <template>
   <div class="mt-2 p-2">
     <h1 class="text-2xl text-center">Sign in Request</h1>
-    <div>
-      <div class="card" v-for="(account, index) in accounts" :key="index">
-        <div class="rounded-lg shadow p-2">
-          <div class="">
-            <div>{{ account.name }}</div>
-          </div>
-          <div class="">
-            {{ compressAddress(account.address, 15) }}
-          </div>
-        </div>
+    <div class="flex items-center justify-around mt-6">
+      <div class="p-1 border border-gray-300 rounded-full">
+        <img class="w-6" :src="hostIcon" alt="" />
       </div>
+      <BaseIcon name="arrow-right" />
+      <div class="py-0.5 px-3 border border-gray-300 rounded-full">
+        <span class="text-xl font-bold text-gray-500">?</span>
+      </div>
+      <BaseIcon name="arrow-right" />
+
+      <div
+        class="
+          h-10
+          w-10
+          flex
+          items-center
+          justify-center
+          rounded-full
+          bg-purple-300
+          text-white text-xl
+        "
+      >
+        {{ accountNameSymbol(account.name) }}
+      </div>
+    </div>
+    <div class="text-left mt-6 flex flex-col space-y-4">
+      <div>
+        <p>
+          <span class="text-xl text-blue-400">{{ host }}</span> wants to connect
+          to your account
+          <span class="text-xl text-blue-400">
+            {{ compressAddress(account.address, 10, 5) }} </span
+          >.
+        </p>
+      </div>
+      <span class="text-sm text-gray-600 font-medium"
+        >This site requests access to view the current account address. Make
+        sure that you trust the site you are using.</span
+      >
     </div>
     <footer class="fixed inset-x-0 bottom-0 flex gap-4 p-2 justify-between">
       <BaseButton block @click="deny" outline> Deny </BaseButton>
@@ -23,7 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { compressAddress } from '@/helpers/string'
+import { compressAddress, accountNameSymbol } from '@/helpers/string'
 import {
   THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
   GET_WALLET_SERVICE_STATE,
@@ -34,9 +62,12 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const host = ref('')
-
+    const hostIcon = computed(() =>
+      host.value
+        ? `http://www.google.com/s2/favicons?domain=${host.value}`
+        : require('@/assets/images/logo-blue.svg')
+    )
     const account = computed(() => store.getters['wallets/active'])
-    const accounts = computed(() => store.getters['wallets/accounts'])
 
     function accept() {
       chrome.runtime.sendMessage({
@@ -71,8 +102,11 @@ export default defineComponent({
     return {
       accept,
       deny,
-      accounts,
-      compressAddress
+      account,
+      compressAddress,
+      accountNameSymbol,
+      host,
+      hostIcon
     }
   }
 })
