@@ -1,10 +1,5 @@
-import { wallet } from '@vite/vitejs'
-import {
-  encryptString,
-  decryptString,
-  encryptKeyStore,
-  decryptKeyStore
-} from './CryptoService'
+import { wallet, utils } from '@vite/vitejs'
+import { encryptString, encryptKeyStore } from './CryptoService'
 
 export function isValidAddress(address: string) {
   return wallet.isValidAddress(address)
@@ -69,7 +64,6 @@ export function createAccount(
 ) {
   const account = createFromPrivateKey(privateKey)
   const keystore = encryptKeyStore(account.privateKey, password)
-  console.log('keystore', keystore)
 
   return {
     name,
@@ -78,14 +72,9 @@ export function createAccount(
   }
 }
 
-export function getAddressFromPrivateKey(privateKey) {
-  return true
-}
+export function sign(hex, privateKey: string) {
+  const hexPaylod = utils._Buffer.from(hex).toString('hex')
+  const sign = utils.ed25519.sign(hexPaylod, privateKey)
 
-export async function getBalance(address, shardId) {
-  return true
-}
-
-export function checkAddress(address) {
-  return true
+  return sign
 }

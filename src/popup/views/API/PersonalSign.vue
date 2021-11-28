@@ -4,11 +4,24 @@
       <h1 class="text-2xl">Personal Sign</h1>
       <p class="text-blue-400">{{ host }}</p>
     </div>
-    <p>Data: {{ signData }}</p>
+    <div>
+      <p>
+        Data:
+        <span class="text-blue-400">
+          {{ data }}
+        </span>
+      </p>
+      <p>
+        Signed Data:
+        <span class="text-blue-400 break-words">
+          {{ signedData }}
+        </span>
+      </p>
+    </div>
     <footer class="fixed inset-x-0 bottom-0 p-2 bg-blue-100">
       <div class="flex gap-4 justify-between">
         <BaseButton block @click="deny" outline> Deny </BaseButton>
-        <BaseButton block @click="sign"> Accept </BaseButton>
+        <BaseButton block @click="accept"> Accept </BaseButton>
       </div>
     </footer>
   </div>
@@ -16,65 +29,65 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import * as crypto from 'crypto-js'
 import { useStore } from 'vuex'
-import { utils } from '@vite/vitejs'
-import { compressAddress } from '@/helpers/string'
-import { decryptKeyStore, decryptString } from 'src/services/CryptoService'
+import { decryptKeyStore } from 'src/services/CryptoService'
+import { sign } from 'src/services/AccountService'
 import {
-  THIRDPARTY_GET_ACCOUNT_SUCCESS_RESPONSE,
   GET_WALLET_SERVICE_STATE,
   THIRDPARTY_PERSONAL_SIGN_CONNECT,
-  THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE
+  THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE,
+  THIRDPARTY_PERSONAL_SIGN_REJECT_RESPONSE,
+  PERSONAL_SIGN_REJECT
 } from '../../../types'
 
 export default defineComponent({
   setup() {
     const store = useStore()
-    const host = ref('')
-    const signData = ref('')
+    const host = ref(null)
+    const data = ref(null)
 
     const account = computed(() => store.getters['wallets/active'])
     const password = computed(() => store.getters['settings/password'])
+    const privateKey = computed(() =>
+      decryptKeyStore(account.value.keystore, password.value)
+    )
+    const signedData = computed(() =>
+      data.value ? sign(data.value, privateKey.value) : ''
+    )
+    // const sign = utils.ed25519.sign(hexPaylod.value, privateKey.value)
 
-    function sign() {
-      const decryptedPassword = decryptString(
-        password.value.payload,
-        password.value.salt
-      )
-      const privateKey = decryptKeyStore(
-        account.value.keystore,
-        decryptedPassword
-      )
-      const hexPaylod = utils._Buffer.from('value').toString('hex')
-      const sign = utils.ed25519.sign(hexPaylod, privateKey)
+    // function sign() {
+    //   console.log('data', data.value)
+    //   const signData = data.value
+    //   const privateKey = decryptKeyStore(account.value.keystore, password.value)
+    //   // @ts-ignore
+    //   const hexPaylod = utils._Buffer.from(signData).toString('hex')
+    //   const sign = utils.ed25519.sign(hexPaylod, privateKey)
 
-      console.log(utils.ed25519.sign(hexPaylod, privateKey))
+    //   chrome.runtime.sendMessage({
+    //     action: THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE,
+    //     payload: {
+    //       data: sign
+    //     }
+    //   })
+    // }
 
+    function accept() {
       chrome.runtime.sendMessage({
         action: THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE,
         payload: {
-          data: sign
+          data: signedData.value
         }
       })
     }
 
-    function accept() {
-      console.log(account.value)
-      const decryptedPassword = decryptString(
-        password.value.payload,
-        password.value.salt
-      )
-      console.log(decryptedPassword)
-      const decrypted = decryptKeyStore(
-        decryptedPassword,
-        account.value.keystore
-      )
-      const plain = decrypted.toString(crypto.enc.Utf8)
-      console.log(plain)
-    }
-
     function deny() {
+      chrome.runtime.sendMessage({
+        action: THIRDPARTY_PERSONAL_SIGN_REJECT_RESPONSE,
+        payload: {
+          message: PERSONAL_SIGN_REJECT
+        }
+      })
       window.close()
     }
 
@@ -86,8 +99,7 @@ export default defineComponent({
           if (state) {
             try {
               const { signData, session } = state
-              console.log('state', state)
-              signData.value = signData.msgData
+              data.value = signData.msgData
               host.value = session.host
             } catch (err) {
               console.error(err)
@@ -101,13 +113,11 @@ export default defineComponent({
     })
 
     return {
-      accept,
       deny,
-      account,
       host,
-      sign,
-      signData,
-      compressAddress
+      accept,
+      data,
+      signedData
     }
   }
 })

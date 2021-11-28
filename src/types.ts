@@ -67,6 +67,7 @@ export const CLOSE_WINDOW = 'CLOSE_WINDOW'
 //wallet provider messages
 export const LOGIN_REJECT = 'User rejected login request'
 export const SIGN_REJECT = 'User rejected sign transaction request'
+export const PERSONAL_SIGN_REJECT = 'User rejected personal sign request'
 export const SIGNOUT_SUCCEED = 'Successfully signed out'
 
 export const LEDGER_CONFIRM_PREPARE =
