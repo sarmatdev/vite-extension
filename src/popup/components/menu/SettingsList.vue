@@ -26,7 +26,7 @@
         </div>
         <base-icon name="chevron-right" size="xl" class="text-blue-600" />
       </li>
-      <li class="list-item" @click="openNewTab">
+      <li class="list-item" @click="lockWallet">
         <div class="flex items-center text-gray-600">
           <BaseIcon name="lock" size="xl" />
           <div class="ml-2">
@@ -70,7 +70,7 @@ export default defineComponent({
 
     function lockWallet() {
       store.dispatch('settings/setLockState', true)
-      // router.push('/lock')
+      router.push({ path: '/lock' })
     }
 
     return {
