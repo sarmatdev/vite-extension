@@ -2,9 +2,14 @@
   <div class="mt-2 p-2">
     <div class="text-center">
       <h1 class="text-2xl">Personal Sign</h1>
-      <p class="text-blue-400">{{ host }}</p>
     </div>
-    <div>
+    <div class="space-y-6 mt-6">
+      <p>
+        For:
+        <span class="text-blue-400">
+          {{ host }}
+        </span>
+      </p>
       <p>
         Data:
         <span class="text-blue-400">
@@ -18,7 +23,7 @@
         </span>
       </p>
     </div>
-    <footer class="fixed inset-x-0 bottom-0 p-2 bg-blue-100">
+    <footer class="fixed inset-x-0 bottom-0 px-2 py-6">
       <div class="flex gap-4 justify-between">
         <BaseButton block @click="deny" outline> Deny </BaseButton>
         <BaseButton block @click="accept"> Accept </BaseButton>
