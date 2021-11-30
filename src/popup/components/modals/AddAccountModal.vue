@@ -25,13 +25,11 @@ export default defineComponent({
     const name = ref('')
 
     function closeModal(state) {
-      console.log('state', state)
       open.value = false
     }
 
     function create() {
       const seed = wallet.createSeed(128)
-      console.log(wallet.getWallet(seed.mnemonic))
     }
 
     return {

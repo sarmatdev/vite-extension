@@ -191,7 +191,7 @@ class APIService {
       this.host = getHostNameFromTab(sender.tab)
       this.tx = payload
       this.txnInfo = payload
-      console.log('🚨payload', payload)
+
       const session = await this.getSession(this.host)
       if (session.exist) {
         const findAcc = find(store.wallets.accounts, {

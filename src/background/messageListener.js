@@ -33,7 +33,6 @@ function externalMessageListener(message, sender, sendResponse) {
 
   if (lock.isLocked(sender)) {
     sendResponse({ isLocked: true })
-    console.log('Wallet is currently locked by other tab')
     return
   }
   lock.lock(sender)
@@ -46,7 +45,6 @@ function externalMessageListener(message, sender, sendResponse) {
       apiService.getAccount(sender)
       break
     case THIRDPARTY_PERSONAL_SIGN_REQUEST:
-      console.log('THIRDPARTY_PERSONAL_SIGN_REQUEST ===> ', payload)
       apiService.sign(sender, payload.payload)
       break
     case THIRDPARTY_FORGET_IDENTITY_REQUEST:
@@ -136,7 +134,6 @@ export function getTabId({ action }, sender, sendResponse) {
     if (action !== GET_TAB_ID_INNER_EVENT_REQUEST) {
       return false
     }
-    console.log('🚨', sender)
     sendResponse(sender.tab.id)
     return true
   } catch (_) {

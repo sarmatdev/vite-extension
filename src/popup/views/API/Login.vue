@@ -41,7 +41,9 @@
         sure that you trust the site you are using.</span
       >
     </div>
-    <footer class="fixed inset-x-0 bottom-0 flex gap-4 px-2 py-6 justify-between">
+    <footer
+      class="fixed inset-x-0 bottom-0 flex gap-4 px-2 py-6 justify-between"
+    >
       <BaseButton block @click="deny" outline> Deny </BaseButton>
       <BaseButton block @click="accept"> Accept </BaseButton>
     </footer>

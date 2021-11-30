@@ -85,8 +85,7 @@ class WalletProvider {
             ...tx
           }
         })
-        console.log('🚨res', res)
-        // resolve(res)
+        resolve(res)
       } catch (err) {
         reject(err)
       }

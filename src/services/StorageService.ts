@@ -1,5 +1,4 @@
 export function saveValue(value): Promise<void> {
-  console.log('save value', value)
   return new Promise((resolve, reject) => {
     chrome.storage.local.set(value, () => {
       if (chrome.runtime.lastError) {

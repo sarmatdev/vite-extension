@@ -118,7 +118,6 @@ export default defineComponent({
           closeModal()
         })
         .catch((e) => {
-          console.log('🚨', e)
           chromeNotify({
             title: 'Transaction Sent',
             message: 'Failed'

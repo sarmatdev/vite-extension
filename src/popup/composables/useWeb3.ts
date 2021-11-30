@@ -103,7 +103,7 @@ export function useWeb3() {
           }
         })
     } catch (e) {
-      console.log(e)
+      return e
     }
   }
   async function fetchFullTokenInfo(address) {

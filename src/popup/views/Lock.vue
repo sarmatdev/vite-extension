@@ -66,7 +66,6 @@ export default defineComponent({
       lV$.value.$touch()
       if (!lV$.value.password.$error) {
         store.dispatch('settings/setLockState', false)
-        console.log('stored')
         const { AppState } = await storage.getValue('AppState')
         storage.saveValue({
           AppState: { ...AppState, lastClosed: Date.now() }

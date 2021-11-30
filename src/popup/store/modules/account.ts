@@ -1,12 +1,6 @@
-import { Commit } from 'vuex'
 import { IVitexToken, AccountBalance, tokenPrices, ITxs } from '@/types'
 import { getTokens } from '@/api/tokens.api'
 import { getExchangeRate } from '@/api/exchange-rate.api'
-import { atos, tokenView, addrType } from '@/helpers/balance'
-import { useWeb3 } from '@/composables/useWeb3'
-import config from '@/config'
-
-const { getAccountBalance } = useWeb3()
 
 export interface AccountState {
   balance: number
@@ -82,7 +76,7 @@ const actions = {
       const vitexTokens = await getTokens()
       commit('setVitexTokens', vitexTokens)
     } catch (e) {
-      console.log(e)
+      return e
     }
   },
   async fetchPrices({ commit, state }) {
@@ -93,7 +87,7 @@ const actions = {
       const priceList = pricesData.data.data
       commit('setPrices', priceList)
     } catch (e) {
-      console.log(e)
+      return e
     }
   }
 }

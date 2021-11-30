@@ -24,10 +24,9 @@ export default defineComponent({
     if (active.value.address) {
       newBlockHandler()
         .then((event) => {
-          event.on((result) => {
+          event.on(() => {
             fetchFullTokenInfo(active.value.address)
           })
-          // event.off();
         })
         .catch((err) => {
           console.warn(err)

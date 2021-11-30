@@ -131,7 +131,6 @@ router.beforeEach(async (to, from, next) => {
 
       if (offset >= timeout.value) {
         store.dispatch('settings/setLockState', true)
-        console.log('locked')
         next({ path: '/lock' })
         return
       }
