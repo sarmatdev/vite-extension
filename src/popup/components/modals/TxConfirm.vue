@@ -16,7 +16,7 @@
         justify-between
         px-2
         py-4
-        duration-1000
+        duration-200
       "
     >
       <header class="border-b py-4 px-2 flex items-center justify-between">
@@ -104,9 +104,9 @@ export default defineComponent({
     function send() {
       loading.value = true
       sendTokens({
-        toAddress: toAddress.value,
+        toAddress: 'vite_feec0243547b03efea18f02c698ee81c1235a797cc38f1755a',
         amount: formatUnits(amount.value, 18),
-        tokenId: config.nativeAsset.tokenId
+        tokenId: 'tti_5649544520544f4b454e6e40'
       })
         .then((res) => {
           console.log('✅', res)
@@ -143,10 +143,10 @@ export default defineComponent({
 
 <style>
 .fade-enter-active {
-  animation: fade-in 1s;
+  animation: fade-in 400ms;
 }
 .fade-leave-active {
-  animation: fade-out 1s;
+  animation: fade-out 400ms;
 }
 @keyframes fade-in {
   from {
