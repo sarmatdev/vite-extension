@@ -90,7 +90,7 @@ export async function signAccountBlock(tx, provider, privateKey) {
     .setProvider(provider)
     .setPrivateKey(privateKey)
 
-  await myAccountBlock.autoSetProperty()
+  await myAccountBlock.autoSetPreviousAccountBlock()
 
   const result = await myAccountBlock.sign()
 
