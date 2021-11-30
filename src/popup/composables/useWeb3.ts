@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 import { ViteAPI, accountBlock } from '@vite/vitejs'
 import HTTP_RPC from '@vite/vitejs-http'
 import config from '@/config'
-import { decryptString } from '../../services/CryptoService'
+import { decryptKeyStore } from '../../services/CryptoService'
 import { atos, tokenView, addrType } from '@/helpers/balance'
 
 export interface SendTokens {
@@ -36,8 +36,8 @@ export function useWeb3() {
   const password = computed(() => store.getters['settings/password'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
-    const privateKey = decryptString(active.value.privateKey, password.value)
-    console.log('privateKey', privateKey)
+    const privateKey = decryptKeyStore(active.value.keystore, password.value)
+
     const newAccountBlock = createAccountBlock('send', {
       address: active.value.address,
       toAddress,
@@ -49,10 +49,8 @@ export function useWeb3() {
 
     await newAccountBlock.autoSetPreviousAccountBlock()
 
-    console.log('newAccountBlock', newAccountBlock)
-
-    // const result = await newAccountBlock.sign().send()
-    // return result
+    const result = await newAccountBlock.sign().send()
+    return result
   }
 
   function handleNetworkChanged(selected: any) {
@@ -63,13 +61,11 @@ export function useWeb3() {
     state.provider.setProvider(
       newProvider,
       () => {
-        console.log('Success✅')
         state.network.isConnected = true
         return
       },
       true
     )
-    console.log('state.provider', state.provider)
   }
 
   function getAccountBalance(address) {

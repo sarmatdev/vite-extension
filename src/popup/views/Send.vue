@@ -84,9 +84,9 @@ export default defineComponent({
     watch(amount, () => {
       rawAmount.value = formatUnits(amount.value, 18)
     })
-    watch(token, () => {
-      amount.value = null
-    })
+    // watch(token, () => {
+    //   amount.value = null
+    // })
 
     function openModal() {
       isOpen.value = true

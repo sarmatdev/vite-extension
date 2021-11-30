@@ -69,8 +69,8 @@ import { defineComponent, ref, watch, PropType, computed } from 'vue'
 import { compressAddress } from '@/helpers/string'
 import { useWeb3, SendTokens } from '@/composables/useWeb3'
 import { useNumbers } from '@/composables/useNumbers'
-import config from '@/config'
 import { useStore } from 'vuex'
+import { useNotifications } from '@/composables/useNotifications'
 
 export default defineComponent({
   name: 'TxConfirm',
@@ -86,7 +86,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const { sendTokens } = useWeb3()
     const { formatUnits } = useNumbers()
+    const { chromeNotify } = useNotifications()
     const store = useStore()
+
     const showModal = ref(false)
     const loading = ref(false)
     const currentAddress = computed(
@@ -104,16 +106,23 @@ export default defineComponent({
     function send() {
       loading.value = true
       sendTokens({
-        toAddress: 'vite_feec0243547b03efea18f02c698ee81c1235a797cc38f1755a',
+        toAddress: toAddress.value,
         amount: formatUnits(amount.value, 18),
-        tokenId: 'tti_5649544520544f4b454e6e40'
+        tokenId: token.value.tokenId
       })
-        .then((res) => {
-          console.log('✅', res)
+        .then(() => {
+          chromeNotify({
+            title: 'Transaction Sent',
+            message: 'Success'
+          })
           closeModal()
         })
         .catch((e) => {
           console.log('🚨', e)
+          chromeNotify({
+            title: 'Transaction Sent',
+            message: 'Failed'
+          })
         })
         .finally(() => {
           loading.value = false
