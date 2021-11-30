@@ -121,7 +121,7 @@ export function useWeb3() {
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance : 0
+          balance: balance ? balance.balance.replace(',', '') : 0
         })
       }
       store.commit('account/setFullTokenInfo', fullTokenInfo)
