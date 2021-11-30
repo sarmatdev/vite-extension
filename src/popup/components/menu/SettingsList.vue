@@ -82,11 +82,7 @@ export default defineComponent({
 
     function lockWallet() {
       store.dispatch('settings/setLockState', true)
-<<<<<<< HEAD
-      router.push('/lock')
-=======
       router.push({ path: '/lock' })
->>>>>>> 1f66643e62f96e72ffe987e709527a0693751d83
     }
 
     return {
