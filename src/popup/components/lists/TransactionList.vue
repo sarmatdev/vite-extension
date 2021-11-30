@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(tx, idx) in txsList" :key="idx">
+  <div v-for="tx in txsList" :key="tx.hash">
     <div v-if="loaded" class="p-3 flex items-center justify-between">
       <div>
         <p class="text-left text-sm text-gray-600 mb-2">
@@ -26,9 +26,29 @@
         </div>
       </div>
       <div class="text-right">
-        <p class="text-black">
-          {{ forAmount(tx.amount) + ' ' + tx.tokenInfo.tokenSymbol }}
-        </p>
+        <div class="flex justify-between">
+          <p class="text-black">
+            {{ forAmount(tx.amount) + ' ' + tx.tokenInfo.tokenSymbol }}
+          </p>
+          <a :href="`https://viteview.xyz/#/tx/${tx.hash}`" target="_blank">
+            <BaseIcon
+              class="
+                bg-blue-500
+                hover:bg-blue-600
+                text-white
+                rounded-md
+                p-1
+                ml-1
+                cursor-pointer
+                flex
+                justify-center
+                items-center
+              "
+              size="sm"
+              name="arrow-up-right"
+            />
+          </a>
+        </div>
         <span class="font-medium text-sm text-gray-600 block"
           ><span class="text-black">From:</span>
           {{ compressAddress(tx.address) }}</span
