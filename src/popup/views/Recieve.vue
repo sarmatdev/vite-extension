@@ -21,7 +21,7 @@
 import { defineComponent, computed } from 'vue'
 import { QRCanvas } from 'qrcanvas-vue'
 import { useStore } from 'vuex'
-import {useClipboard} from '@/composables/useClipboard'
+import { useClipboard } from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'Recieve',

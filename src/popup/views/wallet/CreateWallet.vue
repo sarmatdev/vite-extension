@@ -120,8 +120,8 @@ import {
   validateMnemonic,
   createFromMnemonic
 } from '../../../services/AccountService'
-import {useClipboard} from '@/composables/useClipboard'
-import {useValidate} from '@/composables/useValidate'
+import { useClipboard } from '@/composables/useClipboard'
+import { useValidate } from '@/composables/useValidate'
 
 export default defineComponent({
   name: 'CreateWallet',

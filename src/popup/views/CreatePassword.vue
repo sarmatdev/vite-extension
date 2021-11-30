@@ -70,11 +70,11 @@ export default defineComponent({
     async function savePassword() {
       cpV$.value.$touch()
       store.dispatch('settings/storePassword', state.password)
-        const { AppState } = await storage.getValue('AppState')
-        storage.saveValue({
-          AppState: { ...AppState, lastClosed: Date.now() }
-        })
-        router.push(route.redirectedFrom)
+      const { AppState } = await storage.getValue('AppState')
+      storage.saveValue({
+        AppState: { ...AppState, lastClosed: Date.now() }
+      })
+      router.push(route.redirectedFrom)
     }
 
     return {

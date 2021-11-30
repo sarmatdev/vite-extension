@@ -132,7 +132,6 @@ export default {
     submitForm() {
       const keystore = this.accounts[this.selectedIndex].keystore
       if (!keystore) return false
-
     },
     copyToClipboard() {
       this.$copyText(this.wallet.privateKey).then(() => {
