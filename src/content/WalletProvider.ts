@@ -76,59 +76,22 @@ class WalletProvider {
       }
     })
   }
-  // signTransaction(
-  //   transaction: Transaction | StakingTransaction,
-  //   updateNonce?: boolean,
-  //   encodeMode?: string,
-  //   blockNumber?: string,
-  //   shardID?: number
-  // ) {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       const parsedTxn: any = await getTxnInfo(transaction)
-  //       if (!parsedTxn)
-  //         return reject(
-  //           "Sorry. Currently, onewallet doesn't support signing the CreateValidator and EditValidator transaction"
-  //         )
-  //       const txnType = checkTransactionType(transaction)
-  //       const res = await sendAsyncMessageToContentScript({
-  //         type: THIRDPARTY_SIGN_REQUEST,
-  //         payload: {
-  //           ...parsedTxn,
-  //           params: { updateNonce, encodeMode, blockNumber, shardID }
-  //         }
-  //       })
-  //       if (res.rejected) {
-  //         if (res.message) return reject(res.message)
-  //         return reject(SIGN_REJECT)
-  //       }
-  //       let signedTransaction: any
-  //       if (txnType == FACTORYTYPE.TRANSACTION) {
-  //         const { txParams } = res
-  //         signedTransaction = transaction as Transaction
-  //         signedTransaction.setParams({
-  //           ...signedTransaction.txParams,
-  //           from: txParams.from,
-  //           nonce: txParams.nonce,
-  //           signature: txParams.signature,
-  //           rawTransaction: txParams.rawTransaction,
-  //           unsignedRawTransaction: txParams.unsignedRawTransaction
-  //         })
-  //       } else {
-  //         const { txParams } = res
-  //         signedTransaction = transaction as StakingTransaction
-  //         signedTransaction.setFromAddress(txParams.from)
-  //         signedTransaction.setNonce(txParams.nonce)
-  //         signedTransaction.setUnsigned(txParams.unsignedRawTransaction)
-  //         signedTransaction.setSignature(txParams.signature)
-  //         signedTransaction.setRawTransaction(txParams.rawTransaction)
-  //       }
-  //       resolve(signedTransaction)
-  //     } catch (err) {
-  //       reject(err)
-  //     }
-  //   })
-  // }
+  signTransaction(tx: { toAddress: string; tokenId: string; amount: string }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await sendAsyncMessageToContentScript({
+          type: THIRDPARTY_SIGN_REQUEST,
+          payload: {
+            ...tx
+          }
+        })
+        console.log('🚨res', res)
+        // resolve(res)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
 }
 
 const walletProvider = new WalletProvider()

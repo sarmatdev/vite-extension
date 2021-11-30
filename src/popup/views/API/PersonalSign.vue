@@ -54,23 +54,6 @@ export default defineComponent({
     const signedData = computed(() =>
       data.value ? sign(data.value, privateKey.value) : ''
     )
-    // const sign = utils.ed25519.sign(hexPaylod.value, privateKey.value)
-
-    // function sign() {
-    //   console.log('data', data.value)
-    //   const signData = data.value
-    //   const privateKey = decryptKeyStore(account.value.keystore, password.value)
-    //   // @ts-ignore
-    //   const hexPaylod = utils._Buffer.from(signData).toString('hex')
-    //   const sign = utils.ed25519.sign(hexPaylod, privateKey)
-
-    //   chrome.runtime.sendMessage({
-    //     action: THIRDPARTY_PERSONAL_SIGN_SUCCESS_RESPONSE,
-    //     payload: {
-    //       data: sign
-    //     }
-    //   })
-    // }
 
     function accept() {
       chrome.runtime.sendMessage({
@@ -105,7 +88,7 @@ export default defineComponent({
               console.error(err)
             }
           } else {
-            // window.close();
+            window.close()
           }
         }
       )

@@ -33,9 +33,10 @@ export function useWeb3() {
   }
 
   const active = computed(() => store.getters['wallets/active'])
+  const password = computed(() => store.getters['settings/password'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
-    const privateKey = decryptString(active.value.privateKey, active.value.salt)
+    const privateKey = decryptString(active.value.privateKey, password.value)
     console.log('privateKey', privateKey)
     const newAccountBlock = createAccountBlock('send', {
       address: active.value.address,
@@ -48,8 +49,10 @@ export function useWeb3() {
 
     await newAccountBlock.autoSetPreviousAccountBlock()
 
-    const result = await newAccountBlock.sign().send()
-    return result
+    console.log('newAccountBlock', newAccountBlock)
+
+    // const result = await newAccountBlock.sign().send()
+    // return result
   }
 
   function handleNetworkChanged(selected: any) {

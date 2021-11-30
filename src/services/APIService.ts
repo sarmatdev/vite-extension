@@ -34,6 +34,7 @@ export const msgToContentScript = (type, payload) => ({
 class APIService {
   params: any
   txnInfo: any
+  tx: any
   signData: any
   type: any
   sender: any
@@ -42,6 +43,7 @@ class APIService {
   constructor() {
     this.params = null
     this.txnInfo = null
+    this.tx = null
     this.signData = null
     this.type = null
     this.sender = null
@@ -163,7 +165,7 @@ class APIService {
           return
         }
       }
-      this.openPopup('login', 400, 600)
+      this.openPopup('login', 360, 630)
     } catch (err) {
       this.sendMessageToInjectScript(THIRDPARTY_GET_ACCOUNT_REQUEST_RESPONSE, {
         rejected: true,
@@ -187,10 +189,9 @@ class APIService {
       const store = this.getVuexStore()
       this.sender = sender.tab.id
       this.host = getHostNameFromTab(sender.tab)
-
-      this.type = payload.type
-      this.params = payload.params
-      this.txnInfo = payload.txnInfo
+      this.tx = payload
+      this.txnInfo = payload
+      console.log('🚨payload', payload)
       const session = await this.getSession(this.host)
       if (session.exist) {
         const findAcc = find(store.wallets.accounts, {
@@ -205,7 +206,7 @@ class APIService {
           return
         }
         this.activeSession = session
-        this.openPopup('sign', 400, 610)
+        this.openPopup('sign', 360, 630)
       } else {
         this.sendMessageToInjectScript(THIRDPARTY_SIGN_REQUEST_RESPONSE, {
           rejected: true,

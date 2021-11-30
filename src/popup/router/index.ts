@@ -98,6 +98,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/personal-sign',
     name: 'PersonalSign',
     component: () => import('../views/API/PersonalSign.vue')
+  },
+  {
+    path: '/sign',
+    name: 'SignTransaction',
+    component: () => import('../views/API/SignTransaction.vue')
   }
 ]
 
@@ -123,10 +128,7 @@ router.beforeEach(async (to, from, next) => {
     ) {
       const now = Date.now()
       const offset = now - lastClosed
-      console.log(now)
-      console.log(lastClosed)
-      console.log(offset)
-      console.log(timeout.value)
+
       if (offset >= timeout.value) {
         store.dispatch('settings/setLockState', true)
         console.log('locked')

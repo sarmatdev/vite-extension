@@ -1,4 +1,4 @@
-import { wallet, utils } from '@vite/vitejs'
+import { wallet, utils, accountBlock } from '@vite/vitejs'
 import { encryptString, encryptKeyStore } from './CryptoService'
 
 export function isValidAddress(address: string) {
@@ -77,4 +77,22 @@ export function sign(hex, privateKey: string) {
   const sign = utils.ed25519.sign(hexPaylod, privateKey)
 
   return sign
+}
+
+export async function signAccountBlock(tx, provider, privateKey) {
+  const myAccountBlock = accountBlock
+    .createAccountBlock('send', {
+      address: tx.address,
+      toAddress: tx.toAddress,
+      tokenId: tx.tokenId,
+      amount: tx.amount
+    })
+    .setProvider(provider)
+    .setPrivateKey(privateKey)
+
+  await myAccountBlock.autoSetProperty()
+
+  const result = await myAccountBlock.sign()
+
+  return result
 }
