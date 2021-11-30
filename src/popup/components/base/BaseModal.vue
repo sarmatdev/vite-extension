@@ -15,7 +15,7 @@
         flex flex-col
         justify-between
         p-2
-        duration-700
+        duration-500
       "
     >
       <header class="border-b py-4 px-2 flex items-center justify-between">
