@@ -36,8 +36,8 @@
         passwordInput
       />
       <BaseButton @click="unLock" color="blue" size="lg" block
-        >Unlock</BaseButton
-      >
+        >Unlock <BaseIcon class="ml-2" name="unlock" size="sm"
+      /></BaseButton>
     </div>
   </section>
 </template>

@@ -16,7 +16,7 @@ export default {
         digits: 4
       },
       pindigits: 4,
-      timeout: 30 * 60 * 1000, //milisec, default 30min
+      timeout: 1 * 30 * 1000, //milisec, default 30min
       attempts: 5,
       countdown: 60 //sec, delay 1min when auth fails
     },
@@ -128,6 +128,7 @@ export default {
         ? decryptString(s.auth.password.payload, s.auth.password.salt)
         : '',
     loaded: (s) => s.loaded,
-    timeout: (s) => s.auth.timeout
+    timeout: (s) => s.auth.timeout,
+    lockState: (s) => s.auth.lockState
   }
 }

@@ -21,17 +21,18 @@ export default defineComponent({
     const { newBlockHandler, fetchFullTokenInfo } = useWeb3()
 
     const active = computed(() => store.getters['wallets/active'])
-
-    newBlockHandler()
-      .then((event) => {
-        event.on((result) => {
-          fetchFullTokenInfo(active.value.address)
+    if (active.value.address) {
+      newBlockHandler()
+        .then((event) => {
+          event.on((result) => {
+            fetchFullTokenInfo(active.value.address)
+          })
+          // event.off();
         })
-        // event.off();
-      })
-      .catch((err) => {
-        console.warn(err)
-      })
+        .catch((err) => {
+          console.warn(err)
+        })
+    }
     chrome.runtime.connect({ name: APP_CONNECT })
   }
 })
