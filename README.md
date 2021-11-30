@@ -7,7 +7,7 @@
 - [x] The ability to add new tokens and check balance
 - [x] List of pending transactions and unreceived transactions
 - [x] The ability to send transactions and receive transactions
-- [ ] The Hook for signing and sending transactions
+- [x] The Hook for signing and sending transactions
 - [x] The ability to switch networks (Mainnet, testnet,etc.)
 
 ## Demo
