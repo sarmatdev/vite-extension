@@ -71,7 +71,6 @@ export default defineComponent({
       cpV$.value.$touch()
       store.dispatch('settings/storePassword', state.password)
       store.dispatch('settings/setLockState', false)
-
       const { AppState } = await storage.getValue('AppState')
       storage.saveValue({
         AppState: { ...AppState, lastClosed: Date.now() }

@@ -15,17 +15,17 @@
         flex flex-col
         justify-between
         p-2
-        duration-200
+        duration-500
       "
     >
       <header class="border-b py-4 px-2 flex items-center justify-between">
         <h1 class="m-auto"><slot name="header" /></h1>
         <BaseToggle @click="closeModal" icon="x" />
       </header>
-      <section class="px-2 flex flex-col items-center">
+      <section class="px-2 flex flex-col">
         <slot />
       </section>
-      <footer class="p-2 bg-blue-100">
+      <footer class="p-2">
         <slot name="footer" />
       </footer>
     </div>
