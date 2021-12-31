@@ -33,10 +33,10 @@
           rounded-t-md
         "
       >
-        <BaseCheckbox class="mx-2" v-model="agree">
+        <BaseCheck class="mx-2" v-model="agree">
           I understand that if i lose my recovery phrase, i will not be able to
           access my funds.
-        </BaseCheckbox>
+        </BaseCheck>
         <BaseButton
           color="blue"
           size="lg"
