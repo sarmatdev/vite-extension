@@ -19,18 +19,13 @@
           v-model="mnemonic"
           readonly
         />
-
-        <BaseCheckbox class="mx-2" v-model="agree">
-          I understand that if i lose my recovery phrase, i will not be able to
-          access my funds.
-        </BaseCheckbox>
       </section>
       <section
         class="
           text-sm
           w-full
-          px-4
-          py-8
+          px-2
+          py-2
           fixed
           bottom-0
           right-0
@@ -38,6 +33,10 @@
           rounded-t-md
         "
       >
+        <BaseCheckbox class="mx-2" v-model="agree">
+          I understand that if i lose my recovery phrase, i will not be able to
+          access my funds.
+        </BaseCheckbox>
         <BaseButton
           color="blue"
           size="lg"
