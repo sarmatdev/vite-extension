@@ -36,7 +36,7 @@ export function useWeb3() {
   const password = computed(() => store.getters['settings/password'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
-    const privateKey = decryptKeyStore(active.value.keystore, password.value)
+    const privateKey = decryptKeyStore(active.value.privateKey, password.value)
 
     const newAccountBlock = createAccountBlock('send', {
       address: active.value.address,
@@ -51,6 +51,34 @@ export function useWeb3() {
 
     const result = await newAccountBlock.sign().send()
     return result
+  }
+
+  async function receiveTokens(txId: number) {
+    console.log(txId)
+    const privateKey = decryptKeyStore(active.value.privateKey, password.value)
+    console.log(privateKey)
+
+
+    // get selected unreceived tx
+    const data = await state.provider.request(
+      'ledger_getUnreceivedBlocksByAddress',
+      active.value.address,
+      txId,
+      1
+    )
+
+    // create a receive tx
+    const ab = accountBlock
+      .createAccountBlock('receive', {
+        address: active.value.address,
+        sendBlockHash: data[0].hash
+      })
+      .setProvider(state.provider)
+      .setPrivateKey(privateKey)
+
+    await ab.autoSetPreviousAccountBlock()
+    const result = await ab.sign().send()
+    console.log('receive success', result)
   }
 
   function handleNetworkChanged(selected: any) {
@@ -195,6 +223,7 @@ export function useWeb3() {
     provider: state.provider,
     network: state.network,
     sendTokens,
+    receiveTokens,
     handleNetworkChanged,
     getAccountBalance,
     fetchFullTokenInfo,

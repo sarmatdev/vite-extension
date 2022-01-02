@@ -1,5 +1,5 @@
 <template>
-  <div v-for="tx in txsList" :key="tx.hash">
+  <div v-for="(tx, idx) in txsList" :key="tx.hash">
     <div v-if="loaded" class="p-3 flex items-center justify-between">
       <div>
         <p class="text-left text-sm text-gray-600 mb-2">
@@ -17,11 +17,14 @@
             <span class="font-medium text-sm text-black block">
               {{ tx.blockType == 2 ? 'Send' : 'Receive' }}
             </span>
-            <span class="font-medium text-sm text-gray-600 block">
-              <BaseBadge :color="txBadge(tx).color">
-                {{ txBadge(tx).status }}
-              </BaseBadge>
-            </span>
+            <div class="flex space-x-2 items-center">
+              <span class="font-medium text-sm text-gray-600 block">
+                <BaseBadge :color="txBadge(tx).color">
+                  {{ txBadge(tx).status }}
+                </BaseBadge>
+              </span>
+              <BaseButton v-if="tx.unreceived" @click="receiveHandler(idx)" size="xs">Receive</BaseButton>
+            </div>
           </div>
         </div>
       </div>
@@ -102,7 +105,7 @@ export default defineComponent({
       type: Array
     }
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore()
     const loaded = computed(() => store.getters['settings/loaded'])
 
@@ -126,6 +129,10 @@ export default defineComponent({
       }
     }
 
+    function receiveHandler(id: number): void {
+      emit('receive', id)
+    }
+
     const { forAmount } = usePrices()
     return {
       compressAddress,
@@ -133,7 +140,8 @@ export default defineComponent({
       timestampToDate,
       forAmount,
       loaded,
-      txBadge
+      txBadge,
+      receiveHandler
     }
   }
 })
