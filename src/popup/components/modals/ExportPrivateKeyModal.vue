@@ -1,15 +1,25 @@
 <template>
   <BaseModal :open="open" @close="closeModal">
     <template v-slot:header> Export Private Key </template>
-    <BaseInput
-      @input="lV$.password.$touch"
-      v-model="state.password"
-      label="Password"
-      placeholder="Input the password"
-      :errors="unLockErrors"
-      passwordInput
-    />
-    <div class="break-word">{{ privateKey }}</div>
+    <div class="relative">
+      <BaseInput
+        @input="lV$.password.$touch"
+        v-model="state.password"
+        label="Password"
+        placeholder="Input the password"
+        :errors="unLockErrors"
+        passwordInput
+      />
+      <div v-show="privateKey" class="absolute top-24 inset-x-0">
+        <base-input
+          v-model="privateKey"
+          label="Private key"
+          disabled
+          icon="copy"
+          @iconEvent="copyPrivateKey"
+        />
+      </div>
+    </div>
     <template v-slot:footer>
       <div class="flex gap-4 justify-between">
         <BaseButton block outline> Cancel </BaseButton>
@@ -24,6 +34,7 @@ import { defineComponent, ref, computed, onBeforeUnmount, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useValidate } from '../../composables/useValidate'
 import { decryptKeyStore } from '../../../services/CryptoService'
+import { useClipboard } from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'ExportPrivaKeyModal',
@@ -38,6 +49,7 @@ export default defineComponent({
     const active = computed(() => store.getters['wallets/active'])
 
     const { lV$, unLockErrors } = useValidate(state)
+    const { writeClipboard } = useClipboard()
 
     function closeModal() {
       open.value = false
@@ -50,6 +62,9 @@ export default defineComponent({
           password.value
         )
       }
+    }
+    function copyPrivateKey() {
+      writeClipboard(privateKey.value)
     }
 
     onBeforeUnmount(() => {
@@ -64,7 +79,8 @@ export default defineComponent({
       state,
       privateKey,
       lV$,
-      unLockErrors
+      unLockErrors,
+      copyPrivateKey
     }
   }
 })
