@@ -1,18 +1,20 @@
 <template>
   <section class="mt-2 h-full flex flex-col bg-blue-100 rounded-2xl">
     <ul class="w-full">
-      <li
-        class="list-item"
-        v-for="(item, i) in items"
-        :key="i"
-        @click="$router.push(item.to)"
-      >
+      <li class="list-item" @click="addAccountModal = !addAccountModal">
         <div class="flex items-center text-gray-600">
-          <BaseIcon :name="item.icon" size="xl" />
+          <BaseIcon name="plus" size="xl" />
           <div class="ml-2">
-            <h3 class="leading-none text-xl font-medium">
-              {{ item.title }}
-            </h3>
+            <h3 class="leading-none text-xl font-medium">Add account</h3>
+          </div>
+        </div>
+        <base-icon name="chevron-right" size="xl" class="text-blue-600" />
+      </li>
+      <li class="list-item" @click="importAccountModal = !importAccountModal">
+        <div class="flex items-center text-gray-600">
+          <BaseIcon name="download" size="xl" />
+          <div class="ml-2">
+            <h3 class="leading-none text-xl font-medium">Import account</h3>
           </div>
         </div>
         <base-icon name="chevron-right" size="xl" class="text-blue-600" />
@@ -47,6 +49,11 @@
     </ul>
   </section>
   <ExportPrivateKeyModal :open="exportModal" @close="exportModal = false" />
+  <AddAccountModal :open="addAccountModal" @close="addAccountModal = false" />
+  <ImportAccountModal
+    :open="importAccountModal"
+    @close="importAccountModal = false"
+  />
 </template>
 
 <script lang="ts">
@@ -54,31 +61,24 @@ import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import ExportPrivateKeyModal from '../modals/ExportPrivateKeyModal.vue'
+import AddAccountModal from '../modals/AddAccountModal.vue'
+import ImportAccountModal from '../modals/ImportAccountModal.vue'
 import { openNewTab } from '../../../utils'
 
 export default defineComponent({
   name: 'AccountsList',
   components: {
-    ExportPrivateKeyModal
+    ExportPrivateKeyModal,
+    AddAccountModal,
+    ImportAccountModal
   },
   setup() {
     const store = useStore()
     const router = useRouter()
 
     const exportModal = ref(false)
-
-    const items = [
-      {
-        title: 'Add account',
-        icon: 'plus',
-        to: '/create-wallet'
-      },
-      {
-        title: 'Import wallet',
-        icon: 'download',
-        to: '/import-wallet'
-      }
-    ]
+    const addAccountModal = ref(false)
+    const importAccountModal = ref(false)
 
     function lockWallet() {
       store.dispatch('settings/setLockState', true)
@@ -86,9 +86,10 @@ export default defineComponent({
     }
 
     return {
-      items,
       openNewTab,
       exportModal,
+      addAccountModal,
+      importAccountModal,
       lockWallet
     }
   }

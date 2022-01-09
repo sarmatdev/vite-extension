@@ -5,6 +5,8 @@ export interface Account {
   address: string
   privateKey: string
   salt: string
+  imported?: boolean
+  mnemonic?: string
 }
 
 export interface WalletsState {
@@ -17,11 +19,15 @@ const state = {
   accounts: []
 }
 const mutations = {
-  setWallet(state: WalletsState, account: Account): void {
+  addAccount(state: WalletsState, account: Account): void {
     state.accounts = [...state.accounts, account]
     state.active = account
   },
-  deleteWallet(state: WalletsState, address: string): void {
+  addImportedAccount(state: WalletsState, account: Account): void {
+    state.accounts = [...state.accounts, { ...account, imported: true }]
+    state.active = account
+  },
+  deleteAccount(state: WalletsState, address: string): void {
     state.accounts = state.accounts.filter((el) => el.address !== address)
     state.active = last(state.accounts)
   },
@@ -33,6 +39,7 @@ const mutations = {
 const getters = {
   active: (s: WalletsState) => s.active,
   accounts: (s: WalletsState) => s.accounts,
+  createdAccounts: (s: WalletsState) => s.accounts.filter((el) => !el.imported),
   accountsNum: (s: WalletsState) => s.accounts.length
 }
 

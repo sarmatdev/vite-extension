@@ -12,14 +12,8 @@
         label="Wallet Name"
         class="mb-5"
       ></BaseInput>
-      <BaseSelect
-        v-model="importWay"
-        label="Import with"
-        placeholder="Select way to import"
-        :options="['Mnemonic', 'Private key']"
-      />
       <BaseTextarea
-        :label="`Write or paste your ${importWay ? importWay : 'data'}`"
+        label="Write or paste your recovery phrase"
         icon="clipboard"
         @input="importTextareaV$.validator.$touch"
         :errors="importTextareaError"
@@ -33,7 +27,7 @@
     >
       <BaseButton
         @click="importWallet"
-        :disabled="!name || !importWay || !source || importTextareaError.length"
+        :disabled="!name || !source || importTextareaError.length"
         color="blue"
         block
       >
@@ -51,7 +45,6 @@ import { useNotifications } from '@/composables/useNotifications'
 
 import {
   createFromMnemonic,
-  createFromPrivateKey,
   createAccount
 } from '../../../services/AccountService'
 import { useClipboard } from '@/composables/useClipboard'
@@ -62,7 +55,6 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const { notify } = useNotifications()
 
     const importWay = ref('')
     const source = ref('')
@@ -80,30 +72,18 @@ export default defineComponent({
     const accountsNum = computed(() => store.getters['wallets/accountsNum'])
     const name = ref(`Wallet ${accountsNum.value + 1}`)
 
-    function checkSource() {
-      const res =
-        importWay.value === 'Private key'
-          ? createFromPrivateKey(source.value)
-          : createFromMnemonic(source.value)
-
-      if (res.code) {
-        notify({ message: res.message, type: 'red' })
-      }
-
-      return res
-    }
-
     function importWallet() {
-      const account = checkSource()
+      const account = createFromMnemonic(source.value)
 
       const wallet = createAccount(
         name.value,
         account.privateKey,
-        password.value
+        password.value,
+        source.value
       )
 
       if (wallet) {
-        store.commit('wallets/setWallet', wallet)
+        store.commit('wallets/addAccount', wallet)
         router.push('/')
       }
     }
@@ -113,7 +93,7 @@ export default defineComponent({
     })
     const { importTextareaV$, importTextareaError } = useValidate({
       validator: source,
-      type: importWay
+      type: 'Mnemonic'
     })
 
     return {
