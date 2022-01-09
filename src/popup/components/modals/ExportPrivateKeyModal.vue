@@ -38,7 +38,7 @@ import { useClipboard } from '@/composables/useClipboard'
 
 export default defineComponent({
   name: 'ExportPrivaKeyModal',
-  setup() {
+  setup(_, { emit }) {
     const store = useStore()
 
     const open = ref(false)
@@ -52,7 +52,9 @@ export default defineComponent({
     const { writeClipboard } = useClipboard()
 
     function closeModal() {
-      open.value = false
+      emit('close')
+      state.password = ''
+      privateKey.value = ''
     }
 
     function exportPrivateKey() {
