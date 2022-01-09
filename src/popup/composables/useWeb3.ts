@@ -54,11 +54,7 @@ export function useWeb3() {
   }
 
   async function receiveTokens(txId: number) {
-    console.log(txId)
-    const privateKey = decryptKeyStore(active.value.privateKey, password.value)
-    console.log(privateKey)
-
-
+    const privateKey = decryptKeyStore(active.value.keystore, password.value)
     // get selected unreceived tx
     const data = await state.provider.request(
       'ledger_getUnreceivedBlocksByAddress',

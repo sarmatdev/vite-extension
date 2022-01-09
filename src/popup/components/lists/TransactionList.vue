@@ -7,15 +7,15 @@
         </p>
         <div class="flex space-x-6 items-center">
           <BaseIcon
-            v-if="true"
+            v-if="!tx.unreceived "
             :class="{ 'transform -rotate-180': tx.blockType !== 2 }"
             class="text-black"
             name="send"
           />
-          <BaseIcon v-if="false" class="text-black" name="clock" />
+          <BaseIcon v-else class="text-black" name="clock" />
           <div class="text-left flex flex-col justify-between">
             <span class="font-medium text-sm text-black block">
-              {{ tx.blockType == 2 ? 'Send' : 'Receive' }}
+              {{ tx.blockType == 2 && !tx.unreceived ? 'Send' : 'Receive' }}
             </span>
             <div class="flex space-x-2 items-center">
               <span class="font-medium text-sm text-gray-600 block">
@@ -85,7 +85,7 @@
   </div>
   <div v-if="!txsList.length" class="relative w-full h-full">
     <p class="text-blue-900 absolute inset-0 top-2/4 text-center">
-      You have no transactions
+      You have no completed transactions
     </p>
   </div>
 </template>
@@ -114,7 +114,7 @@ export default defineComponent({
       web3.getTxsList(store.getters['wallets/active'].address)
     }
     const txsList = computed(() =>
-      props.txs ? props.txs : store.getters['account/txsList']
+      props.txs ? props.txs : store.getters['account/txs']
     )
     function txBadge(tx) {
       if (tx.unreceived) {

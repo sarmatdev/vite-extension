@@ -58,6 +58,7 @@ export default defineComponent({
 
     function receiveTokens(txId) {
       web3.receiveTokens(txId)
+      console.log('receive')
     }
 
     return {
