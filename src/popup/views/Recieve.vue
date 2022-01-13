@@ -11,7 +11,7 @@
       icon="copy"
       @iconEvent="copyAddress"
     />
-    <div class="flex justify-center mt-8">
+    <div class="flex justify-center my-16">
       <QRCanvas :options="{ cellSize: 8, data: active.address }"></QRCanvas>
     </div>
   </div>
@@ -22,6 +22,7 @@ import { defineComponent, computed } from 'vue'
 import { QRCanvas } from 'qrcanvas-vue'
 import { useStore } from 'vuex'
 import { useClipboard } from '@/composables/useClipboard'
+import { useWeb3 } from '@/composables/useWeb3'
 
 export default defineComponent({
   name: 'Recieve',
@@ -30,8 +31,11 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
+    const web3 = useWeb3()
 
     const active = computed(() => store.getters['wallets/active'])
+    web3.getUtxs(active.value.address)
+    const uTxs = computed(() => store.getters['account/uTxs'])
     const options = {
       cellSize: 8,
       data: 'hello, world'
@@ -46,7 +50,8 @@ export default defineComponent({
     return {
       active,
       options,
-      copyAddress
+      copyAddress,
+      uTxs,
     }
   }
 })

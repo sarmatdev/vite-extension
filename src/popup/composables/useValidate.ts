@@ -7,8 +7,11 @@ import {
   validateMnemonic,
   isValidAddress
 } from '../../services/AccountService'
+import { createFromPrivateKey } from '../../services/AccountService'
 
 export function useValidate(state: any) {
+  const store = useStore()
+
   const createPasswordRules = computed(() => {
     const localRules = {
       password: { required, minLength: minLength(8) },
@@ -46,7 +49,6 @@ export function useValidate(state: any) {
     return errors
   })
 
-  const store = useStore()
   const originPassword = computed(() => store.getters['settings/password'])
   const lockRules = computed(() => {
     const localRules = {
@@ -114,15 +116,28 @@ export function useValidate(state: any) {
     return errors
   })
 
-  const validPrivateKey = (address) => !!validatePrivateKey(address)
+  const accounts = computed(() => store.getters['wallets/accounts'])
+
+  const validPrivateKey = (key) => !!validatePrivateKey(key)
   const validMnemonic = (value) => !!validateMnemonic(value)
+  const uniqueAccount = (value) => {
+    const account = createFromPrivateKey(value)
+    let uniqueAccount = true
+    accounts.value.forEach((acc) => {
+      if (acc.address === account.address) {
+        uniqueAccount = false
+      }
+    })
+    return uniqueAccount
+  }
   const inputType = (value) => value.includes('Mnemonic')
   const importTextareaRules = computed(() => {
     const localRules = {
       validator: {
         required,
         validPrivateKey,
-        validMnemonic
+        validMnemonic,
+        uniqueAccount
       },
       type: {
         inputType
@@ -147,6 +162,12 @@ export function useValidate(state: any) {
         importTextareaV$.value.type.inputType.$response
       ) {
         errors.push('Invalid mnemonic')
+      } else if (
+        importTextareaV$.value.validator.validPrivateKey.$response &&
+        !importTextareaV$.value.validator.uniqueAccount.$response &&
+        !importTextareaV$.value.type.inputType.$response
+      ) {
+        errors.push('Already added')
       }
     }
     return errors

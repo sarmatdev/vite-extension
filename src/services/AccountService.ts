@@ -1,5 +1,7 @@
+import { Account } from '@/store/modules/wallets'
 import { wallet, utils, accountBlock } from '@vite/vitejs'
-import { encryptString, encryptKeyStore } from './CryptoService'
+import { encryptString, encryptKeyStore, decryptString } from './CryptoService'
+import { nanoid } from 'nanoid'
 
 export function isValidAddress(address: string) {
   return wallet.isValidAddress(address)
@@ -41,17 +43,34 @@ export function validatePrivateKey(privateKey) {
 
 export async function createAccountFromMnemonic(
   name: string,
-  mnemonic: string,
-  password: string
+  mnemonic: string
 ) {
   const account = {
     mnemonic: wallet.getWallet(mnemonic).mnemonics,
     ...wallet.getWallet(mnemonic).deriveAddress(0)
   }
-  const keystore = encryptString(mnemonic, password)
-
+  const salt = nanoid(24)
+  const mnemonicStore = { payload: encryptString(mnemonic, salt), salt }
   return {
     name,
+    address: account.address,
+    mnemonicStore
+  }
+}
+
+export function deriveNewAccount(
+  nextAccountIndex: number,
+  mnemonicStore: { payload: string; salt: string },
+  password: string
+) {
+  console.log(decryptString(mnemonicStore.payload, mnemonicStore.salt))
+  const path = wallet.getPath(nextAccountIndex)
+  const mnemonic = decryptString(mnemonicStore.payload, mnemonicStore.salt)
+  const keyPair = wallet.deriveKeyPairByPath(mnemonic, path)
+  const account = createFromPrivateKey(keyPair.privateKey)
+  const keystore = encryptKeyStore(account.privateKey, password)
+
+  return {
     address: account.address,
     keystore
   }
@@ -60,15 +79,22 @@ export async function createAccountFromMnemonic(
 export function createAccount(
   name: string,
   privateKey: string,
-  password: string
+  password: string,
+  mnemonic?: string
 ) {
   const account = createFromPrivateKey(privateKey)
   const keystore = encryptKeyStore(account.privateKey, password)
+  let mnemonicStore = null
+  if (mnemonic) {
+    const salt = nanoid(24)
+    mnemonicStore = { payload: encryptString(mnemonic, salt), salt }
+  }
 
   return {
     name,
     address: account.address,
-    keystore
+    keystore,
+    mnemonicStore: mnemonicStore
   }
 }
 

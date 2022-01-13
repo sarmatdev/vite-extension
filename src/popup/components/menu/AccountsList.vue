@@ -45,9 +45,14 @@
             {{ accountNameSymbol(account.name) }}
           </div>
           <div class="ml-2">
-            <h3 class="leading-none">
-              {{ account.name }}
-            </h3>
+            <div class="flex space-x-2 items-center">
+              <h3 class="leading-none">
+                {{ account.name }}
+              </h3>
+              <BaseBadge v-if="account.imported" color="purple"
+                >Imported</BaseBadge
+              >
+            </div>
             <p class="text-sm text-gray-600">
               {{ compressAddress(account.address, 10, 5) }}
             </p>
@@ -94,7 +99,7 @@ export default defineComponent({
     }
 
     function deleteAccount(address: string): void {
-      store.commit('wallets/deleteWallet', address)
+      store.commit('wallets/deleteAccount', address)
     }
 
     const web3 = useWeb3()

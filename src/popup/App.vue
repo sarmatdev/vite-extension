@@ -18,7 +18,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const { newBlockHandler, fetchFullTokenInfo } = useWeb3()
+    const { newBlockHandler, fetchFullTokenInfo, receiveTokens } = useWeb3()
 
     const active = computed(() => store.getters['wallets/active'])
     if (active.value.address) {
@@ -26,6 +26,7 @@ export default defineComponent({
         .then((event) => {
           event.on(() => {
             fetchFullTokenInfo(active.value.address)
+            receiveTokens()
           })
         })
         .catch((err) => {

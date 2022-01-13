@@ -16,12 +16,18 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/welcome',
     name: 'Welcome',
-    component: () => import('../views/Welcome.vue')
+    component: () => import('../views/Welcome.vue'),
+    meta: {
+      onboarding: true
+    }
   },
   {
     path: '/create-password',
     name: 'CreatePassword',
-    component: () => import('../views/CreatePassword.vue')
+    component: () => import('../views/CreatePassword.vue'),
+    meta: {
+      onboarding: true
+    }
   },
   {
     path: '/lock',
@@ -33,7 +39,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CreateWallet',
     component: () => import('../views/wallet/CreateWallet.vue'),
     meta: {
-      authenticate: true
+      authenticate: true,
+      onboarding: true
     }
   },
   {
@@ -41,7 +48,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ImportWallet',
     component: () => import('../views/wallet/ImportWallet.vue'),
     meta: {
-      authenticate: true
+      authenticate: true,
+      onboarding: true
     }
   },
   {
@@ -92,17 +100,29 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/API/Login.vue')
+    component: () => import('../views/API/Login.vue'),
+    meta: {
+      requiredAccount: true,
+      authenticate: true
+    }
   },
   {
     path: '/personal-sign',
     name: 'PersonalSign',
-    component: () => import('../views/API/PersonalSign.vue')
+    component: () => import('../views/API/PersonalSign.vue'),
+    meta: {
+      requiredAccount: true,
+      authenticate: true
+    }
   },
   {
     path: '/sign',
     name: 'SignTransaction',
-    component: () => import('../views/API/SignTransaction.vue')
+    component: () => import('../views/API/SignTransaction.vue'),
+    meta: {
+      requiredAccount: true,
+      authenticate: true
+    }
   }
 ]
 
@@ -136,6 +156,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   }
+
   if (to.matched.some((record) => record.meta.authenticate)) {
     if (!password.value) {
       next({ path: '/create-password' })
@@ -149,6 +170,13 @@ router.beforeEach(async (to, from, next) => {
         url: 'popup.html#/welcome'
       })
       return
+    }
+  }
+  if (to.matched.some((record) => record.meta.onboarding)) {
+    if (!accounts.value.length) {
+      next()
+    } else {
+      next(false)
     }
   }
   next()

@@ -35,7 +35,7 @@
         :errors="unLockErrors"
         passwordInput
       />
-      <BaseButton @click="unLock" color="blue" size="lg" block
+      <BaseButton @click="unLock" color="blue" size="lg" block :disabled="state.password && unLockErrors.length"
         >Unlock <BaseIcon class="ml-2" name="unlock" size="sm"
       /></BaseButton>
     </div>
@@ -63,15 +63,12 @@ export default defineComponent({
     const { lV$, unLockErrors } = useValidate(state)
 
     async function unLock() {
-      lV$.value.$touch()
-      if (!lV$.value.password.$error) {
         store.dispatch('settings/setLockState', false)
         const { AppState } = await storage.getValue('AppState')
         storage.saveValue({
           AppState: { ...AppState, lastClosed: Date.now() }
         })
         router.push('/')
-      }
     }
 
     return {

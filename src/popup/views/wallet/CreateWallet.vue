@@ -117,7 +117,8 @@ import { useRouter } from 'vue-router'
 import {
   createRandom,
   validateMnemonic,
-  createFromMnemonic
+  createFromMnemonic,
+  createAccount
 } from '../../../services/AccountService'
 import { useClipboard } from '@/composables/useClipboard'
 import { useValidate } from '@/composables/useValidate'
@@ -130,6 +131,7 @@ export default defineComponent({
     const router = useRouter()
     let scene = ref(1)
     const wallet = createRandom()
+    const password = computed(() => store.getters['settings/password'])
     const mnemonic = wallet.mnemonic
     const mnemonicForConfirm = ref('')
     const { writeClipboard, readClipboard } = useClipboard()
@@ -185,11 +187,13 @@ export default defineComponent({
     const name = ref(`Wallet ${accountsNum.value + 1}`)
     const { requiedV$, requiedError } = useValidate({ validator: name })
     function saveWallet() {
-      store.commit('wallets/setWallet', {
-        name: name.value,
-        address: fromMnemonic.value.address,
-        privateKey: fromMnemonic.value.privateKey
-      })
+      const createdWallet = createAccount(
+        name.value,
+        fromMnemonic.value.privateKey,
+        password.value,
+        mnemonic
+      )
+      store.commit('wallets/addAccount', createdWallet)
 
       router.push('/')
     }

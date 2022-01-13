@@ -2,41 +2,60 @@
   <BaseModal :open="open" @close="closeModal">
     <template v-slot:header> Add Account </template>
     <template v-slot:default>
-      <BaseInput placeholder="Account name" v-model="name" />
+      <BaseInput label="Account Name" v-model="name" />
     </template>
     <template v-slot:footer>
       <div class="flex gap-4 justify-between">
-        <BaseButton block outline> Cancel </BaseButton>
-        <BaseButton block @click="create"> Confirm </BaseButton>
+        <BaseButton block @click="deriveWallet" :disabled="!name">
+          Confirm
+        </BaseButton>
       </div>
     </template>
   </BaseModal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { wallet } from '@vite/vitejs'
+import { computed, defineComponent, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import { deriveNewAccount } from '../../../services/AccountService'
 
 export default defineComponent({
-  name: 'Menu',
+  name: 'AddAccountModal',
   components: {},
-  setup() {
-    const open = ref(false)
-    const name = ref('')
+  setup(_, { emit }) {
+    const store = useStore()
+    const accountsNum = computed(() => store.getters['wallets/accountsNum'] + 1)
+    const name = ref(`Wallet ${accountsNum.value}`)
+    const accounts = computed(() => store.getters['wallets/createdAccounts'])
+    const password = computed(() => store.getters['settings/password'])
 
-    function closeModal(state) {
-      open.value = false
+    function closeModal() {
+      emit('close')
     }
 
-    function create() {
-      const seed = wallet.createSeed(128)
+    function deriveWallet() {
+      console.log(accounts.value[0].mnemonicStore)
+      const { address, keystore } = deriveNewAccount(
+        accounts.value.length,
+        accounts.value[0].mnemonicStore,
+        password.value
+      )
+      store.commit('wallets/addAccount', {
+        name: name.value,
+        address: address,
+        keystore: keystore
+      })
+      closeModal()
     }
+
+    watch(accountsNum, () => {
+      name.value = `Wallet ${accountsNum.value}`
+    })
 
     return {
-      open,
       name,
       closeModal,
-      create
+      deriveWallet
     }
   }
 })
