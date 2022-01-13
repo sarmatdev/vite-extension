@@ -1,7 +1,7 @@
 <template>
   <BaseModal :open="open" @close="closeModal">
     <template v-slot:header> Export Private Key </template>
-    <div class="relative">
+    <div class="flex flex-col space-y-8">
       <BaseInput
         @input="lV$.password.$touch"
         v-model="state.password"
@@ -10,20 +10,24 @@
         :errors="unLockErrors"
         passwordInput
       />
-      <div v-show="privateKey" class="absolute top-24 inset-x-0">
-        <base-input
-          v-model="privateKey"
-          label="Private key"
-          disabled
-          icon="copy"
-          @iconEvent="copyPrivateKey"
-        />
-      </div>
+      <BaseInput
+        v-model="privateKey"
+        label="Private key"
+        disabled
+        icon="copy"
+        @iconEvent="copyPrivateKey"
+      />
     </div>
     <template v-slot:footer>
       <div class="flex gap-4 justify-between">
         <BaseButton block outline> Cancel </BaseButton>
-        <BaseButton block @click="exportPrivateKey"> Export </BaseButton>
+        <BaseButton
+          block
+          @click="exportPrivateKey"
+          :disabled="state.password && unLockErrors.length"
+        >
+          Export
+        </BaseButton>
       </div>
     </template>
   </BaseModal>

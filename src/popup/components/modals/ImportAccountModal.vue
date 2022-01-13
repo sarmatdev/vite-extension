@@ -54,6 +54,7 @@ export default defineComponent({
 
     function closeModal() {
       emit('close')
+      source.value = ''
     }
 
     async function pasteSource() {
