@@ -53,28 +53,31 @@ export function useWeb3() {
     return result
   }
 
-  async function receiveTokens(txId: number) {
+  async function receiveTokens() {
     const privateKey = decryptKeyStore(active.value.keystore, password.value)
     // get selected unreceived tx
     const data = await state.provider.request(
       'ledger_getUnreceivedBlocksByAddress',
       active.value.address,
-      txId,
-      1
+      0,
+      30
     )
 
     // create a receive tx
-    const ab = accountBlock
-      .createAccountBlock('receive', {
-        address: active.value.address,
-        sendBlockHash: data[0].hash
-      })
-      .setProvider(state.provider)
-      .setPrivateKey(privateKey)
+    if (!data.length) { return }
+    data.forEach(async (tx) => {
+      const ab = accountBlock
+        .createAccountBlock('receive', {
+          address: active.value.address,
+          sendBlockHash: tx.hash
+        })
+        .setProvider(state.provider)
+        .setPrivateKey(privateKey)
 
-    await ab.autoSetPreviousAccountBlock()
-    const result = await ab.sign().send()
-    console.log('receive success', result)
+      await ab.autoSetPreviousAccountBlock()
+      const result = await ab.sign().send()
+      console.log('receive success', result)
+    })
   }
 
   function handleNetworkChanged(selected: any) {
@@ -206,8 +209,8 @@ export function useWeb3() {
       await getTxs(address)
       await getUtxs(address)
       store.commit('account/setTxsList', [
-        ...store.getters['account/txs'],
-        ...store.getters['account/uTxs']
+        ...store.getters['account/uTxs'],
+        ...store.getters['account/txs']
       ])
     } catch (e) {
       console.log(e)

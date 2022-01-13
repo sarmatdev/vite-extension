@@ -49,7 +49,9 @@
               <h3 class="leading-none">
                 {{ account.name }}
               </h3>
-              <BaseBadge v-if="account.imported" color="purple">Imported</BaseBadge>
+              <BaseBadge v-if="account.imported" color="purple"
+                >Imported</BaseBadge
+              >
             </div>
             <p class="text-sm text-gray-600">
               {{ compressAddress(account.address, 10, 5) }}

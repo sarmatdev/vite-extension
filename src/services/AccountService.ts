@@ -72,7 +72,7 @@ export function deriveNewAccount(
 
   return {
     address: account.address,
-    keystore,
+    keystore
   }
 }
 

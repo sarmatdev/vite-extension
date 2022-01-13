@@ -1,5 +1,5 @@
 <template>
-  <div v-for="(tx, idx) in txsList" :key="tx.hash">
+  <div v-for="tx in txsList" :key="tx.hash">
     <div v-if="loaded" class="p-3 flex items-center justify-between">
       <div>
         <p class="text-left text-sm text-gray-600 mb-2">
@@ -7,7 +7,7 @@
         </p>
         <div class="flex space-x-6 items-center">
           <BaseIcon
-            v-if="!tx.unreceived "
+            v-if="!tx.unreceived"
             :class="{ 'transform -rotate-180': tx.blockType !== 2 }"
             class="text-black"
             name="send"
@@ -23,7 +23,6 @@
                   {{ txBadge(tx).status }}
                 </BaseBadge>
               </span>
-              <BaseButton v-if="tx.unreceived" @click="receiveHandler(idx)" size="xs">Receive</BaseButton>
             </div>
           </div>
         </div>
@@ -114,7 +113,7 @@ export default defineComponent({
       web3.getTxsList(store.getters['wallets/active'].address)
     }
     const txsList = computed(() =>
-      props.txs ? props.txs : store.getters['account/txs']
+      props.txs ? props.txs : store.getters['account/txsList']
     )
     function txBadge(tx) {
       if (tx.unreceived) {
