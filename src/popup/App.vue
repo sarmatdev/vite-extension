@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onUnmounted } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import { APP_CONNECT } from '../types'
 import { useWeb3 } from './composables/useWeb3'
@@ -18,15 +18,15 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const { newBlockHandler, fetchFullTokenInfo, receiveTokens } = useWeb3()
+    const { newBlockHandler, fetchFullTokenInfo, autoReceiveTokens } = useWeb3()
 
     const active = computed(() => store.getters['wallets/active'])
     if (active.value.address) {
+      autoReceiveTokens()
       newBlockHandler()
         .then((event) => {
           event.on(() => {
             fetchFullTokenInfo(active.value.address)
-            receiveTokens()
           })
         })
         .catch((err) => {
@@ -34,6 +34,7 @@ export default defineComponent({
         })
     }
     chrome.runtime.connect({ name: APP_CONNECT })
+    onUnmounted(() => autoReceiveTokens('stop'))
   }
 })
 </script>

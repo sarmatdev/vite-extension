@@ -53,33 +53,27 @@ export function useWeb3() {
     return result
   }
 
-  async function receiveTokens() {
+  async function autoReceiveTokens(stop?) {
     const privateKey = decryptKeyStore(active.value.keystore, password.value)
-    // get selected unreceived tx
-    const data = await state.provider.request(
-      'ledger_getUnreceivedBlocksByAddress',
-      active.value.address,
-      0,
-      30
-    )
+    const { ReceiveAccountBlockTask } = accountBlock
 
-    // create a receive tx
-    if (!data.length) {
-      return
-    }
-    data.forEach(async (tx) => {
-      const ab = accountBlock
-        .createAccountBlock('receive', {
-          address: active.value.address,
-          sendBlockHash: tx.hash
-        })
-        .setProvider(state.provider)
-        .setPrivateKey(privateKey)
-
-      await ab.autoSetPreviousAccountBlock()
-      const result = await ab.sign().send()
-      console.log('receive success', result)
+    const ReceiveTask = new ReceiveAccountBlockTask({
+      address: active.value.address,
+      privateKey: privateKey,
+      provider: state.provider
     })
+    if (stop) {
+      return ReceiveTask.stop()
+    }
+    ReceiveTask.start({
+      checkTime: 3000,
+      transctionNumber: 5
+    })
+    ReceiveTask.onError((error) => {
+      console.log('error', error)
+    })
+    
+
   }
 
   function handleNetworkChanged(selected: any) {
@@ -150,7 +144,7 @@ export function useWeb3() {
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance.replace(',', '') : 0
+          balance: balance ? balance.balance.replace(',', '.') : 0
         })
       }
       store.commit('account/setFullTokenInfo', fullTokenInfo)
@@ -224,7 +218,7 @@ export function useWeb3() {
     provider: state.provider,
     network: state.network,
     sendTokens,
-    receiveTokens,
+    autoReceiveTokens,
     handleNetworkChanged,
     getAccountBalance,
     fetchFullTokenInfo,
