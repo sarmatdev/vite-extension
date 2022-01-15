@@ -36,7 +36,7 @@ export function useWeb3() {
   const password = computed(() => store.getters['settings/password'])
 
   async function sendTokens({ toAddress, tokenId, amount }: SendTokens) {
-    const privateKey = decryptKeyStore(active.value.privateKey, password.value)
+    const privateKey = decryptKeyStore(active.value.keystore, password.value)
 
     const newAccountBlock = createAccountBlock('send', {
       address: active.value.address,
@@ -64,7 +64,9 @@ export function useWeb3() {
     )
 
     // create a receive tx
-    if (!data.length) { return }
+    if (!data.length) {
+      return
+    }
     data.forEach(async (tx) => {
       const ab = accountBlock
         .createAccountBlock('receive', {
