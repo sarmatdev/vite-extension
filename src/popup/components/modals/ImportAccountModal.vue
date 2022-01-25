@@ -35,6 +35,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useWeb3 } from '@/composables/useWeb3'
 import {
   createFromPrivateKey,
   createAccount
@@ -46,6 +47,7 @@ export default defineComponent({
   name: 'ImportAccountModal',
   setup(_, { emit }) {
     const store = useStore()
+    const { unsubscribeAutoReceive } = useWeb3()
     const { readClipboard } = useClipboard()
     const accountsNum = computed(() => store.getters['wallets/accountsNum'] + 1)
     const name = ref(`Wallet ${accountsNum.value}`)
@@ -71,11 +73,9 @@ export default defineComponent({
         account.privateKey,
         password.value
       )
-
-      if (wallet) {
-        store.commit('wallets/addImportedAccount', wallet)
-        closeModal()
-      }
+      unsubscribeAutoReceive()
+      store.commit('wallets/addImportedAccount', wallet)
+      closeModal()
     }
 
     watch(accountsNum, () => {

@@ -1,8 +1,10 @@
 export interface Account {
   name: string
   address: string
-  privateKey: string
+  keystore: string
   salt: string
+  imported?: boolean
+  mnemonic?: string
 }
 
 export interface IVitexToken {
@@ -105,10 +107,16 @@ export interface ITxs {
   vmLogHash: null | any
 }
 
-export interface network {
+export interface Network {
   id: number
   name: string
   httpUrl: string
   wsUrl: string
   httpVitex: string
+}
+
+export interface confirmTx {
+  token: IVitexToken
+  toAddress: string
+  amount: string | number
 }

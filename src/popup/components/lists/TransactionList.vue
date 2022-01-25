@@ -84,7 +84,7 @@
   </div>
   <div v-if="!txsList.length" class="relative w-full h-full">
     <p class="text-blue-900 absolute inset-0 top-2/4 text-center">
-      You have no completed transactions
+      You have no transactions
     </p>
   </div>
 </template>
@@ -107,10 +107,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore()
     const loaded = computed(() => store.getters['settings/loaded'])
+    const active = computed(() => store.getters['wallets/active'])
 
-    const web3 = useWeb3()
-    if (store.getters['wallets/active'].address && !props.txs) {
-      web3.getTxsList(store.getters['wallets/active'].address)
+    const { getTxsList } = useWeb3()
+    if (active.value.address && !props.txs) {
+      getTxsList(active.value.address)
     }
     const txsList = computed(() =>
       props.txs ? props.txs : store.getters['account/txsList']
@@ -128,10 +129,6 @@ export default defineComponent({
       }
     }
 
-    function receiveHandler(id: number): void {
-      emit('receive', id)
-    }
-
     const { forAmount } = usePrices()
     return {
       compressAddress,
@@ -139,8 +136,7 @@ export default defineComponent({
       timestampToDate,
       forAmount,
       loaded,
-      txBadge,
-      receiveHandler
+      txBadge
     }
   }
 })

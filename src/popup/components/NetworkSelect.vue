@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed, watchEffect } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import { useWeb3 } from '@/composables/useWeb3'
 import config from '@/config'
 import { useStore } from 'vuex'
@@ -127,6 +127,7 @@ import {
   ListboxOption,
   ListboxOptions
 } from '@headlessui/vue'
+import { Network } from '@/types'
 
 export default defineComponent({
   components: {
@@ -136,29 +137,20 @@ export default defineComponent({
     ListboxOptions
   },
   setup() {
-    const web3 = useWeb3()
+    const { handleNetworkChanged } = useWeb3()
     const store = useStore()
-    const active = computed(() => store.getters['wallets/active'])
-
-    const selected = ref(null)
-    watchEffect(() =>
-      store.getters['network/network'].httpUrl
-        ? (selected.value = store.getters['network/network'])
-        : (selected.value = config.networks[0])
+    const selectedNetwork = computed(
+      () => store.getters['network/network'] as Network
     )
+
+    const selected = ref(selectedNetwork.value as Network)
+
     watch(
       selected,
-      () => {
-        store.commit('settings/setLoaded', false)
+      (newNetwork, oldNetwork) => {
+        if (newNetwork === oldNetwork) return
         store.commit('network/setNetwork', selected.value)
-        web3.handleNetworkChanged(selected.value)
-        web3.fetchFullTokenInfo(active.value.address)
-        web3.getTxsList(active.value.address)
-        setTimeout(() => {
-          store.commit('settings/setLoaded', true)
-        }, 1000)
       },
-      { immediate: true }
     )
 
     return {

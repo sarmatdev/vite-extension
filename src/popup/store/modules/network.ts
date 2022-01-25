@@ -1,21 +1,16 @@
-import { network } from '@/types'
+import { Network } from '@/types'
+import config from '@/config'
 
 export interface NetworkState {
-  network: network
+  network: Network
 }
 
 const state = {
-  network: {
-    id: 0,
-    name: '',
-    httpUrl: '',
-    wsUrl: '',
-    httpVitex: ''
-  }
+  network: config.networks[0] as Network
 }
 
 const mutations = {
-  setNetwork(state: NetworkState, network: network) {
+  setNetwork(state: NetworkState, network: Network) {
     state.network = network
   }
 }
