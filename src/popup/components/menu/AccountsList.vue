@@ -76,15 +76,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
-import { accountNameSymbol, compressAddress } from '@/helpers/string'
 import { useWeb3 } from '@/composables/useWeb3'
+import { accountNameSymbol, compressAddress } from '@/helpers/string'
 
 export default defineComponent({
   name: 'AccountsList',
   setup() {
     const store = useStore()
+    const { unsubscribeAutoReceive } = useWeb3()
 
     const accounts = computed(() => {
       return store.getters['wallets/accounts']
@@ -95,27 +96,14 @@ export default defineComponent({
     })
 
     function selectActive(address: string): void {
+      unsubscribeAutoReceive()
       store.commit('wallets/setActive', address)
     }
 
     function deleteAccount(address: string): void {
+      unsubscribeAutoReceive()
       store.commit('wallets/deleteAccount', address)
     }
-
-    const web3 = useWeb3()
-
-    watch(
-      () => active.value,
-      (newAccount, oldAccount) => {
-        if (oldAccount === newAccount) return
-        store.commit('settings/setLoaded', false)
-        web3.fetchFullTokenInfo(active.value.address)
-        web3.getTxsList(active.value.address)
-        setTimeout(() => {
-          store.commit('settings/setLoaded', true)
-        }, 1000)
-      }
-    )
 
     return {
       accounts,

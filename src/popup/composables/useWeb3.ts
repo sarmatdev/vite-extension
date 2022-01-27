@@ -1,3 +1,4 @@
+import { Network, Account } from './../types/index'
 import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { ViteAPI, accountBlock } from '@vite/vitejs'
@@ -15,7 +16,8 @@ export interface SendTokens {
 
 const state = reactive({
   network: { ...config.networks[0], isConnected: false },
-  provider: null
+  provider: null,
+  autoReceiveListener: null
 })
 
 const { createAccountBlock } = accountBlock
@@ -30,6 +32,18 @@ export function useWeb3() {
 
   function newBlockHandler() {
     return state.provider.subscribe('newAccountBlocks')
+  }
+  function subscribeNewBlockData() {
+    newBlockHandler().then((event) => {
+      event.on(() => {
+        fetchFullTokenInfo(active.value.address)
+        getTxsList(active.value.address)
+      })
+    })
+  }
+  function unsubscribeNewBlockHandler() {
+    if (!state.provider.subscriptionList.length) return
+    state.provider.unsubscribeAll()
   }
 
   const active = computed(() => store.getters['wallets/active'])
@@ -53,31 +67,39 @@ export function useWeb3() {
     return result
   }
 
-  async function autoReceiveTokens(stop?) {
+  function subscribeAutoReceive() {
+    if (state.autoReceiveListener) return
+    const address = active.value.address
+
     const privateKey = decryptKeyStore(active.value.keystore, password.value)
+
     const { ReceiveAccountBlockTask } = accountBlock
 
-    const ReceiveTask = new ReceiveAccountBlockTask({
-      address: active.value.address,
+    state.autoReceiveListener = new ReceiveAccountBlockTask({
+      address: address,
       privateKey: privateKey,
       provider: state.provider
     })
-    if (stop) {
-      return ReceiveTask.stop()
-    }
-    ReceiveTask.start({
+
+    state.autoReceiveListener.start({
       checkTime: 3000,
       transctionNumber: 5
     })
-    ReceiveTask.onError((error) => {
+
+    state.autoReceiveListener.onError((error) => {
       console.log('error', error)
     })
-    
+  }
 
+  function unsubscribeAutoReceive() {
+    if (!state.autoReceiveListener) return
+    state.autoReceiveListener.stop()
+    state.autoReceiveListener = null
   }
 
   function handleNetworkChanged(selected: any) {
     state.network.isConnected = false
+    unsubscribeAutoReceive()
     state.network = selected
     const newProvider = new HTTP_RPC(state.network.httpUrl)
 
@@ -144,7 +166,7 @@ export function useWeb3() {
         fullTokenInfo.push({
           ...token,
           price: price ? price.usdRate : 0,
-          balance: balance ? balance.balance.replace(',', '.') : 0
+          balance: balance ? balance.balance.replace(',', '') : 0
         })
       }
       store.commit('account/setFullTokenInfo', fullTokenInfo)
@@ -218,13 +240,16 @@ export function useWeb3() {
     provider: state.provider,
     network: state.network,
     sendTokens,
-    autoReceiveTokens,
+    subscribeAutoReceive,
+    unsubscribeAutoReceive,
     handleNetworkChanged,
     getAccountBalance,
     fetchFullTokenInfo,
     getTxs,
     getUtxs,
     getTxsList,
-    newBlockHandler
+    newBlockHandler,
+    subscribeNewBlockData,
+    unsubscribeNewBlockHandler
   }
 }

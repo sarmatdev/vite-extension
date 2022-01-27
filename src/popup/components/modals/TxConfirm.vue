@@ -67,10 +67,11 @@
 <script lang="ts">
 import { defineComponent, ref, watch, PropType, computed } from 'vue'
 import { compressAddress } from '@/helpers/string'
-import { useWeb3, SendTokens } from '@/composables/useWeb3'
+import { useWeb3 } from '@/composables/useWeb3'
 import { useNumbers } from '@/composables/useNumbers'
 import { useStore } from 'vuex'
 import { useNotifications } from '@/composables/useNotifications'
+import { confirmTx } from '@/types'
 
 export default defineComponent({
   name: 'TxConfirm',
@@ -80,7 +81,7 @@ export default defineComponent({
       default: false
     },
     params: {
-      type: Object as PropType<SendTokens>
+      type: Object as PropType<confirmTx>
     }
   },
   setup(props, { emit }) {
@@ -97,20 +98,18 @@ export default defineComponent({
     function closeModal() {
       emit('close')
     }
-    //@ts-ignore
     const token = computed(() => props.params.token)
-    //@ts-ignore
     const toAddress = computed(() => props.params.toAddress)
-    //@ts-ignore
     const amount = computed(() => props.params.amount)
     function send() {
       loading.value = true
       sendTokens({
         toAddress: toAddress.value,
-        amount: formatUnits(amount.value, 18),
-        tokenId: token.value.tokenId
+        tokenId: token.value.tokenId,
+        amount: formatUnits(amount.value, 18)
       })
         .then(() => {
+          console.log('succes sent')
           chromeNotify({
             title: 'Transaction Sent',
             message: 'Success'
@@ -118,6 +117,7 @@ export default defineComponent({
           closeModal()
         })
         .catch((e) => {
+          console.log('failedn sent',e)
           chromeNotify({
             title: 'Transaction Sent',
             message: 'Failed'

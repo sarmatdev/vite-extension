@@ -17,6 +17,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useWeb3 } from '@/composables/useWeb3'
 import { deriveNewAccount } from '../../../services/AccountService'
 
 export default defineComponent({
@@ -24,6 +25,7 @@ export default defineComponent({
   components: {},
   setup(_, { emit }) {
     const store = useStore()
+    const { unsubscribeAutoReceive } = useWeb3()
     const accountsNum = computed(() => store.getters['wallets/accountsNum'] + 1)
     const name = ref(`Wallet ${accountsNum.value}`)
     const accounts = computed(() => store.getters['wallets/createdAccounts'])
@@ -40,6 +42,7 @@ export default defineComponent({
         accounts.value[0].mnemonicStore,
         password.value
       )
+      unsubscribeAutoReceive()
       store.commit('wallets/addAccount', {
         name: name.value,
         address: address,

@@ -1,13 +1,5 @@
 import { last } from 'lodash-es'
-
-export interface Account {
-  name: string
-  address: string
-  privateKey: string
-  salt: string
-  imported?: boolean
-  mnemonic?: string
-}
+import {Account} from '@/types'
 
 export interface WalletsState {
   active: Account | undefined

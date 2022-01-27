@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onUnmounted } from 'vue'
+import { defineComponent, computed, onUnmounted, watch } from 'vue'
 import Notifications from '@/components/Notifications.vue'
 import { APP_CONNECT } from '../types'
 import { useWeb3 } from './composables/useWeb3'
@@ -18,23 +18,44 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    const { newBlockHandler, fetchFullTokenInfo, autoReceiveTokens } = useWeb3()
+    const {
+      subscribeNewBlockData,
+      fetchFullTokenInfo,
+      getTxsList,
+      unsubscribeAutoReceive,
+      subscribeAutoReceive,
+      handleNetworkChanged,
+      unsubscribeNewBlockHandler
+    } = useWeb3()
 
     const active = computed(() => store.getters['wallets/active'])
-    if (active.value.address) {
-      autoReceiveTokens()
-      newBlockHandler()
-        .then((event) => {
-          event.on(() => {
-            fetchFullTokenInfo(active.value.address)
-          })
+    const selectedNetwork = computed(() => store.getters['network/network'])
+
+    watch(
+      [active, selectedNetwork],
+      ([newAccount, newNetwork], [oldAccount, oldNetwork]) => {
+        if (!active.value) return
+        if (newNetwork !== oldNetwork) {
+          unsubscribeNewBlockHandler()
+          handleNetworkChanged(newNetwork)
+          subscribeNewBlockData()
+        }
+        store.commit('settings/setLoaded', false)
+        Promise.all([
+          fetchFullTokenInfo(active.value.address),
+          getTxsList(active.value.address)
+        ]).then(() => {
+          store.commit('settings/setLoaded', true)
         })
-        .catch((err) => {
-          console.warn(err)
-        })
-    }
+        subscribeAutoReceive()
+      },
+      { immediate: true }
+    )
     chrome.runtime.connect({ name: APP_CONNECT })
-    onUnmounted(() => autoReceiveTokens('stop'))
+    onUnmounted(() => {
+      unsubscribeAutoReceive()
+      unsubscribeNewBlockHandler()
+    })
   }
 })
 </script>
