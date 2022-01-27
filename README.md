@@ -1,4 +1,5 @@
-# vite-extension
+# 🚨PROTECTED BY LICENSE🚨 READ LICENSE BEFORE USING
+# 🚨TL;DR NOONE IS ABLE TO USE THIS PROJECT🚨
 
 ## Features
 
