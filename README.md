@@ -1,6 +1,4 @@
-# 🚨PROTECTED BY LICENSE🚨 READ LICENSE BEFORE USING
-# 🚨TL;DR NOONE IS ABLE TO USE THIS PROJECT🚨
-
+# Vite Wallet Extension
 ## Features
 
 - [x] Mnemonic creation, input, output and encryption
